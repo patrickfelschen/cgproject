@@ -6,8 +6,8 @@
 #include <fstream>
 #include <iostream>
 #include "../GLincludes.hpp"
-#include "../util/vector.h"
-#include "../util/Matrix.h"
+#include "../Utils/vector.h"
+#include "../Utils/Matrix.h"
 
 class ShaderProgram {
 private:

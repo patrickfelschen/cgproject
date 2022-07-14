@@ -2,7 +2,7 @@
 #define Entity_hpp
 
 #include "../Models/TexturedModel.hpp"
-#include "../util/vector.h"
+#include "../Utils/vector.h"
 
 class Entity {
 private:

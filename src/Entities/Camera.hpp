@@ -1,7 +1,7 @@
 #ifndef Camera_HPP
 #define Camera_HPP
 
-#include "../util/vector.h";
+#include "../Utils/vector.h";
 #include "../GLincludes.hpp"
 
 

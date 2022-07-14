@@ -15,8 +15,8 @@
 #include "FreeImage.h"
 #include "../GLincludes.hpp"
 #include "../Models/RawModel.hpp"
-#include "../util/rgbimage.h"
-#include "../util/color.h"
+#include "../Utils/rgbimage.h"
+#include "../Utils/color.h"
 #include "../Toolbox/TextureLoader.hpp"
 
 class Loader {

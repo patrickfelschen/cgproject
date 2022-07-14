@@ -3,7 +3,7 @@
 
 #define _USE_MATH_DEFINES
 
-#include "../util/Matrix.h"
+#include "../Utils/Matrix.h"
 #include "../Entities/Camera.hpp"
 #include <math.h>
 
