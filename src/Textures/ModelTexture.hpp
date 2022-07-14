@@ -5,11 +5,15 @@
 
 class ModelTexture {
 private:
-	GLuint textureID;
+    GLuint textureID;
 public:
-	ModelTexture();
-	ModelTexture(GLuint textureID);
-	virtual ~ModelTexture();
-	GLuint getID();
+    ModelTexture();
+
+    ModelTexture(GLuint textureID);
+
+    virtual ~ModelTexture();
+
+    GLuint getID();
 };
+
 #endif

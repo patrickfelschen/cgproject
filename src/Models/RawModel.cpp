@@ -6,34 +6,28 @@
 
 #include "RawModel.hpp"
 
-RawModel::RawModel(){}
+RawModel::RawModel() {}
 
-RawModel::RawModel(GLuint vaoID, unsigned long vertexCount)
-{
-	this->vaoID = vaoID;
-	this->vertexCount = vertexCount;
+RawModel::RawModel(GLuint vaoID, unsigned long vertexCount) {
+    this->vaoID = vaoID;
+    this->vertexCount = vertexCount;
 }
 
-RawModel::~RawModel()
-{
+RawModel::~RawModel() {
 }
 
-GLuint RawModel::getVaoID()
-{
-	return this->vaoID;
+GLuint RawModel::getVaoID() {
+    return this->vaoID;
 }
 
-void RawModel::setVaoID(GLuint vaoID)
-{
-	this->vaoID = vaoID;
+void RawModel::setVaoID(GLuint vaoID) {
+    this->vaoID = vaoID;
 }
 
-unsigned long RawModel::getVertexCount()
-{
-	return this->vertexCount;
+unsigned long RawModel::getVertexCount() {
+    return this->vertexCount;
 }
 
-void RawModel::setVertexCount(unsigned long vertexCount)
-{
-	this->vertexCount = vertexCount;
+void RawModel::setVertexCount(unsigned long vertexCount) {
+    this->vertexCount = vertexCount;
 }

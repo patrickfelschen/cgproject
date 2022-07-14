@@ -14,7 +14,7 @@ RGBImage::~RGBImage() {
     delete[] m_Image;
 }
 
-void RGBImage::setPixelColor(unsigned int x, unsigned int y, const Color& c) {
+void RGBImage::setPixelColor(unsigned int x, unsigned int y, const Color &c) {
     //https://softwareengineering.stackexchange.com/a/212813
     assert(x >= 0);
     assert(y >= 0);
@@ -23,7 +23,7 @@ void RGBImage::setPixelColor(unsigned int x, unsigned int y, const Color& c) {
     m_Image[x + m_Width * y] = c;
 }
 
-const Color& RGBImage::getPixelColor(unsigned int x, unsigned int y) const {
+const Color &RGBImage::getPixelColor(unsigned int x, unsigned int y) const {
     //https://softwareengineering.stackexchange.com/a/212813
     assert(x >= 0);
     assert(y >= 0);
@@ -51,11 +51,11 @@ unsigned char RGBImage::convertColorChannel(float v) {
         return 255;
     }
 
-    return (unsigned char)(v * 255);
+    return (unsigned char) (v * 255);
 }
 
 
-bool RGBImage::saveToDisk(const char* Filename) {
+bool RGBImage::saveToDisk(const char *Filename) {
 
     // https://stackoverflow.com/a/30423762
     // http://de.wikipedia.org/wiki/Windows_Bitmap
@@ -106,7 +106,7 @@ bool RGBImage::saveToDisk(const char* Filename) {
     bih.biClrUsed = 0;
     bih.biClrImportant = 0;
 
-    FILE* pFile = fopen(Filename, "wb");
+    FILE *pFile = fopen(Filename, "wb");
 
     /*Write headers*/
     fwrite(&bfType, 1, sizeof(bfType), pFile);

@@ -21,19 +21,28 @@
 
 class Loader {
 private:
-	std::vector<GLuint> vaos;
-	std::vector<GLuint> vbos;
-	std::vector<GLuint> textures;
-	int createVAO();
-	void storeDataInAttributeList(GLuint attributeNumber, unsigned int coordinateSize, std::vector<float> data);
-	void bindIndicesBuffer(std::vector<int> indices);
-	void unbindVAO();
+    std::vector<GLuint> vaos;
+    std::vector<GLuint> vbos;
+    std::vector<GLuint> textures;
+
+    int createVAO();
+
+    void storeDataInAttributeList(GLuint attributeNumber, unsigned int coordinateSize, std::vector<float> data);
+
+    void bindIndicesBuffer(std::vector<int> indices);
+
+    void unbindVAO();
+
 public:
-	Loader();
-	virtual ~Loader();
-	RawModel loadToVAO(std::vector<float> positions, std::vector<float> textureCoords, std::vector<int> indices);
-	void cleanUp();
-	GLuint loadTexture(std::string file);
+    Loader();
+
+    virtual ~Loader();
+
+    RawModel loadToVAO(std::vector<float> positions, std::vector<float> textureCoords, std::vector<int> indices);
+
+    void cleanUp();
+
+    GLuint loadTexture(std::string file);
 };
 
 #endif /* Loader_hpp */

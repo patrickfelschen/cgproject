@@ -13,14 +13,19 @@ private:
     static const std::string VERTEX_FILE;
     static const std::string FRAGMENT_FILE;
 public:
-	StaticShader();
+    StaticShader();
+
     virtual ~StaticShader();
-    void loadTransformationMatrix(const Matrix& matrix);
-    void loadProjectionMatrix(const Matrix& projection);
+
+    void loadTransformationMatrix(const Matrix &matrix);
+
+    void loadProjectionMatrix(const Matrix &projection);
+
     void loadViewMatrix(Camera camera);
 
 protected:
-	void bindAttributes() override;
+    void bindAttributes() override;
+
     void getAllUniformLocations() override;
 };
 

@@ -12,23 +12,27 @@
 #include "FreeImage.h"
 #include <string>
 
-class TextureLoader{
+class TextureLoader {
 public:
-    static TextureLoader* Inst();
+    static TextureLoader *Inst();
+
     virtual ~TextureLoader();
-    
+
     bool getTexture(std::string filepath,
                     GLuint *texID,
                     GLenum image_format = GL_RGB,
                     GLint internal_format = GL_RGB,
                     GLint level = 0,
                     GLint border = 0);
+
 protected:
     TextureLoader();
-    TextureLoader(const TextureLoader& tm);
-    TextureLoader& operator=(const TextureLoader& tm);
 
-    static TextureLoader* m_inst;
+    TextureLoader(const TextureLoader &tm);
+
+    TextureLoader &operator=(const TextureLoader &tm);
+
+    static TextureLoader *m_inst;
 };
 
 #endif /* TextureLoader_hpp */

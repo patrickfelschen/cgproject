@@ -2,16 +2,13 @@
 
 ModelTexture::ModelTexture() {}
 
-ModelTexture::ModelTexture(GLuint textureID)
-{
-	this->textureID = textureID;
+ModelTexture::ModelTexture(GLuint textureID) {
+    this->textureID = textureID;
 }
 
-ModelTexture::~ModelTexture()
-{
+ModelTexture::~ModelTexture() {
 }
 
-GLuint ModelTexture::getID()
-{
-	return this->textureID;
+GLuint ModelTexture::getID() {
+    return this->textureID;
 }

@@ -8,58 +8,57 @@
 
 #include "TextureLoader.hpp"
 
-TextureLoader* TextureLoader::m_inst(0);
+TextureLoader *TextureLoader::m_inst(0);
 
-TextureLoader* TextureLoader::Inst()
-{
-    if(!m_inst)
+TextureLoader *TextureLoader::Inst() {
+    if (!m_inst)
         m_inst = new TextureLoader();
 
     return m_inst;
 }
 
-TextureLoader::TextureLoader()
-{
+TextureLoader::TextureLoader() {
     // call this ONLY when linking with FreeImage as a static library
-    #ifdef FREEIMAGE_LIB
-        FreeImage_Initialise();
-    #endif
+#ifdef FREEIMAGE_LIB
+    FreeImage_Initialise();
+#endif
 }
 
-TextureLoader::~TextureLoader()
-{
+TextureLoader::~TextureLoader() {
     // call this ONLY when linking with FreeImage as a static library
-    #ifdef FREEIMAGE_LIB
-        FreeImage_DeInitialise();
-    #endif
+#ifdef FREEIMAGE_LIB
+    FreeImage_DeInitialise();
+#endif
 
     m_inst = 0;
 }
 
-bool TextureLoader::getTexture(std::string filepath, GLuint *texID, GLenum image_format, GLint internal_format, GLint level, GLint border){
+bool
+TextureLoader::getTexture(std::string filepath, GLuint *texID, GLenum image_format, GLint internal_format, GLint level,
+                          GLint border) {
     //image format
     FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
     //pointer to the image, once loaded
     FIBITMAP *dib(0);
     //pointer to the image data
-    BYTE* bits(0);
+    BYTE *bits(0);
     //image width and height
     unsigned int width(0), height(0);
-    
+
     //check the file signature and deduce its format
     fif = FreeImage_GetFileType(filepath.data(), 0);
     //if still unknown, try to guess the file format from the file extension
-    if(fif == FIF_UNKNOWN)
+    if (fif == FIF_UNKNOWN)
         fif = FreeImage_GetFIFFromFilename(filepath.data());
     //if still unkown, return failure
-    if(fif == FIF_UNKNOWN)
+    if (fif == FIF_UNKNOWN)
         return false;
 
     //check that the plugin has reading capabilities and load the file
-    if(FreeImage_FIFSupportsReading(fif))
+    if (FreeImage_FIFSupportsReading(fif))
         dib = FreeImage_Load(fif, filepath.data());
     //if the image failed to load, return failure
-    if(!dib)
+    if (!dib)
         return false;
 
     //retrieve the image data
@@ -68,7 +67,7 @@ bool TextureLoader::getTexture(std::string filepath, GLuint *texID, GLenum image
     width = FreeImage_GetWidth(dib);
     height = FreeImage_GetHeight(dib);
     //if this somehow one of these failed (they shouldn't), return failure
-    if((bits == 0) || (width == 0) || (height == 0))
+    if ((bits == 0) || (width == 0) || (height == 0))
         return false;
 
     //generate an OpenGL texture ID for this texture

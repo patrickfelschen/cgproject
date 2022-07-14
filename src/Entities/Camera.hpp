@@ -7,17 +7,24 @@
 
 class Camera {
 private:
-	Vector pos;
-	float yaw, pitch, roll;
+    Vector pos;
+    float yaw, pitch, roll;
 public:
-	Camera();
-	Camera(Vector pos);
-	~Camera();
-	Vector getPosition();
-	float getYaw();
-	float getPitch();
-	float getRoll();
-	void move(int key);
+    Camera();
+
+    Camera(Vector pos);
+
+    ~Camera();
+
+    Vector getPosition();
+
+    float getYaw();
+
+    float getPitch();
+
+    float getRoll();
+
+    void move(int key);
 };
 
 #endif
