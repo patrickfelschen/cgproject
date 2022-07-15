@@ -16,10 +16,11 @@
 #include "Shaders/StaticShader.hpp"
 #include "Shaders/ShaderProgram.hpp"
 #include "Models/TexturedModel.hpp"
+#include "Utils/ObjectLoader.h"
 
 static const int window_width = 640;
 static const int window_height = 480;
-Camera camera(Vector(0, 0, 5));
+Camera camera(Vector3f(0, 0, 5));
 
 static void error_callback(int error, const char *description) {
     std::cerr << "Error: " << description << std::endl;
@@ -86,94 +87,23 @@ int main(int argc, char *argv[]) {
     print_opengl_version();
 
     Loader loader;
+    ObjectLoader objLoader;
     StaticShader shader;
     Renderer renderer(window_width, window_height, shader);
 
-    std::vector<float> vertices = {
-            -0.5f, 0.5f, -0.5f,
-            -0.5f, -0.5f, -0.5f,
-            0.5f, -0.5f, -0.5f,
-            0.5f, 0.5f, -0.5f,
 
-            -0.5f, 0.5f, 0.5f,
-            -0.5f, -0.5f, 0.5f,
-            0.5f, -0.5f, 0.5f,
-            0.5f, 0.5f, 0.5f,
+    RawModel model = objLoader.loadObjectModel(ASSET_DIRECTORY "Objects/Tree01/model.obj", loader);
 
-            0.5f, 0.5f, -0.5f,
-            0.5f, -0.5f, -0.5f,
-            0.5f, -0.5f, 0.5f,
-            0.5f, 0.5f, 0.5f,
-
-            -0.5f, 0.5f, -0.5f,
-            -0.5f, -0.5f, -0.5f,
-            -0.5f, -0.5f, 0.5f,
-            -0.5f, 0.5f, 0.5f,
-
-            -0.5f, 0.5f, 0.5f,
-            -0.5f, 0.5f, -0.5f,
-            0.5f, 0.5f, -0.5f,
-            0.5f, 0.5f, 0.5f,
-
-            -0.5f, -0.5f, 0.5f,
-            -0.5f, -0.5f, -0.5f,
-            0.5f, -0.5f, -0.5f,
-            0.5f, -0.5f, 0.5f
-    };
-
-    std::vector<int> indices = {
-            0, 1, 3,
-            3, 1, 2,
-            4, 5, 7,
-            7, 5, 6,
-            8, 9, 11,
-            11, 9, 10,
-            12, 13, 15,
-            15, 13, 14,
-            16, 17, 19,
-            19, 17, 18,
-            20, 21, 23,
-            23, 21, 22
-    };
-
-    std::vector<float> textureCoords = {
-            0, 1,
-            0, 0,
-            1, 0,
-            1, 1,
-            0, 1,
-            0, 0,
-            1, 0,
-            1, 1,
-            0, 1,
-            0, 0,
-            1, 0,
-            1, 1,
-            0, 1,
-            0, 0,
-            1, 0,
-            1, 1,
-            0, 1,
-            0, 0,
-            1, 0,
-            1, 1,
-            0, 1,
-            0, 0,
-            1, 0,
-            1, 1,
-    };
-
-    RawModel model = loader.loadToVAO(vertices, textureCoords, indices);
     ModelTexture texture(loader.loadTexture(ASSET_DIRECTORY "Images/colorchess.bmp"));
     TexturedModel *texturedModel = new TexturedModel(model, texture);
 
-    Entity entity1(texturedModel, Vector(-1, 0.5, -3), 0, 0, 0, 1);
-    Entity entity2(texturedModel, Vector(1, 0.5, -3), 0, 0, 0, 0.5);
-    Entity entity3(texturedModel, Vector(0, -0.5, -3), 0, 0, 0, 2);
+    Entity entity1(texturedModel, Vector3f(-1, 0.5, -3), 0, 0, 0, 1);
+    Entity entity2(texturedModel, Vector3f(1, 0.5, -3), 0, 0, 0, 0.5);
+    Entity entity3(texturedModel, Vector3f(0, -0.5, -3), 0, 0, 0, 2);
 
     std::vector<Entity> entities;
     for (int i = 0; i < 10; i++) {
-        entities.push_back(Entity(texturedModel, Vector(i, i, 0), 0, 0, 0, 1));
+        entities.push_back(Entity(texturedModel, Vector3f(i, i, 0), 0, 0, 0, 1));
     }
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {

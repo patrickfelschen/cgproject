@@ -6,7 +6,7 @@ Maths::Maths() {
 Maths::~Maths() {
 }
 
-Matrix Maths::createTransformationMatrix(const Vector &translation, const float &rx, const float &ry, const float &rz,
+Matrix Maths::createTransformationMatrix(const Vector3f &translation, const float &rx, const float &ry, const float &rz,
                                          const float &scale) {
     Matrix transMat, rotXMat, rotYMat, rotZMat, scaleMat;
 
@@ -24,12 +24,12 @@ Matrix Maths::createTransformationMatrix(const Vector &translation, const float 
 Matrix Maths::createViewMatrix(Camera camera) {
     Matrix transMat, rotMat;
 
-    Vector cameraPos = camera.getPosition();
-    Vector negativeCameraPos = Vector(-cameraPos.X, -cameraPos.Y, -cameraPos.Z);
+    Vector3f cameraPos = camera.getPosition();
+    Vector3f negativeCameraPos = Vector3f(-cameraPos.X, -cameraPos.Y, -cameraPos.Z);
     transMat.translation(negativeCameraPos);
 
     rotMat.rotationYawPitchRoll(
-            Vector(toRadians(camera.getYaw()), toRadians(camera.getPitch()), toRadians(camera.getRoll())));
+            Vector3f(toRadians(camera.getYaw()), toRadians(camera.getPitch()), toRadians(camera.getRoll())));
 
     return transMat * rotMat;
 

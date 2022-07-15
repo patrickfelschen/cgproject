@@ -8,7 +8,7 @@
 
 #include "TextureLoader.hpp"
 
-TextureLoader *TextureLoader::m_inst(0);
+TextureLoader *TextureLoader::m_inst(nullptr);
 
 TextureLoader *TextureLoader::Inst() {
     if (!m_inst)
@@ -30,7 +30,7 @@ TextureLoader::~TextureLoader() {
     FreeImage_DeInitialise();
 #endif
 
-    m_inst = 0;
+    m_inst = nullptr;
 }
 
 bool
@@ -67,7 +67,7 @@ TextureLoader::getTexture(std::string filepath, GLuint *texID, GLenum image_form
     width = FreeImage_GetWidth(dib);
     height = FreeImage_GetHeight(dib);
     //if this somehow one of these failed (they shouldn't), return failure
-    if ((bits == 0) || (width == 0) || (height == 0))
+    if ((bits == nullptr) || (width == 0) || (height == 0))
         return false;
 
     //generate an OpenGL texture ID for this texture

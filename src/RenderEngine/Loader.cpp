@@ -6,11 +6,11 @@
 
 #include "Loader.hpp"
 
-RawModel Loader::loadToVAO(std::vector<float> positions, std::vector<float> textureCoords, std::vector<int> indices) {
+
+RawModel Loader::loadToVAO(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices) {
     int vaoID = createVAO();
     bindIndicesBuffer(indices);
-    storeDataInAttributeList(0, 3, positions);
-    storeDataInAttributeList(1, 2, textureCoords);
+    storeVerticesInAttributeList(vertices);
     unbindVAO();
     return RawModel(vaoID, indices.size());
 }
@@ -29,7 +29,7 @@ void Loader::cleanUp() {
     }
 }
 
-GLuint Loader::loadTexture(std::string filepath) {
+GLuint Loader::loadTexture(const std::string &filepath) {
     GLuint texID;
     bool textureLoaded = TextureLoader::Inst()->getTexture(filepath, &texID);
 
@@ -52,24 +52,26 @@ int Loader::createVAO() {
     return vaoID;
 }
 
-void Loader::storeDataInAttributeList(GLuint attributeNumber, unsigned int coordinateSize, std::vector<float> data) {
+void Loader::storeVerticesInAttributeList(const std::vector<Vertex> &vertices) {
     GLuint vboID;
     glGenBuffers(1, &vboID);
-    vbos.push_back(vboID);
     glBindBuffer(GL_ARRAY_BUFFER, vboID);
-    glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), data.data(), GL_STATIC_DRAW);
-    glVertexAttribPointer(attributeNumber, coordinateSize, GL_FLOAT, false, 0, 0);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *) nullptr);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *) offsetof(Vertex, normal));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *) offsetof(Vertex, texCoords));
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void Loader::bindIndicesBuffer(std::vector<int> indices) {
+void Loader::bindIndicesBuffer(const std::vector<unsigned int> &indices) {
     GLuint vboID;
     glGenBuffers(1, &vboID);
     vbos.push_back(vboID);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboID);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int), indices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 }
-
 
 void Loader::unbindVAO() {
     glBindVertexArray(0);

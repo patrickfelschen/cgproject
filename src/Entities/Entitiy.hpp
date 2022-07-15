@@ -2,36 +2,36 @@
 #define Entity_hpp
 
 #include "../Models/TexturedModel.hpp"
-#include "../Utils/vector.h"
+#include "../Utils/Vector3f.h"
 
 class Entity {
 private:
     TexturedModel *model;
-    Vector position;
+    Vector3f position;
     float rotX, rotY, rotZ;
     float scale;
 public:
     Entity();
 
-    Entity(TexturedModel *model, Vector position, float rotX, float rotY, float rotZ, float scale);
+    Entity(TexturedModel *model, Vector3f position, float rotX, float rotY, float rotZ, float scale);
 
     ~Entity();
 
     TexturedModel *getModel();
 
-    Vector getPosition();
+    Vector3f getPosition();
 
-    float getRotX();
+    float getRotX() const;
 
-    float getRotY();
+    float getRotY() const;
 
-    float getRotZ();
+    float getRotZ() const;
 
-    float getScale();
+    float getScale() const;
 
     void setModel(TexturedModel *model);
 
-    void setPosition(Vector pos);
+    void setPosition(Vector3f pos);
 
     void setRotX(float rotX);
 

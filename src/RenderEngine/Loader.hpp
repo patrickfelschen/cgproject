@@ -15,9 +15,8 @@
 #include "FreeImage.h"
 #include "../GLincludes.hpp"
 #include "../Models/RawModel.hpp"
-#include "../Utils/rgbimage.h"
-#include "../Utils/color.h"
 #include "../Toolbox/TextureLoader.hpp"
+#include "../Utils/Mesh.h"
 
 class Loader {
 private:
@@ -27,9 +26,9 @@ private:
 
     int createVAO();
 
-    void storeDataInAttributeList(GLuint attributeNumber, unsigned int coordinateSize, std::vector<float> data);
+    void bindIndicesBuffer(const std::vector<unsigned int> &indices);
 
-    void bindIndicesBuffer(std::vector<int> indices);
+    void storeVerticesInAttributeList(const std::vector<Vertex> &vertices);
 
     void unbindVAO();
 
@@ -38,11 +37,12 @@ public:
 
     virtual ~Loader();
 
-    RawModel loadToVAO(std::vector<float> positions, std::vector<float> textureCoords, std::vector<int> indices);
-
     void cleanUp();
 
-    GLuint loadTexture(std::string file);
+    GLuint loadTexture(const std::string &file);
+
+    RawModel loadToVAO(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices);
+
 };
 
 #endif /* Loader_hpp */

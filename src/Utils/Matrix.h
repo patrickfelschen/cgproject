@@ -10,7 +10,7 @@
 #define __RealtimeRending__Matrix__
 
 #include <iostream>
-#include "vector.h"
+#include "Vector3f.h"
 
 class Matrix {
 public:
@@ -42,37 +42,37 @@ public:
 
     Matrix &operator*=(const Matrix &M);
 
-    Vector operator*(const Vector &v) const;
+    Vector3f operator*(const Vector3f &v) const;
 
     bool operator==(const Matrix &M);
 
     bool operator!=(const Matrix &M);
 
-    Vector left() const;
+    Vector3f left() const;
 
-    Vector right() const;
+    Vector3f right() const;
 
-    Vector up() const;
+    Vector3f up() const;
 
-    Vector down() const;
+    Vector3f down() const;
 
-    Vector forward() const;
+    Vector3f forward() const;
 
-    Vector backward() const;
+    Vector3f backward() const;
 
-    Vector translation() const;
+    Vector3f translation() const;
 
-    void up(const Vector &v);
+    void up(const Vector3f &v);
 
-    void forward(const Vector &v);
+    void forward(const Vector3f &v);
 
-    void right(const Vector &v);
+    void right(const Vector3f &v);
 
     Matrix &multiply(const Matrix &M);
 
     Matrix &translation(float X, float Y, float Z);
 
-    Matrix &translation(const Vector &XYZ);
+    Matrix &translation(const Vector3f &XYZ);
 
     Matrix &rotationX(float Angle);
 
@@ -82,13 +82,13 @@ public:
 
     Matrix &rotationYawPitchRoll(float Yaw, float Pitch, float Roll);
 
-    Matrix &rotationYawPitchRoll(const Vector &Angles);
+    Matrix &rotationYawPitchRoll(const Vector3f &Angles);
 
-    Matrix &rotationAxis(const Vector &Axis, float Angle);
+    Matrix &rotationAxis(const Vector3f &Axis, float Angle);
 
     Matrix &scale(float ScaleX, float ScaleY, float ScaleZ);
 
-    Matrix &scale(const Vector &Scalings);
+    Matrix &scale(const Vector3f &Scalings);
 
     Matrix &scale(float Scaling);
 
@@ -98,15 +98,15 @@ public:
 
     Matrix &invert();
 
-    Matrix &lookAt(const Vector &Target, const Vector &Up, const Vector &Position);
+    Matrix &lookAt(const Vector3f &Target, const Vector3f &Up, const Vector3f &Position);
 
     Matrix &perspective(float Fovy, float AspectRatio, float NearPlane, float FarPlane);
 
     Matrix &orthographic(float Width, float Height, float Near, float Far);
 
-    Vector transformVec4x4(const Vector &v) const;
+    Vector3f transformVec4x4(const Vector3f &v) const;
 
-    Vector transformVec3x3(const Vector &v) const;
+    Vector3f transformVec3x3(const Vector3f &v) const;
 
     float determinat();
 };

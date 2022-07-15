@@ -6,7 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include "../GLincludes.hpp"
-#include "../Utils/vector.h"
+#include "../Utils/Vector3f.h"
 #include "../Utils/Matrix.h"
 
 class ShaderProgram {
@@ -39,7 +39,7 @@ protected:
 
     void loadFloat(GLint location, const float &value);
 
-    void loadVector(GLint location, const Vector &vector);
+    void loadVector(GLint location, const Vector3f &vector);
 
     void loadBoolean(GLint location, const bool &value);
 

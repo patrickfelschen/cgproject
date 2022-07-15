@@ -1,20 +1,20 @@
 #include "Camera.hpp"
 
 Camera::Camera() {
-    this->pos = Vector(0, 0, 0);
+    this->pos = Vector3f(0, 0, 0);
     this->yaw = 0;
     this->pitch = 0;
     this->roll = 0;
 }
 
-Camera::Camera(Vector pos) {
+Camera::Camera(Vector3f pos) {
     this->pos = pos;
 }
 
 Camera::~Camera() {
 }
 
-Vector Camera::getPosition() {
+Vector3f Camera::getPosition() {
     return this->pos;
 }
 

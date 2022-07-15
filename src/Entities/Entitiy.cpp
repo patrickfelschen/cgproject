@@ -3,7 +3,7 @@
 Entity::Entity() {
 }
 
-Entity::Entity(TexturedModel *model, Vector position, float rotX, float rotY, float rotZ, float scale) {
+Entity::Entity(TexturedModel *model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
     this->model = model;
     this->position = position;
     this->rotX = rotX;
@@ -19,23 +19,23 @@ TexturedModel *Entity::getModel() {
     return this->model;
 }
 
-Vector Entity::getPosition() {
+Vector3f Entity::getPosition() {
     return this->position;
 }
 
-float Entity::getRotX() {
+float Entity::getRotX() const {
     return this->rotX;
 }
 
-float Entity::getRotY() {
+float Entity::getRotY() const {
     return this->rotY;
 }
 
-float Entity::getRotZ() {
+float Entity::getRotZ() const {
     return this->rotZ;
 }
 
-float Entity::getScale() {
+float Entity::getScale() const {
     return this->scale;
 }
 
@@ -43,7 +43,7 @@ void Entity::setModel(TexturedModel *model) {
     this->model = model;
 }
 
-void Entity::setPosition(Vector pos) {
+void Entity::setPosition(Vector3f pos) {
     this->position = pos;
 }
 

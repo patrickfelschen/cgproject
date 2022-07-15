@@ -45,7 +45,7 @@ Matrix &Matrix::operator*=(const Matrix &M) {
     return *this;
 }
 
-Vector Matrix::operator*(const Vector &v) const {
+Vector3f Matrix::operator*(const Vector3f &v) const {
     return transformVec4x4(v);
 }
 
@@ -63,20 +63,20 @@ bool Matrix::operator==(const Matrix &M) {
     return false;
 }
 
-Vector Matrix::transformVec4x4(const Vector &v) const {
+Vector3f Matrix::transformVec4x4(const Vector3f &v) const {
     float X = m00 * v.X + m01 * v.Y + m02 * v.Z + m03;
     float Y = m10 * v.X + m11 * v.Y + m12 * v.Z + m13;
     float Z = m20 * v.X + m21 * v.Y + m22 * v.Z + m23;
     float W = m30 * v.X + m31 * v.Y + m32 * v.Z + m33;
-    return Vector(X / W, Y / W, Z / W);
+    return Vector3f(X / W, Y / W, Z / W);
 
 }
 
-Vector Matrix::transformVec3x3(const Vector &v) const {
+Vector3f Matrix::transformVec3x3(const Vector3f &v) const {
     float X = m00 * v.X + m01 * v.Y + m02 * v.Z;
     float Y = m10 * v.X + m11 * v.Y + m12 * v.Z;
     float Z = m20 * v.X + m21 * v.Y + m22 * v.Z;
-    return Vector(X, Y, Z);
+    return Vector3f(X, Y, Z);
 }
 
 
@@ -84,47 +84,47 @@ bool Matrix::operator!=(const Matrix &M) {
     return !(*this == M);
 }
 
-Vector Matrix::left() const {
-    return Vector(-m00, -m10, -m20);
+Vector3f Matrix::left() const {
+    return Vector3f(-m00, -m10, -m20);
 }
 
-Vector Matrix::right() const {
-    return Vector(m00, m10, m20);
+Vector3f Matrix::right() const {
+    return Vector3f(m00, m10, m20);
 }
 
-Vector Matrix::up() const {
-    return Vector(m01, m11, m21);
+Vector3f Matrix::up() const {
+    return Vector3f(m01, m11, m21);
 }
 
-Vector Matrix::down() const {
-    return Vector(-m01, -m11, -m21);
+Vector3f Matrix::down() const {
+    return Vector3f(-m01, -m11, -m21);
 }
 
-Vector Matrix::forward() const {
-    return Vector(m02, m12, m22);
+Vector3f Matrix::forward() const {
+    return Vector3f(m02, m12, m22);
 }
 
-Vector Matrix::backward() const {
-    return Vector(-m02, -m12, -m22);
+Vector3f Matrix::backward() const {
+    return Vector3f(-m02, -m12, -m22);
 }
 
-Vector Matrix::translation() const {
-    return Vector(m03, m13, m23);
+Vector3f Matrix::translation() const {
+    return Vector3f(m03, m13, m23);
 }
 
-void Matrix::up(const Vector &v) {
+void Matrix::up(const Vector3f &v) {
     m01 = v.X;
     m11 = v.Y;
     m21 = v.Z;
 }
 
-void Matrix::forward(const Vector &v) {
+void Matrix::forward(const Vector3f &v) {
     m02 = v.X;
     m12 = v.Y;
     m22 = v.Z;
 }
 
-void Matrix::right(const Vector &v) {
+void Matrix::right(const Vector3f &v) {
     m00 = v.X;
     m10 = v.Y;
     m20 = v.Z;
@@ -177,7 +177,7 @@ Matrix &Matrix::translation(float X, float Y, float Z) {
     return *this;
 }
 
-Matrix &Matrix::translation(const Vector &XYZ) {
+Matrix &Matrix::translation(const Vector3f &XYZ) {
     return translation(XYZ.X, XYZ.Y, XYZ.Z);
 }
 
@@ -274,16 +274,16 @@ Matrix &Matrix::rotationYawPitchRoll(float Yaw, float Pitch, float Roll) {
     return *this;
 }
 
-Matrix &Matrix::rotationYawPitchRoll(const Vector &Angles) {
+Matrix &Matrix::rotationYawPitchRoll(const Vector3f &Angles) {
     rotationYawPitchRoll(Angles.X, Angles.Y, Angles.Z);
     return *this;
 }
 
-Matrix &Matrix::rotationAxis(const Vector &Axis, float Angle) {
+Matrix &Matrix::rotationAxis(const Vector3f &Axis, float Angle) {
     const float Si = sin(Angle);
     const float Co = cos(Angle);
     const float OMCo = 1 - Co;
-    Vector Ax = Axis;
+    Vector3f Ax = Axis;
     Ax.normalize();
 
     m00 = (Ax.X * Ax.X) * OMCo + Co;
@@ -330,7 +330,7 @@ Matrix &Matrix::scale(float ScaleX, float ScaleY, float ScaleZ) {
     return *this;
 }
 
-Matrix &Matrix::scale(const Vector &Scalings) {
+Matrix &Matrix::scale(const Vector3f &Scalings) {
     scale(Scalings.X, Scalings.Y, Scalings.Z);
     return *this;
 }
@@ -429,12 +429,12 @@ Matrix &Matrix::invert() {
     return *this;
 }
 
-Matrix &Matrix::lookAt(const Vector &Target, const Vector &Up, const Vector &Position) {
-    Vector f = Target - Position;
+Matrix &Matrix::lookAt(const Vector3f &Target, const Vector3f &Up, const Vector3f &Position) {
+    Vector3f f = Target - Position;
     f.normalize();
-    Vector u = Up;
+    Vector3f u = Up;
     u.normalize();
-    Vector r = f.cross(u);
+    Vector3f r = f.cross(u);
     r.normalize();
     u = r.cross(f);
     m00 = r.X;

@@ -14,7 +14,7 @@ public:
     ~Maths();
 
     static Matrix
-    createTransformationMatrix(const Vector &translation, const float &rx, const float &ry, const float &rz,
+    createTransformationMatrix(const Vector3f &translation, const float &rx, const float &ry, const float &rz,
                                const float &scale);
 
     static Matrix createViewMatrix(Camera camera);

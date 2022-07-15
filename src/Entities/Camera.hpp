@@ -1,22 +1,22 @@
 #ifndef Camera_HPP
 #define Camera_HPP
 
-#include "../Utils/vector.h";
+#include "../Utils/Vector3f.h"
 #include "../GLincludes.hpp"
 
 
 class Camera {
 private:
-    Vector pos;
+    Vector3f pos;
     float yaw, pitch, roll;
 public:
     Camera();
 
-    Camera(Vector pos);
+    Camera(Vector3f pos);
 
     ~Camera();
 
-    Vector getPosition();
+    Vector3f getPosition();
 
     float getYaw();
 
