@@ -5,16 +5,18 @@
 #include "Model.h"
 #include "../utils/Vertex.h"
 
-Model::Model(const Shader &shader) : shader(shader) {
+Model::Model(const Shader &shader, const Texture &texture) : shader(shader), texture(texture) {
+    transform.identity();
+
     Vertex vertices[] = {
-            Vertex(Vector3f(0.5f, 0.5f, 0.5f), Vector2f(), Vector3f()),
-            Vertex(Vector3f(-0.5f, 0.5f, -0.5f), Vector2f(), Vector3f()),
-            Vertex(Vector3f(-0.5f, 0.5f, 0.5f), Vector2f(), Vector3f()),
-            Vertex(Vector3f(0.5f, -0.5f, -0.5f), Vector2f(), Vector3f()),
-            Vertex(Vector3f(-0.5f, -0.5f, -0.5f), Vector2f(), Vector3f()),
-            Vertex(Vector3f(0.5f, 0.5f, -0.5f), Vector2f(), Vector3f()),
-            Vertex(Vector3f(0.5f, -0.5f, 0.5f), Vector2f(), Vector3f()),
-            Vertex(Vector3f(-0.5f, -0.5f, 0.5f), Vector2f(), Vector3f()),
+            Vertex(Vector3f(0.5f, 0.5f, 0.5f), Vector2f(0.0f, 0.0f), Vector3f()),
+            Vertex(Vector3f(-0.5f, 0.5f, -0.5f), Vector2f(0.0f, 1.0f), Vector3f()),
+            Vertex(Vector3f(-0.5f, 0.5f, 0.5f), Vector2f(1.0f, 1.0f), Vector3f()),
+            Vertex(Vector3f(0.5f, -0.5f, -0.5f), Vector2f(1.0f, 0.0f), Vector3f()),
+            Vertex(Vector3f(-0.5f, -0.5f, -0.5f), Vector2f(0.0f, 0.0f), Vector3f()),
+            Vertex(Vector3f(0.5f, 0.5f, -0.5f), Vector2f(0.0f, 1.0f), Vector3f()),
+            Vertex(Vector3f(0.5f, -0.5f, 0.5f), Vector2f(1.0f, 1.0f), Vector3f()),
+            Vertex(Vector3f(-0.5f, -0.5f, 0.5f), Vector2f(1.0f, 0.0f), Vector3f()),
     };
 
     // Handle zum Buffer erstellen
@@ -45,22 +47,23 @@ Model::Model(const Shader &shader) : shader(shader) {
 }
 
 void Model::update(float deltaTime) {
-    Matrix scale = Matrix().identity();
-    scale.scale(0.2f);
+//    Matrix scale = Matrix().identity();
+//    scale.scale(0.2f);
+//
+//    Matrix rotation = Matrix().identity();
+//    rotation.rotationY(0.0f);
+//
+//    Matrix translation = Matrix().identity();
+//    translation.translation(0.0f, 0.0f, 0.0f);
+//
+//    Matrix worldTransformation = translation * rotation * scale;
 
-    Matrix rotation = Matrix().identity();
-    rotation.rotationY(0.0f);
-
-    Matrix translation = Matrix().identity();
-    translation.translation(0.0f, 0.0f, 0.0f);
-
-    Matrix worldTransformation = translation * rotation * scale;
-
-    shader.setModelTransform(worldTransformation);
+    shader.setModelTransform(transform);
 }
 
 void Model::render(const Camera &camera) {
     shader.activate(camera);
+    texture.activate(0);
 
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
@@ -87,4 +90,17 @@ void Model::render(const Camera &camera) {
     glDisableVertexAttribArray(2);
 
     shader.deactivate();
+    texture.deactivate();
+}
+
+void Model::setPosition(const Vector3f &v) {
+    transform.translation(v);
+}
+
+void Model::setScale(const float &v) {
+    transform.scale(v);
+}
+
+void Model::setRotation(const Vector3f &v, const float &a) {
+    transform.rotationAxis(v, a);
 }
