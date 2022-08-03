@@ -33,7 +33,7 @@ public:
     void setModelTransform(const Matrix &modelTransform);
 
 protected:
-    // ID des Shaders
+    // ID des shaders
     GLuint shaderProgramId = 0;
     // Pfad der Shaderdateien
     const char *vsFilePath;
