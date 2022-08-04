@@ -18,12 +18,6 @@ public:
 
     void update(float deltaTime);
 
-    Vector3f getPosition() const;
-
-    Vector3f getTarget();
-
-    Vector3f getUp() const;
-
     void setPosition(const Vector3f &newPosition);
 
     void setTarget(const Vector3f &newTarget);
@@ -34,7 +28,19 @@ public:
 
     const Matrix &getProj() const;
 
+    Vector3f getPosition() const;
 
+    Vector3f getTarget();
+
+    Vector3f getUp() const;
+
+    Vector3f getRight();
+
+    Vector3f getDirection() const;
+
+    void handleKeyboardInputs(float deltaTime);
+
+    void handleMouseInputs(float deltaTime);
 
 private:
     GLFWwindow &window;
@@ -50,10 +56,6 @@ private:
 
     float yaw;
     float pitch;
-
-    void handleKeyboardInputs(float deltaTime);
-
-    void handleMouseInputs(float deltaTime);
 };
 
 

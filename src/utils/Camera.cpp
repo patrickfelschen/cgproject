@@ -1,5 +1,6 @@
 //
 // Created by Patrick on 03.08.2022.
+// https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/camera.h
 //
 
 
@@ -10,7 +11,7 @@
 
 Camera::Camera(GLFWwindow &window) : window(window) {
     position = Vector3f(0.0f, 0.0f, 0.0f);
-    target = Vector3f(0.0f, 0.0f, 0.0f);
+    target = Vector3f(0.0f, 0.0f, -1.0f);
     up = Vector3f(0.0f, 1.0f, 0.0f);
 
     yaw = 0;
@@ -75,7 +76,7 @@ void Camera::update(float deltaTime) {
     handleKeyboardInputs(deltaTime);
     handleMouseInputs(deltaTime);
 
-    view.lookAt(getTarget(), up, getPosition());
+    view.lookAt(getTarget() + getPosition(), getUp(), getPosition());
 }
 
 void Camera::handleKeyboardInputs(float deltaTime) {
@@ -88,10 +89,10 @@ void Camera::handleKeyboardInputs(float deltaTime) {
         position -= (target * speed);
     }
     if (glfwGetKey(&window, GLFW_KEY_A) == GLFW_PRESS) {
-        position -= target.cross(up).normalize() * speed;
+        position -= getRight() * speed;
     }
     if (glfwGetKey(&window, GLFW_KEY_D) == GLFW_PRESS) {
-        position += target.cross(up).normalize() * speed;
+        position += getRight() * speed;
     }
     if (glfwGetKey(&window, GLFW_KEY_SPACE) == GLFW_PRESS) {
         position.y += speed;
@@ -99,7 +100,6 @@ void Camera::handleKeyboardInputs(float deltaTime) {
     if (glfwGetKey(&window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
         position.y -= speed;
     }
-
 }
 
 void Camera::handleMouseInputs(float deltaTime) {
@@ -121,6 +121,10 @@ void Camera::handleMouseInputs(float deltaTime) {
 
     if (pitch > 89.0f) pitch = 89.0f;
     if (pitch < -89.0f) pitch = -89.0f;
+}
+
+Vector3f Camera::getRight() {
+    return getTarget().cross(getUp()).normalize();
 }
 
 
