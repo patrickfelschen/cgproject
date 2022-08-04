@@ -9,8 +9,10 @@ uniform mat4 view;
 uniform mat4 transform;
 
 out vec4 color;
+out vec2 texCoord;
 
 void main() {
     gl_Position = projection * view * transform  * vec4(pos, 1.0);
     color = vec4(1.0f, 0.0f, 0.0f, 1.0f);
+    texCoord = texCoords;
 }
