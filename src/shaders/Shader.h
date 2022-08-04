@@ -6,6 +6,7 @@
 #define CG_SHADER_H
 
 
+#include <unordered_map>
 #include "GL/glew.h"
 #include "../utils/Loader.h"
 #include "../maths/Vector3f.h"
@@ -22,38 +23,32 @@ public:
 
     void deactivate() const;
 
-    void setUniform(GLint locationId, int value) const;
+    void setUniform(const char *name, int value);
 
-    void setUniform(GLint locationId, float value) const;
+    void setUniform(const char *name, float value);
 
-    void setUniform(GLint locationId, const Vector3f &value) const;
+    void setUniform(const char *name, const Vector3f &value);
 
-    void setUniform(GLint locationId, const Matrix &value) const;
+    void setUniform(const char *name, const Matrix &value);
 
     void setModelTransform(const Matrix &modelTransform);
 
 protected:
-    // ID des shaders
-    GLuint shaderProgramId = 0;
-    // Pfad der Shaderdateien
-    const char *vsFilePath;
-    const char *fsFilePath;
-
     Matrix modelTransform;
 
-    GLint transformLoc = 0;
-    GLint projectionLoc = 0;
-    GLint viewLoc = 0;
-    GLint lightPosLoc = 0;
-    GLint camPosLoc = 0;
-
-    void queryUniforms();
-
-    GLint getUniformLocation(const char *uniform) const;
+    GLint getUniformLocation(const char *name);
 
     void setUniforms(const Camera &camera);
 
 private:
+    // ID des shaders
+    GLuint id = 0;
+    // Pfad der Shaderdateien
+    const char *vsFilePath;
+    const char *fsFilePath;
+
+    std::unordered_map<const char *, GLint> uniformLocationCache;
+
     void compile();
 };
 
