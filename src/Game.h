@@ -8,7 +8,6 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <vector>
-#include "interfaces/Renderable.h"
 #include "models/Model.h"
 #include "utils/Camera.h"
 
@@ -25,7 +24,7 @@ public:
 private:
     GLFWwindow &window;
     Camera camera;
-    std::vector<Renderable *> renderables;
+    std::vector<Model> models;
 };
 
 

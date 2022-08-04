@@ -6,26 +6,27 @@
 
 Game::Game(GLFWwindow &window, const Camera &camera) : window(window), camera(camera) {
     Shader shader = Shader("../assets/shaders/shader.vert", "../assets/shaders/shader.frag");
+    Model model = Model(shader);
 
-    Model* renderable = new Model(shader);
-    renderable->loadMesh("../assets/Objects/Orangutan.obj");
-    renderable->setPosition(Vector3f(0.0f, 0.0f, 3.0f));
-    renderable->setScale(0.1f);
+    model.loadMesh("../assets/Objects/Orangutan.obj");
 
-    renderables.push_back(renderable);
+    model.setPosition(Vector3f(0.0f, 0.0f, 3.0f));
+    model.setScale(0.1f);
+
+    models.push_back(model);
 }
 
 void Game::update(float deltaTime) {
 
     camera.update(deltaTime);
 
-    for (Renderable *renderable: this->renderables) {
-        renderable->update(deltaTime);
+    for (auto &model: models) {
+        model.update(deltaTime);
     }
 }
 
 void Game::render() {
-    for (Renderable *renderable: this->renderables) {
-        renderable->render(camera);
+    for (auto &model: models) {
+        model.render(camera);
     }
 }

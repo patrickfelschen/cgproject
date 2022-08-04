@@ -8,7 +8,6 @@
 #include <iostream>
 #include <vector>
 #include "GL/glew.h"
-#include "../interfaces/Renderable.h"
 #include "../maths/Vector3f.h"
 #include "../utils/Loader.h"
 #include "../shaders/Shader.h"
@@ -50,20 +49,19 @@ struct BasicMeshEntry {
     unsigned int materialIndex;
 };
 
-class Model : public Renderable {
+class Model {
 public:
     explicit Model(const Shader &shader);
-    ~Model() override = default;
+    ~Model() = default;
 
-    void update(float deltaTime) override;
-    void render(const Camera &camera) override;
+    void update(float deltaTime);
+    void render(const Camera &camera);
 
     void setPosition(const Vector3f& v);
     void setScale(const float& v);
     void setRotation(const Vector3f& v, const float& a);
 
     bool loadMesh(const char* filename);
-
 
 private:
     GLuint VAO = 0;
