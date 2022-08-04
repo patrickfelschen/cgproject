@@ -52,6 +52,7 @@ int main(int argc, char **argv) {
     }
 #endif
 
+    glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
 
     Camera camera(*window);

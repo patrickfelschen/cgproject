@@ -5,6 +5,7 @@
 #include "Shader.h"
 
 Shader::Shader(const char *vsFilePath, const char *fsFilePath) : vsFilePath(vsFilePath), fsFilePath(fsFilePath) {
+    this->modelTransform.identity();
     this->compile();
     this->queryUniforms();
 }

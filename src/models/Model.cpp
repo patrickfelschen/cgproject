@@ -5,45 +5,8 @@
 #include "Model.h"
 #include "../utils/Vertex.h"
 
-Model::Model(const Shader &shader, const Texture &texture) : shader(shader), texture(texture) {
+Model::Model(const Shader &shader) : shader(shader) {
     transform.identity();
-
-    Vertex vertices[] = {
-            Vertex(Vector3f(0.5f, 0.5f, 0.5f), Vector2f(0.0f, 0.0f), Vector3f()),
-            Vertex(Vector3f(-0.5f, 0.5f, -0.5f), Vector2f(0.0f, 1.0f), Vector3f()),
-            Vertex(Vector3f(-0.5f, 0.5f, 0.5f), Vector2f(1.0f, 1.0f), Vector3f()),
-            Vertex(Vector3f(0.5f, -0.5f, -0.5f), Vector2f(1.0f, 0.0f), Vector3f()),
-            Vertex(Vector3f(-0.5f, -0.5f, -0.5f), Vector2f(0.0f, 0.0f), Vector3f()),
-            Vertex(Vector3f(0.5f, 0.5f, -0.5f), Vector2f(0.0f, 1.0f), Vector3f()),
-            Vertex(Vector3f(0.5f, -0.5f, 0.5f), Vector2f(1.0f, 1.0f), Vector3f()),
-            Vertex(Vector3f(-0.5f, -0.5f, 0.5f), Vector2f(1.0f, 0.0f), Vector3f()),
-    };
-
-    // Handle zum Buffer erstellen
-    glGenBuffers(1, &VBO);
-    // Bufferobjekt binden
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    // An GL_ARRAY_BUFFER gebundenes Objekt mit Vertexattribut-Daten füllen
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    unsigned int indices[] = {
-            0, 1, 2,
-            1, 3, 4,
-            5, 6, 3,
-            7, 3, 6,
-            2, 4, 7,
-            0, 7, 6,
-            0, 5, 1,
-            1, 5, 3,
-            5, 0, 6,
-            7, 4, 3,
-            2, 1, 4,
-            0, 2, 7
-    };
-
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 }
 
 void Model::update(float deltaTime) {
@@ -63,34 +26,28 @@ void Model::update(float deltaTime) {
 
 void Model::render(const Camera &camera) {
     shader.activate(camera);
-    texture.activate(0);
 
-    glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    for(unsigned int i = 0; i < meshes.size(); i++) {
+        unsigned int materialIndex = meshes[i].materialIndex;
 
-    // Position
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *) offsetof(Vertex, Vertex::pos));
+        assert(materialIndex < textures.size());
 
-    // TexCoords
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *) offsetof(Vertex, Vertex::texCoords));
+        if(textures[materialIndex])
+           textures[materialIndex]->activate(i);
 
-    // Normals
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *) offsetof(Vertex, Vertex::normal));
+        glDrawElementsBaseVertex(GL_TRIANGLES,
+                                 meshes[i].numIndices,
+                                 GL_UNSIGNED_INT,
+                                 (void*)(sizeof(unsigned int) * meshes[i].baseIndex),
+                                 meshes[i].baseVertex);
 
-    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
+        textures[materialIndex]->deactivate();
+    }
 
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
-    glDisableVertexAttribArray(2);
-
+    glBindVertexArray(0);
     shader.deactivate();
-    texture.deactivate();
 }
 
 void Model::setPosition(const Vector3f &v) {
@@ -103,4 +60,174 @@ void Model::setScale(const float &v) {
 
 void Model::setRotation(const Vector3f &v, const float &a) {
     transform.rotationAxis(v, a);
+}
+
+bool Model::loadMesh(const char *filename) {
+    clear();
+
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+
+    glGenBuffers(ARRAY_SIZE_IN_ELEMENTS(buffers), buffers);
+
+    bool ret = false;
+    Assimp::Importer importer;
+
+    const aiScene* pScene = importer.ReadFile(filename, ASSIMP_LOAD_FLAGS);
+
+    if(!pScene) {
+        std::cerr << "ERROR::MODEL: " << importer.GetErrorString() << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    ret = initFromScene(pScene, filename);
+
+    glBindVertexArray(0);
+
+    return ret;
+}
+
+void Model::clear() {
+    std::destroy(textures.begin(), textures.end());
+
+//    if(buffers[0] != 0)
+//        glDeleteBuffers(ARRAY_SIZE_IN_ELEMENTS)
+
+    if(VAO != 0) {
+        glDeleteVertexArrays(1, &VAO);
+        VAO = 0;
+    }
+}
+
+bool Model::initFromScene(const aiScene *pScene, const char *filename) {
+    meshes.resize(pScene->mNumMeshes);
+    textures.resize(pScene->mNumMaterials);
+
+    unsigned int numVertices = 0;
+    unsigned int numIndices  = 0;
+
+    countVerticesAndIndices(pScene, numVertices, numIndices);
+
+    reserveSpace(numVertices, numIndices);
+
+    initAllMeshes(pScene);
+
+    if(!initMaterials(pScene, filename)) {
+        std::cerr << "ERROR::MODEL: could not initialize materials" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    populateBuffers();
+
+    return true;
+}
+
+void Model::countVerticesAndIndices(const aiScene *pScene, unsigned int &numVertices, unsigned int &numIndices) {
+    for(unsigned int i = 0; i < meshes.size(); i++) {
+        meshes[i].materialIndex = pScene->mMeshes[i]->mMaterialIndex;
+        meshes[i].numIndices    = pScene->mMeshes[i]->mNumFaces * 3; // Flag: aiProcess_Triangulate -> alle Polygone werden zu Dreiecken, deswegen * 3
+        meshes[i].baseVertex    = numVertices;
+        meshes[i].baseIndex     = numIndices;
+
+        numVertices += pScene->mMeshes[i]->mNumVertices;
+        numIndices  += meshes[i].numIndices;
+    }
+}
+
+void Model::reserveSpace(unsigned int numVertices, unsigned int numIndices) {
+    positions.reserve(numVertices);
+    normals.reserve(numVertices);
+    texCoords.reserve(numVertices);
+    indices.reserve(numIndices);
+}
+
+void Model::initAllMeshes(const aiScene *pScene) {
+    for(unsigned int i = 0; i < meshes.size(); i++) {
+        const aiMesh* pAiMesh = pScene->mMeshes[i];
+        initSingleMesh(pAiMesh);
+    }
+}
+
+void Model::initSingleMesh(const aiMesh *pAiMesh) {
+    const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
+
+    for(unsigned int i = 0; i < pAiMesh->mNumVertices; i++) {
+        const aiVector3D& pPos      = pAiMesh->mVertices[i];
+        const aiVector3D& pNormal   = pAiMesh->mNormals[i];
+        const aiVector3D& pTexCoord = pAiMesh->HasTextureCoords(0) ? pAiMesh->mTextureCoords[0][i] : Zero3D;
+
+        positions.push_back(Vector3f(pPos.x, pPos.y, pPos.z));
+        normals.push_back(Vector3f(pNormal.x, pNormal.y, pNormal.z));
+        texCoords.push_back(Vector2f(pTexCoord.x, pTexCoord.y));
+
+        for(unsigned int i = 0; i < pAiMesh->mNumFaces; i++) {
+            const aiFace& face = pAiMesh->mFaces[i];
+            assert(face.mNumIndices == 3);
+            indices.push_back(face.mIndices[0]);
+            indices.push_back(face.mIndices[1]);
+            indices.push_back(face.mIndices[2]);
+        }
+    }
+}
+
+bool Model::initMaterials(const aiScene *pScene, const std::string& filename) {
+    std::string::size_type slashIndex = filename.find_last_of("/");
+    std::string dir;
+
+    if(slashIndex == std::string::npos)
+        dir = ".";
+    else if(slashIndex == 0)
+        dir = "/";
+    else
+        dir = filename.substr(0, slashIndex);
+
+    bool ret = true;
+
+    for(unsigned int i = 0; i < pScene->mNumMaterials; i++) {
+        const aiMaterial* pMaterial = pScene->mMaterials[i];
+
+        textures[i] = NULL;
+
+        if(pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
+            aiString path;
+
+            if(pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
+                std::string p(path.data);
+
+                if(p.substr(0, 2) == ".\\")
+                    p = p.substr(2, p.size() - 2);
+
+                std::string fullPath = dir + "/" + p;
+
+                textures[i] = new Texture(fullPath.c_str());
+
+                if(!textures[i]) {
+                    std::cerr << "ERROR::MODEL: error loading texture" << std::endl;
+                    ret = false;
+                }
+            }
+        }
+    }
+
+    return ret;
+}
+
+void Model::populateBuffers() {
+    glBindBuffer(GL_ARRAY_BUFFER, buffers[POS_VB]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(positions[0]) * positions.size(), &positions[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(POSITION_LOCATION);
+    glVertexAttribPointer(POSITION_LOCATION, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, buffers[TEXCOORD_VB]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(texCoords[0]) * texCoords.size(), &texCoords[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(TEX_COORD_LOCATION);
+    glVertexAttribPointer(TEX_COORD_LOCATION, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, buffers[NORMAL_VB]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(normals[0]) * normals.size(), &normals[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(NORMAL_LOCATION);
+    glVertexAttribPointer(NORMAL_LOCATION, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[INDEX_BUFFER]);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * indices.size(), &indices[0], GL_STATIC_DRAW);
 }
