@@ -20,6 +20,8 @@ void Shader::queryUniforms() {
     projectionLoc = getUniformLocation("projection");
     viewLoc = getUniformLocation("view");
     transformLoc = getUniformLocation("transform");
+    lightPosLoc = getUniformLocation("lightPos");
+    camPosLoc = getUniformLocation("camPos");
 }
 
 void Shader::activate(const Camera &camera) const {
@@ -34,6 +36,8 @@ void Shader::activate(const Camera &camera) const {
     setUniform(projectionLoc, camera.getProj());
     setUniform(viewLoc, camera.getView());
     setUniform(transformLoc, modelTransform);
+    setUniform(lightPosLoc, Vector3f(0.0f, -2.0f, 2.0f));
+    setUniform(camPosLoc, camera.getPosition());
 }
 
 void Shader::deactivate() const {
@@ -58,10 +62,10 @@ void Shader::setUniform(GLint locationId, const Matrix &value) const {
 
 GLint Shader::getUniformLocation(const char *uniform) const {
     GLint locationId = glGetUniformLocation(shaderProgramId, uniform);
-    if (locationId == -1) {
-        std::cerr << "ERROR::SHADER: can not find uniform location" << std::endl;
-        exit(EXIT_FAILURE);
-    }
+//    if (locationId == -1) {
+//        std::cerr << "ERROR::SHADER: can not find uniform location" << std::endl;
+//        exit(EXIT_FAILURE);
+//    }
     return locationId;
 }
 

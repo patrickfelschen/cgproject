@@ -159,14 +159,14 @@ void Model::initSingleMesh(const aiMesh *pAiMesh) {
         positions.push_back(Vector3f(pPos.x, pPos.y, pPos.z));
         normals.push_back(Vector3f(pNormal.x, pNormal.y, pNormal.z));
         texCoords.push_back(Vector2f(pTexCoord.x, pTexCoord.y));
+    }
 
-        for(unsigned int i = 0; i < pAiMesh->mNumFaces; i++) {
-            const aiFace& face = pAiMesh->mFaces[i];
-            assert(face.mNumIndices == 3);
-            indices.push_back(face.mIndices[0]);
-            indices.push_back(face.mIndices[1]);
-            indices.push_back(face.mIndices[2]);
-        }
+    for(unsigned int i = 0; i < pAiMesh->mNumFaces; i++) {
+        const aiFace& face = pAiMesh->mFaces[i];
+        assert(face.mNumIndices == 3);
+        indices.push_back(face.mIndices[0]);
+        indices.push_back(face.mIndices[1]);
+        indices.push_back(face.mIndices[2]);
     }
 }
 

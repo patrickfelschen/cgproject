@@ -53,7 +53,7 @@ void Camera::setUp(const Vector3f &newUp) {
     this->up = newUp;
 }
 
-Vector3f Camera::getPosition() {
+Vector3f Camera::getPosition() const {
     return position;
 }
 

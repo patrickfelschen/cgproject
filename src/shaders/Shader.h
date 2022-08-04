@@ -44,6 +44,8 @@ protected:
     GLint transformLoc = 0;
     GLint projectionLoc = 0;
     GLint viewLoc = 0;
+    GLint lightPosLoc = 0;
+    GLint camPosLoc = 0;
 
     void compile();
 

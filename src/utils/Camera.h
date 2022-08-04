@@ -18,7 +18,7 @@ public:
 
     void update(float deltaTime);
 
-    Vector3f getPosition();
+    Vector3f getPosition() const;
 
     Vector3f getTarget();
 
@@ -33,6 +33,8 @@ public:
     const Matrix &getView() const;
 
     const Matrix &getProj() const;
+
+
 
 private:
     GLFWwindow &window;
