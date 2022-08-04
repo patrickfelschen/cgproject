@@ -2,23 +2,31 @@
 #define __SimpleRayTracer__rgbimage__
 
 #include <iostream>
+
 class Color;
 
-class RGBImage
-{
+class RGBImage {
 public:
-    RGBImage( unsigned int Width, unsigned Height);
+    RGBImage(unsigned int Width, unsigned Height);
+
     ~RGBImage();
-    void setPixelColor( unsigned int x, unsigned int y, const Color& c);
-    const Color& getPixelColor( unsigned int x, unsigned int y) const;
-    bool saveToDisk( const char* Filename);
+
+    void setPixelColor(unsigned int x, unsigned int y, const Color &c);
+
+    const Color &getPixelColor(unsigned int x, unsigned int y) const;
+
+    bool saveToDisk(const char *Filename);
+
     unsigned int width() const;
+
     unsigned int height() const;
-    
-    static unsigned char convertColorChannel( float f);
-    static RGBImage& SobelFilter(RGBImage& dst, const RGBImage& src, float factor = 1.0f);
+
+    static unsigned char convertColorChannel(float f);
+
+    static RGBImage &SobelFilter(RGBImage &dst, const RGBImage &src, float factor = 1.0f);
+
 protected:
-    Color* m_Image;
+    Color *m_Image;
     unsigned int m_Height;
     unsigned int m_Width;
 };

@@ -24,7 +24,15 @@ void Shader::queryUniforms() {
     camPosLoc = getUniformLocation("camPos");
 }
 
-void Shader::activate(const Camera &camera) const {
+void Shader::setUniforms(const Camera &camera) {
+    setUniform(projectionLoc, camera.getProj());
+    setUniform(viewLoc, camera.getView());
+    setUniform(transformLoc, modelTransform);
+    setUniform(lightPosLoc, Vector3f(0.0f, -2.0f, 2.0f));
+    setUniform(camPosLoc, camera.getPosition());
+}
+
+void Shader::activate(const Camera &camera) {
     if (shaderProgramId <= 0) {
         std::cerr << "ERROR::SHADER: can not activate shader" << std::endl;
         exit(EXIT_FAILURE);
@@ -33,11 +41,7 @@ void Shader::activate(const Camera &camera) const {
     glUseProgram(shaderProgramId);
 
     // Uniform setzen
-    setUniform(projectionLoc, camera.getProj());
-    setUniform(viewLoc, camera.getView());
-    setUniform(transformLoc, modelTransform);
-    setUniform(lightPosLoc, Vector3f(0.0f, -2.0f, 2.0f));
-    setUniform(camPosLoc, camera.getPosition());
+    setUniforms(camera);
 }
 
 void Shader::deactivate() const {
@@ -62,10 +66,10 @@ void Shader::setUniform(GLint locationId, const Matrix &value) const {
 
 GLint Shader::getUniformLocation(const char *uniform) const {
     GLint locationId = glGetUniformLocation(shaderProgramId, uniform);
-//    if (locationId == -1) {
-//        std::cerr << "ERROR::SHADER: can not find uniform location" << std::endl;
-//        exit(EXIT_FAILURE);
-//    }
+    if (locationId == -1) {
+        std::cerr << "ERROR::SHADER: can not find uniform location" << std::endl;
+        exit(EXIT_FAILURE);
+    }
     return locationId;
 }
 

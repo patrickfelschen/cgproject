@@ -53,23 +53,18 @@ unsigned char RGBImage::convertColorChannel(float v) {
     return (unsigned char) (v * 255);
 }
 
-RGBImage& RGBImage::SobelFilter(RGBImage& dst, const RGBImage& src, float factor)
-{
+RGBImage &RGBImage::SobelFilter(RGBImage &dst, const RGBImage &src, float factor) {
     assert(dst.m_Height == src.m_Height, "height not equal");
     assert(dst.m_Width == src.m_Width, "width not equal");
-    int K[9] = { 1, 0, -1, 2, 0, -2, 1, 0, -1 };
+    int K[9] = {1, 0, -1, 2, 0, -2, 1, 0, -1};
 
     // Formel f�r Sobel Filter anwenden (Bildfilter zur Kantenhervorhebung)
-    for (unsigned int x = 0; x < src.width(); x++)
-    {
-        for (unsigned int y = 0; y < src.height(); y++)
-        {
+    for (unsigned int x = 0; x < src.width(); x++) {
+        for (unsigned int y = 0; y < src.height(); y++) {
             Color U;
             Color V;
-            for (unsigned int i = 0; i <= 2; i++)
-            {
-                for (unsigned int j = 0; j <= 2; j++)
-                {
+            for (unsigned int i = 0; i <= 2; i++) {
+                for (unsigned int j = 0; j <= 2; j++) {
                     U += src.getPixelColor(x - i - 1, y - j - 1) * K[i + 3 * j];
                     V += src.getPixelColor(x - i - 1, y - j - 1) * K[j + 3 * i];
                 }
@@ -151,9 +146,9 @@ bool RGBImage::saveToDisk(const char *Filename) {
         for (int x = 0; x < bih.biWidth; x++) /*Column loop forwards*/
         {
             /*compute some pixel values*/
-            unsigned char r = convertColorChannel(getPixelColor(x,y).R);
-            unsigned char g = convertColorChannel(getPixelColor(x,y).G);
-            unsigned char b = convertColorChannel(getPixelColor(x,y).B);
+            unsigned char r = convertColorChannel(getPixelColor(x, y).R);
+            unsigned char g = convertColorChannel(getPixelColor(x, y).G);
+            unsigned char b = convertColorChannel(getPixelColor(x, y).B);
 
             fwrite(&b, sizeof(b), 1, pFile);
             fwrite(&g, sizeof(g), 1, pFile);

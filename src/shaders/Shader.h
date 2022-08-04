@@ -18,7 +18,7 @@ public:
 
     virtual ~Shader();
 
-    void activate(const Camera &camera) const;
+    void activate(const Camera &camera);
 
     void deactivate() const;
 
@@ -47,11 +47,14 @@ protected:
     GLint lightPosLoc = 0;
     GLint camPosLoc = 0;
 
-    void compile();
-
     void queryUniforms();
 
     GLint getUniformLocation(const char *uniform) const;
+
+    void setUniforms(const Camera &camera);
+
+private:
+    void compile();
 };
 
 

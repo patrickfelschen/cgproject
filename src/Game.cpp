@@ -3,30 +3,33 @@
 //
 
 #include "Game.h"
+#include "entities/Orangutan.h"
+#include "entities/SquirrelMonkey.h"
 
 Game::Game(GLFWwindow &window, const Camera &camera) : window(window), camera(camera) {
     Shader shader = Shader("../assets/shaders/shader.vert", "../assets/shaders/shader.frag");
-    Model model = Model(shader);
 
-    model.loadMesh("../assets/Objects/Orangutan.obj");
+    Model *orangutanModel = new ObjectModel(shader, "../assets/Objects/Orangutan.obj");
+    Model *squirrelMonkeyModel = new ObjectModel(shader, "../assets/Objects/SquirrelMonkey.OBJ");
 
-    model.setPosition(Vector3f(0.0f, 0.0f, 3.0f));
-    model.setScale(0.1f);
+    Entity *monkey = new Orangutan(orangutanModel);
+    Entity *squirrelMonkey = new SquirrelMonkey(squirrelMonkeyModel);
 
-    models.push_back(model);
+    entities.push_back(monkey);
+    entities.push_back(squirrelMonkey);
 }
 
 void Game::update(float deltaTime) {
 
     camera.update(deltaTime);
 
-    for (auto &model: models) {
-        model.update(deltaTime);
+    for (Entity *entity: entities) {
+        entity->update(deltaTime);
     }
 }
 
 void Game::render() {
-    for (auto &model: models) {
-        model.render(camera);
+    for (Entity *entity: entities) {
+        entity->render(camera);
     }
 }

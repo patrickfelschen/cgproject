@@ -15,7 +15,8 @@ void processInput(GLFWwindow *window);
 
 void glfwErrorCallback(int, const char *errorMsg);
 
-void GLAPIENTRY glErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
+void GLAPIENTRY glErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
+                                const GLchar *message, const void *userParam);
 
 const unsigned int SCR_WIDTH = 960;
 const unsigned int SCR_HEIGHT = 540;
@@ -98,6 +99,7 @@ void glfwErrorCallback(int, const char *errorMsg) {
     std::cerr << "ERROR::GLFW: " << errorMsg << std::endl;
 }
 
-void GLAPIENTRY glErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
+void GLAPIENTRY glErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
+                                const GLchar *message, const void *userParam) {
     std::cerr << message << std::endl;
 }

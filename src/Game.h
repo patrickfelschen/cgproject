@@ -8,8 +8,9 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <vector>
-#include "models/Model.h"
+#include "models/ObjectModel.h"
 #include "utils/Camera.h"
+#include "entities/Entity.h"
 
 class Game {
 public:
@@ -24,7 +25,7 @@ public:
 private:
     GLFWwindow &window;
     Camera camera;
-    std::vector<Model> models;
+    std::vector<Entity *> entities;
 };
 
 

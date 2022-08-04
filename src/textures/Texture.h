@@ -12,17 +12,25 @@
 class Texture {
 private:
     GLuint texId;
-    RGBImage* pImage = nullptr;
+    RGBImage *pImage = nullptr;
     int currentTextureUnit;
+
     bool isValid() const;
-    bool load(const char* filename);
+
+    bool load(const char *filename);
+
     void release();
+
 protected:
-    RGBImage* createImage(unsigned char* data, unsigned int width, unsigned int height);
+    RGBImage *createImage(unsigned char *data, unsigned int width, unsigned int height);
+
 public:
     Texture();
-    Texture(const char* filename);
+
+    Texture(const char *filename);
+
     void activate(int slot);
+
     void deactivate();
 };
 
