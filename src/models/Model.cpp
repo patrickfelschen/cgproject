@@ -10,17 +10,6 @@ Model::Model(const Shader &shader) : shader(shader) {
 }
 
 void Model::update(float deltaTime) {
-//    Matrix scale = Matrix().identity();
-//    scale.scale(0.2f);
-//
-//    Matrix rotation = Matrix().identity();
-//    rotation.rotationY(0.0f);
-//
-//    Matrix translation = Matrix().identity();
-//    translation.translation(0.0f, 0.0f, 0.0f);
-//
-//    Matrix worldTransformation = translation * rotation * scale;
-
     shader.setModelTransform(transform);
 }
 
@@ -29,18 +18,18 @@ void Model::render(const Camera &camera) {
 
     glBindVertexArray(VAO);
 
-    for(unsigned int i = 0; i < meshes.size(); i++) {
+    for (unsigned int i = 0; i < meshes.size(); i++) {
         unsigned int materialIndex = meshes[i].materialIndex;
 
         assert(materialIndex < textures.size());
 
-        if(textures[materialIndex])
-           textures[materialIndex]->activate(i);
+        if (textures[materialIndex])
+            textures[materialIndex]->activate(i);
 
         glDrawElementsBaseVertex(GL_TRIANGLES,
                                  meshes[i].numIndices,
                                  GL_UNSIGNED_INT,
-                                 (void*)(sizeof(unsigned int) * meshes[i].baseIndex),
+                                 (void *) (sizeof(unsigned int) * meshes[i].baseIndex),
                                  meshes[i].baseVertex);
 
         textures[materialIndex]->deactivate();
@@ -73,9 +62,9 @@ bool Model::loadMesh(const char *filename) {
     bool ret = false;
     Assimp::Importer importer;
 
-    const aiScene* pScene = importer.ReadFile(filename, ASSIMP_LOAD_FLAGS);
+    const aiScene *pScene = importer.ReadFile(filename, ASSIMP_LOAD_FLAGS);
 
-    if(!pScene) {
+    if (!pScene) {
         std::cerr << "ERROR::MODEL: " << importer.GetErrorString() << std::endl;
         exit(EXIT_FAILURE);
     }
@@ -90,10 +79,7 @@ bool Model::loadMesh(const char *filename) {
 void Model::clear() {
     std::destroy(textures.begin(), textures.end());
 
-//    if(buffers[0] != 0)
-//        glDeleteBuffers(ARRAY_SIZE_IN_ELEMENTS)
-
-    if(VAO != 0) {
+    if (VAO != 0) {
         glDeleteVertexArrays(1, &VAO);
         VAO = 0;
     }
@@ -104,7 +90,7 @@ bool Model::initFromScene(const aiScene *pScene, const char *filename) {
     textures.resize(pScene->mNumMaterials);
 
     unsigned int numVertices = 0;
-    unsigned int numIndices  = 0;
+    unsigned int numIndices = 0;
 
     countVerticesAndIndices(pScene, numVertices, numIndices);
 
@@ -112,7 +98,7 @@ bool Model::initFromScene(const aiScene *pScene, const char *filename) {
 
     initAllMeshes(pScene);
 
-    if(!initMaterials(pScene, filename)) {
+    if (!initMaterials(pScene, filename)) {
         std::cerr << "ERROR::MODEL: could not initialize materials" << std::endl;
         exit(EXIT_FAILURE);
     }
@@ -123,14 +109,15 @@ bool Model::initFromScene(const aiScene *pScene, const char *filename) {
 }
 
 void Model::countVerticesAndIndices(const aiScene *pScene, unsigned int &numVertices, unsigned int &numIndices) {
-    for(unsigned int i = 0; i < meshes.size(); i++) {
+    for (unsigned int i = 0; i < meshes.size(); i++) {
         meshes[i].materialIndex = pScene->mMeshes[i]->mMaterialIndex;
-        meshes[i].numIndices    = pScene->mMeshes[i]->mNumFaces * 3; // Flag: aiProcess_Triangulate -> alle Polygone werden zu Dreiecken, deswegen * 3
-        meshes[i].baseVertex    = numVertices;
-        meshes[i].baseIndex     = numIndices;
+        meshes[i].numIndices = pScene->mMeshes[i]->mNumFaces *
+                               3; // Flag: aiProcess_Triangulate -> alle Polygone werden zu Dreiecken, deswegen * 3
+        meshes[i].baseVertex = numVertices;
+        meshes[i].baseIndex = numIndices;
 
         numVertices += pScene->mMeshes[i]->mNumVertices;
-        numIndices  += meshes[i].numIndices;
+        numIndices += meshes[i].numIndices;
     }
 }
 
@@ -142,8 +129,8 @@ void Model::reserveSpace(unsigned int numVertices, unsigned int numIndices) {
 }
 
 void Model::initAllMeshes(const aiScene *pScene) {
-    for(unsigned int i = 0; i < meshes.size(); i++) {
-        const aiMesh* pAiMesh = pScene->mMeshes[i];
+    for (unsigned int i = 0; i < meshes.size(); i++) {
+        const aiMesh *pAiMesh = pScene->mMeshes[i];
         initSingleMesh(pAiMesh);
     }
 }
@@ -151,18 +138,18 @@ void Model::initAllMeshes(const aiScene *pScene) {
 void Model::initSingleMesh(const aiMesh *pAiMesh) {
     const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
 
-    for(unsigned int i = 0; i < pAiMesh->mNumVertices; i++) {
-        const aiVector3D& pPos      = pAiMesh->mVertices[i];
-        const aiVector3D& pNormal   = pAiMesh->mNormals[i];
-        const aiVector3D& pTexCoord = pAiMesh->HasTextureCoords(0) ? pAiMesh->mTextureCoords[0][i] : Zero3D;
+    for (unsigned int i = 0; i < pAiMesh->mNumVertices; i++) {
+        const aiVector3D &pPos = pAiMesh->mVertices[i];
+        const aiVector3D &pNormal = pAiMesh->mNormals[i];
+        const aiVector3D &pTexCoord = pAiMesh->HasTextureCoords(0) ? pAiMesh->mTextureCoords[0][i] : Zero3D;
 
         positions.push_back(Vector3f(pPos.x, pPos.y, pPos.z));
         normals.push_back(Vector3f(pNormal.x, pNormal.y, pNormal.z));
         texCoords.push_back(Vector2f(pTexCoord.x, pTexCoord.y));
     }
 
-    for(unsigned int i = 0; i < pAiMesh->mNumFaces; i++) {
-        const aiFace& face = pAiMesh->mFaces[i];
+    for (unsigned int i = 0; i < pAiMesh->mNumFaces; i++) {
+        const aiFace &face = pAiMesh->mFaces[i];
         assert(face.mNumIndices == 3);
         indices.push_back(face.mIndices[0]);
         indices.push_back(face.mIndices[1]);
@@ -170,38 +157,38 @@ void Model::initSingleMesh(const aiMesh *pAiMesh) {
     }
 }
 
-bool Model::initMaterials(const aiScene *pScene, const std::string& filename) {
+bool Model::initMaterials(const aiScene *pScene, const std::string &filename) {
     std::string::size_type slashIndex = filename.find_last_of("/");
     std::string dir;
 
-    if(slashIndex == std::string::npos)
+    if (slashIndex == std::string::npos)
         dir = ".";
-    else if(slashIndex == 0)
+    else if (slashIndex == 0)
         dir = "/";
     else
         dir = filename.substr(0, slashIndex);
 
     bool ret = true;
 
-    for(unsigned int i = 0; i < pScene->mNumMaterials; i++) {
-        const aiMaterial* pMaterial = pScene->mMaterials[i];
+    for (unsigned int i = 0; i < pScene->mNumMaterials; i++) {
+        const aiMaterial *pMaterial = pScene->mMaterials[i];
 
         textures[i] = NULL;
 
-        if(pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
+        if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
             aiString path;
 
-            if(pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
+            if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
                 std::string p(path.data);
 
-                if(p.substr(0, 2) == ".\\")
+                if (p.substr(0, 2) == ".\\")
                     p = p.substr(2, p.size() - 2);
 
                 std::string fullPath = dir + "/" + p;
 
                 textures[i] = new Texture(fullPath.c_str());
 
-                if(!textures[i]) {
+                if (!textures[i]) {
                     std::cerr << "ERROR::MODEL: error loading texture" << std::endl;
                     ret = false;
                 }
