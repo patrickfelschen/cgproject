@@ -1,5 +1,6 @@
 //
 // Created by Patrick on 02.08.2022.
+// https://youtu.be/gDtHL6hy9R8
 //
 
 #include "Shader.h"
@@ -18,8 +19,6 @@ void Shader::setUniforms(const Camera &camera) {
     setUniform("projection", camera.getProj());
     setUniform("view", camera.getView());
     setUniform("transform", modelTransform);
-    setUniform("lightPos", Vector3f(0.0f, -2.0f, 2.0f));
-    setUniform("camPos", camera.getPosition());
 }
 
 void Shader::activate(const Camera &camera) {

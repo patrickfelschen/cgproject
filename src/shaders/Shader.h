@@ -23,14 +23,6 @@ public:
 
     void deactivate() const;
 
-    void setUniform(const char *name, int value);
-
-    void setUniform(const char *name, float value);
-
-    void setUniform(const char *name, const Vector3f &value);
-
-    void setUniform(const char *name, const Matrix &value);
-
     void setModelTransform(const Matrix &modelTransform);
 
 protected:
@@ -38,7 +30,15 @@ protected:
 
     GLint getUniformLocation(const char *name);
 
-    void setUniforms(const Camera &camera);
+    virtual void setUniforms(const Camera &camera);
+
+    void setUniform(const char *name, int value);
+
+    void setUniform(const char *name, float value);
+
+    void setUniform(const char *name, const Vector3f &value);
+
+    void setUniform(const char *name, const Matrix &value);
 
 private:
     // ID des shaders

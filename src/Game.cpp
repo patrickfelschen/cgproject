@@ -5,11 +5,12 @@
 #include "Game.h"
 #include "entities/Orangutan.h"
 #include "entities/SquirrelMonkey.h"
+#include "shaders/PhongShader.h"
 
 Game::Game(GLFWwindow &window, const Camera &camera) : window(window), camera(camera) {
-    Shader shader = Shader("../assets/shaders/shader.vert", "../assets/shaders/shader.frag");
+    Shader *shader = new PhongShader();
 
-    Model *orangutanModel = new ObjectModel(shader, "../assets/Objects/Orangutan.obj");
+    Model *orangutanModel = new ObjectModel(shader, "../assets/Objects/scene/scene.obj");
     Model *squirrelMonkeyModel = new ObjectModel(shader, "../assets/Objects/SquirrelMonkey.OBJ");
 
     Entity *monkey = new Orangutan(orangutanModel);

@@ -12,7 +12,7 @@
 
 class Model {
 public:
-    explicit Model(const Shader &shader);
+    explicit Model(Shader *shader);
 
     virtual ~Model();
 
@@ -31,7 +31,7 @@ public:
     void rotateZ(float angle);
 
 protected:
-    Shader shader;
+    Shader *shader;
 private:
     Matrix translation;
     Matrix rotationX;

@@ -52,7 +52,7 @@ struct BasicMeshEntry {
 
 class ObjectModel : public Model {
 public:
-    explicit ObjectModel(const Shader &shader, const char *filename);
+    explicit ObjectModel(Shader *shader, const char *filename);
 
     ~ObjectModel() override = default;
 

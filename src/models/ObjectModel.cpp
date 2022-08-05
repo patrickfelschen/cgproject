@@ -5,7 +5,7 @@
 #include "ObjectModel.h"
 #include "../utils/Vertex.h"
 
-ObjectModel::ObjectModel(const Shader &shader, const char *filename) : Model(shader) {
+ObjectModel::ObjectModel(Shader *shader, const char *filename) : Model(shader) {
     loadMesh(filename);
 }
 
@@ -14,7 +14,7 @@ void ObjectModel::update(float deltaTime) {
 }
 
 void ObjectModel::render(const Camera &camera) {
-    shader.activate(camera);
+    shader->activate(camera);
 
     glBindVertexArray(VAO);
 
@@ -39,7 +39,7 @@ void ObjectModel::render(const Camera &camera) {
     }
 
     glBindVertexArray(0);
-    shader.deactivate();
+    shader->deactivate();
 }
 
 bool ObjectModel::loadMesh(const char *filename) {
