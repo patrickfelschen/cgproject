@@ -7,8 +7,13 @@ layout (location = 2) in vec3 normal;
 uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 transform;
+uniform vec3 acolor;
+uniform vec3 dcolor;
+uniform vec3 scolor;
 
-out vec4 color;
+out vec4 ambientColor;
+out vec4 diffuseColor;
+out vec4 specularColor;
 out vec2 texCoord;
 out vec3 currentPos;
 out vec3 outNormal;
@@ -16,8 +21,9 @@ out vec3 outNormal;
 void main() {
     currentPos = vec3(transform * vec4(pos, 1.0f));
     gl_Position = projection * view * transform  * vec4(pos, 1.0);
-    color = vec4(1.0f, 1.0f, 1.0f, 0.5f);
     texCoord = texCoords;
     outNormal = normal;
-    color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    ambientColor = vec4(acolor, 1);
+    diffuseColor = vec4(dcolor, 1);
+    specularColor = vec4(scolor, 1);
 }

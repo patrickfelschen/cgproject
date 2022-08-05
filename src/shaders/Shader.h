@@ -25,10 +25,10 @@ public:
 
     void setModelTransform(const Matrix &modelTransform);
 
+    GLint getUniformLocation(const char *name);
+
 protected:
     Matrix modelTransform;
-
-    GLint getUniformLocation(const char *name);
 
     virtual void setUniforms(const Camera &camera);
 

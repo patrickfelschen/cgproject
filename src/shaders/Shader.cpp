@@ -60,7 +60,7 @@ GLint Shader::getUniformLocation(const char *name) {
 
     GLint locationId = glGetUniformLocation(id, name);
     if (locationId == -1) {
-        std::cerr << "ERROR::SHADER: can not find uniform location" << std::endl;
+        std::cerr << "ERROR::SHADER: can not find uniform location: " << name << std::endl;
         exit(EXIT_FAILURE);
     }
     uniformLocationCache[name] = locationId;

@@ -50,6 +50,22 @@ struct BasicMeshEntry {
     unsigned int materialIndex;
 };
 
+struct Material {
+    Material() {
+        pDiffuse = nullptr;
+        pSpecular = nullptr;
+        ambientColor = Color(1.0f, 1.0f, 1.0f);
+        diffuseColor = Color(1.0f, 1.0f, 1.0f);
+        specularColor = Color(1.0f, 1.0f, 1.0f);
+    }
+
+    Texture* pDiffuse;
+    Texture* pSpecular;
+    Color ambientColor;
+    Color diffuseColor;
+    Color specularColor;
+};
+
 class ObjectModel : public Model {
 public:
     explicit ObjectModel(Shader *shader, const char *filename);
@@ -63,10 +79,16 @@ public:
 private:
     GLuint VAO = 0;
 
+    bool useTexture = false;
+    GLuint useTextureLoc    = 0;
+    GLuint diffuseColorLoc  = 0;
+    GLuint specularColorLoc = 0;
+    GLuint ambientColorLoc  = 0;
+
     GLuint buffers[NUM_BUFFERS] = {0};
 
     std::vector<BasicMeshEntry> meshes;
-    std::vector<Texture *> textures;
+    std::vector<Material> materials;
 
     std::vector<Vector3f> positions;
     std::vector<Vector3f> normals;
@@ -89,7 +111,17 @@ private:
 
     bool initMaterials(const aiScene *pScene, const std::string &filename);
 
+    void loadTextures(const std::string& dir, const aiMaterial* pMaterial, int index);
+
+    void loadDiffuseTexture(const std::string& dir, const aiMaterial* pMaterial, int index);
+
+    void loadSpecularTexture(const std::string& dir, const aiMaterial* pMaterial, int index);
+
+    void loadColors(const aiMaterial* pMaterial, int index);
+
     void populateBuffers();
+
+
 };
 
 

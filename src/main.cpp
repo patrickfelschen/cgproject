@@ -67,21 +67,20 @@ int main(int argc, char **argv) {
     Camera camera(*window);
     Game game(*window, camera);
 
-    {
-        double lastTime = 0;
-        while (!glfwWindowShouldClose(window)) {
-            double now = glfwGetTime();
-            double deltaTime = now - lastTime;
-            lastTime = now;
-            processInput(window);
-            glfwPollEvents();
-            // Render start
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            game.update((float) deltaTime);
-            game.render();
-            // Render end
-            glfwSwapBuffers(window);
-        }
+    double lastTime = 0;
+    while (!glfwWindowShouldClose(window)) {
+        double now = glfwGetTime();
+        double deltaTime = now - lastTime;
+        lastTime = now;
+        processInput(window);
+        glfwPollEvents();
+        // Render start
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearColor(0.2, 0.2, 0.2, 1.0f);
+        game.update((float) deltaTime);
+        game.render();
+        // Render end
+        glfwSwapBuffers(window);
     }
 
     glfwTerminate();
