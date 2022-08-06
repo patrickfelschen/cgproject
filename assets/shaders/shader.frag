@@ -27,6 +27,8 @@ float sat(in float a) {
     return clamp(a, 0.0, 1.0);
 }
 
+bool blinn = true;
+
 void main() {
     vec3 lightColor = vec3(1.0f, 1.0f, 1.0f);
     Light light;
@@ -45,11 +47,19 @@ void main() {
     vec4 diffuse = vec4(light.diffuse, 1.0f) * (diff * diffuseColor);
 
     // specular
+    float spec;
     vec3 viewDir = normalize(camPos - currentPos);
-    vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0f), shininess);
+    if(blinn) {
+        vec3 halfwayDir = normalize(lightDir + viewDir);
+        spec = pow(max(dot(norm, halfwayDir), 0.0f), shininess);
+    }
+    else {
+        vec3 reflectDir = reflect(-lightDir, norm);
+        spec = pow(max(dot(viewDir, reflectDir), 0.0f), shininess);
+    }
     vec4 specular = vec4(light.specular, 1.0f) * (spec * specularColor);
 
     fragColor = (ambient + diffuse + specular) * diffTex;
+
 
 }
