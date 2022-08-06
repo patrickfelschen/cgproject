@@ -6,12 +6,6 @@
 #include "../utils/Vertex.h"
 ObjectModel::ObjectModel(Shader *shader, const char *filename) : Model(shader) {
     loadMesh(filename);
-    ambientColorLoc = shader->getUniformLocation("acolor");
-    diffuseColorLoc = shader->getUniformLocation("dcolor");
-    specularColorLoc = shader->getUniformLocation("scolor");
-    useTextureLoc = shader->getUniformLocation("useTexture");
-    shininessLoc = shader->getUniformLocation("shine");
-
 }
 
 void ObjectModel::update(float deltaTime) {
@@ -37,12 +31,11 @@ void ObjectModel::render(const Camera &camera) {
             materials[materialIndex].pSpecular->activate(1);
         }
 
-        glUniform3f(ambientColorLoc, materials[materialIndex].ambientColor.R, materials[materialIndex].ambientColor.G, materials[materialIndex].ambientColor.B);
-        glUniform3f(diffuseColorLoc, materials[materialIndex].diffuseColor.R, materials[materialIndex].diffuseColor.G, materials[materialIndex].diffuseColor.B);
-        glUniform3f(specularColorLoc, materials[materialIndex].specularColor.R, materials[materialIndex].specularColor.G, materials[materialIndex].specularColor.B);
-        glUniform1f(shininessLoc, materials[materialIndex].shininess);
-
-        glUniform1i(useTextureLoc, useTexture);
+        shader->setUniform("material.ambientColor", materials[materialIndex].ambientColor.R, materials[materialIndex].ambientColor.G, materials[materialIndex].ambientColor.B);
+        shader->setUniform("material.diffuseColor", materials[materialIndex].diffuseColor.R, materials[materialIndex].diffuseColor.G, materials[materialIndex].diffuseColor.B);
+        shader->setUniform("material.specularColor", materials[materialIndex].specularColor.R, materials[materialIndex].specularColor.G, materials[materialIndex].specularColor.B);
+        shader->setUniform("material.shininess", materials[materialIndex].shininess);
+        shader->setUniform("useTexture", useTexture);
 
         glDrawElementsBaseVertex(
                 GL_TRIANGLES,

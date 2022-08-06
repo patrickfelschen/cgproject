@@ -25,20 +25,22 @@ public:
 
     void setModelTransform(const Matrix &modelTransform);
 
-    GLint getUniformLocation(const char *name);
-
-protected:
-    Matrix modelTransform;
-
-    virtual void setUniforms(const Camera &camera);
-
-    void setUniform(const char *name, int value);
-
     void setUniform(const char *name, float value);
 
     void setUniform(const char *name, const Vector3f &value);
 
+    void setUniform(const char *name, const float &f1, const float &f2, const float &f3);
+
+    void setUniform(const char *name, int value);
+
     void setUniform(const char *name, const Matrix &value);
+
+protected:
+    Matrix modelTransform;
+
+    GLint getUniformLocation(const char *name);
+
+    virtual void setUniforms(const Camera &camera);
 
 private:
     // ID des shaders

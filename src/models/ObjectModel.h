@@ -82,11 +82,6 @@ private:
     GLuint VAO = 0;
 
     bool useTexture = false;
-    GLuint useTextureLoc    = 0;
-    GLuint diffuseColorLoc  = 0;
-    GLuint specularColorLoc = 0;
-    GLuint ambientColorLoc  = 0;
-    GLuint shininessLoc     = 0;
 
     GLuint buffers[NUM_BUFFERS] = {0};
 

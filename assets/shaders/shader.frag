@@ -8,18 +8,22 @@ struct Light {
     vec3 specular;
 };
 
-in vec4 ambientColor;
-in vec4 diffuseColor;
-in vec4 specularColor;
+struct Material {
+    vec3 ambientColor;
+    vec3 diffuseColor;
+    vec3 specularColor;
+    float shininess;
+};
+
 in vec2 texCoord;
 in vec3 currentPos;
 in vec3 outNormal;
-in float shininess;
 
 out vec4 fragColor;
 
 uniform sampler2D tex0;
 uniform sampler2D tex1;
+uniform Material material;
 uniform vec3 lightPos;
 uniform vec3 camPos;
 uniform bool useTexture;
@@ -39,28 +43,30 @@ void main() {
 
     vec4 diffTex = useTexture ? texture(tex0, texCoord) : vec4(1.0f, 1.0f, 1.0f, 1.0f);
     // ambient
-    vec4 ambient = vec4(light.ambient, 1.0f) * ambientColor;
+    vec3 ambient = light.ambient * material.ambientColor;
 
     // diffuse
     vec3 norm = normalize(outNormal);
     vec3 lightDir = normalize(lightPos - currentPos);
     float diff = max(dot(norm, lightDir), 0.0f);
-    vec4 diffuse = vec4(light.diffuse, 1.0f) * (diff * diffuseColor);
+    vec3 diffuse = light.diffuse * (diff * material.diffuseColor);
 
     // specular
     float spec;
     vec3 viewDir = normalize(camPos - currentPos);
     if(blinn) {
         vec3 halfwayDir = normalize(lightDir + viewDir);
-        spec = pow(max(dot(norm, halfwayDir), 0.0f), shininess);
+        spec = pow(max(dot(norm, halfwayDir), 0.0f), material.shininess);
     }
     else {
         vec3 reflectDir = reflect(-lightDir, norm);
-        spec = pow(max(dot(viewDir, reflectDir), 0.0f), shininess);
+        spec = pow(max(dot(viewDir, reflectDir), 0.0f), material.shininess);
     }
-    vec4 specular = vec4(light.specular, 1.0f) * (spec * specularColor);
+    vec3 specular = light.specular * (spec * material.specularColor);
 
-    fragColor = (ambient + diffuse + specular) * diffTex;
+    vec4 result = vec4((ambient + diffuse + specular), 1.0f);
+
+    fragColor = result * diffTex;
 
 
 }
