@@ -10,6 +10,7 @@ ObjectModel::ObjectModel(Shader *shader, const char *filename) : Model(shader) {
     diffuseColorLoc = shader->getUniformLocation("dcolor");
     specularColorLoc = shader->getUniformLocation("scolor");
     useTextureLoc = shader->getUniformLocation("useTexture");
+    shininessLoc = shader->getUniformLocation("shine");
 
 }
 
@@ -39,6 +40,7 @@ void ObjectModel::render(const Camera &camera) {
         glUniform3f(ambientColorLoc, materials[materialIndex].ambientColor.R, materials[materialIndex].ambientColor.G, materials[materialIndex].ambientColor.B);
         glUniform3f(diffuseColorLoc, materials[materialIndex].diffuseColor.R, materials[materialIndex].diffuseColor.G, materials[materialIndex].diffuseColor.B);
         glUniform3f(specularColorLoc, materials[materialIndex].specularColor.R, materials[materialIndex].specularColor.G, materials[materialIndex].specularColor.B);
+        glUniform1f(shininessLoc, materials[materialIndex].shininess);
 
         glUniform1i(useTextureLoc, useTexture);
 
@@ -253,6 +255,7 @@ void ObjectModel::loadColors(const aiMaterial *pMaterial, int index) {
     aiColor3D ambientColor(0.0f, 0.0f, 0.0f);
     aiColor3D diffuseColor(0.0f, 0.0f, 0.0f);
     aiColor3D specularColor(0.0f, 0.0f, 0.0f);
+    float shininess;
 
 
     if(pMaterial->Get(AI_MATKEY_COLOR_AMBIENT, ambientColor) == AI_SUCCESS) {
@@ -280,6 +283,13 @@ void ObjectModel::loadColors(const aiMaterial *pMaterial, int index) {
     }
     else {
         materials[index].specularColor = Color(1.0f, 1.0f, 1.0f);
+    }
+
+    if(aiGetMaterialFloat(pMaterial, AI_MATKEY_SHININESS, &shininess) == AI_SUCCESS) {
+        materials[index].shininess = shininess;
+    }
+    else {
+        materials[index].shininess = 20.0f;
     }
 }
 

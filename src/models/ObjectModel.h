@@ -57,6 +57,7 @@ struct Material {
         ambientColor = Color(1.0f, 1.0f, 1.0f);
         diffuseColor = Color(1.0f, 1.0f, 1.0f);
         specularColor = Color(1.0f, 1.0f, 1.0f);
+        shininess = 0;
     }
 
     Texture* pDiffuse;
@@ -64,6 +65,7 @@ struct Material {
     Color ambientColor;
     Color diffuseColor;
     Color specularColor;
+    float shininess;
 };
 
 class ObjectModel : public Model {
@@ -84,6 +86,7 @@ private:
     GLuint diffuseColorLoc  = 0;
     GLuint specularColorLoc = 0;
     GLuint ambientColorLoc  = 0;
+    GLuint shininessLoc     = 0;
 
     GLuint buffers[NUM_BUFFERS] = {0};
 

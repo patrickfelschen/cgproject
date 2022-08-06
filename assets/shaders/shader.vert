@@ -10,6 +10,7 @@ uniform mat4 transform;
 uniform vec3 acolor;
 uniform vec3 dcolor;
 uniform vec3 scolor;
+uniform float shine;
 
 out vec4 ambientColor;
 out vec4 diffuseColor;
@@ -17,6 +18,7 @@ out vec4 specularColor;
 out vec2 texCoord;
 out vec3 currentPos;
 out vec3 outNormal;
+out float shininess;
 
 void main() {
     currentPos = vec3(transform * vec4(pos, 1.0f));
@@ -26,4 +28,5 @@ void main() {
     ambientColor = vec4(acolor, 1);
     diffuseColor = vec4(dcolor, 1);
     specularColor = vec4(scolor, 1);
+    shininess = shine;
 }

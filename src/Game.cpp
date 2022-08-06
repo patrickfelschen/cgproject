@@ -10,23 +10,17 @@
 Game::Game(GLFWwindow &window, const Camera &camera) : window(window), camera(camera) {
     Shader *shader = new PhongShader();
 
-    Model *orangutanModel = new ObjectModel(shader, "../assets/Objects/Orangutan.obj");
-    Model *landscape = new ObjectModel(shader, "../assets/Objects/Terrain/model.obj");
-    Model *manmodel = new ObjectModel(shader, "../assets/Objects/IronMan/IronMan.obj");
+    Model *nanosuitModel = new ObjectModel(shader, "../assets/Objects/Nanosuit/TTURDKN8VOY7P4PVHSULB36RF.obj");
+    Model *gunModel = new ObjectModel(shader, "../assets/Objects/Gun/ZE8FK2UU5PF8Y5F5777X34XII.obj");
 
-    Entity *monkey = new Orangutan(orangutanModel);
-    Entity *terrain = new SquirrelMonkey(landscape);
-    Entity *ironman = new Orangutan(manmodel);
+    Entity *nanosuit = new Orangutan(nanosuitModel);
+    Entity *gun = new SquirrelMonkey(gunModel);
 
-    dynamic_cast<PhongShader*>(shader)->moveLight(Vector3f(2.0f, 5.0f, 0.0f));
+    gun->setScaling(1.0f);
 
-    ironman->setPosition(0.0f, 0.0f, 0.0f);
-    ironman->setScaling(0.001f);
+    entities.push_back(gun);
+    entities.push_back(nanosuit);
 
-//
-//    entities.push_back(monkey);
-//    entities.push_back(terrain);
-    entities.push_back(ironman);
 }
 
 void Game::update(float deltaTime) {
