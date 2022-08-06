@@ -1,4 +1,5 @@
 // https://learnopengl.com/Lighting/Basic-Lighting
+// https://learnopengl.com/Advanced-Lighting/Advanced-Lighting
 #version 460 core
 
 struct Light {
