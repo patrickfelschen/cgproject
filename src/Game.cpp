@@ -10,16 +10,16 @@
 Game::Game(GLFWwindow &window, const Camera &camera) : window(window), camera(camera) {
     Shader *shader = new PhongShader();
 
-    Model *nanosuitModel = new ObjectModel(shader, "../assets/Objects/Nanosuit/TTURDKN8VOY7P4PVHSULB36RF.obj");
+//    Model *nanosuitModel = new ObjectModel(shader, "../assets/Objects/Nanosuit/TTURDKN8VOY7P4PVHSULB36RF.obj");
     Model *gunModel = new ObjectModel(shader, "../assets/Objects/Gun/ZE8FK2UU5PF8Y5F5777X34XII.obj");
 
-    Entity *nanosuit = new Orangutan(nanosuitModel);
+//    Entity *nanosuit = new Orangutan(nanosuitModel);
     Entity *gun = new SquirrelMonkey(gunModel);
 
     gun->setScaling(1.0f);
 
     entities.push_back(gun);
-    entities.push_back(nanosuit);
+//    entities.push_back(nanosuit);
 
 }
 
