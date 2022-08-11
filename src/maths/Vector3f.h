@@ -39,6 +39,7 @@ public:
     float lengthSquared() const;
 
     Vector3f reflection(const Vector3f &normal) const;
+
 };
 
 #endif /* defined(__SimpleRayTracer__Vector3f__) */

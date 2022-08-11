@@ -16,9 +16,9 @@ void Shader::compile() {
 }
 
 void Shader::setUniforms(const Camera &camera) {
-    setUniform("projection", camera.getProj());
-    setUniform("view", camera.getView());
-    setUniform("transform", modelTransform);
+    setUniform("uProjection", camera.getProj());
+    setUniform("uView", camera.getView());
+    setUniform("uTransform", modelTransform);
 }
 
 void Shader::activate(const Camera &camera) {

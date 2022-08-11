@@ -12,11 +12,13 @@
 
 class Vertex {
 public:
+    Vertex();
+
+    virtual ~Vertex();
+
     Vector3f pos;
     Vector2f texCoords;
     Vector3f normal;
-
-    Vertex(const Vector3f &pos, const Vector2f &texCoords, const Vector3f &normal);
 };
 
 

@@ -5,7 +5,6 @@
 #include "Orangutan.h"
 
 Orangutan::Orangutan(Model *model) : Entity(model) {
-    Entity::setPosition(0, 0, 2);
 }
 
 Orangutan::~Orangutan() = default;

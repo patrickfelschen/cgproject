@@ -15,8 +15,4 @@ void PhongShader::setUniforms(const Camera &camera) {
     setUniform("camPos", camera.getPosition());
 }
 
-void PhongShader::moveLight(const Vector3f &v) {
-    lightPos = v;
-}
-
 PhongShader::~PhongShader() = default;
