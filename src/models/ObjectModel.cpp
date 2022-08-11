@@ -37,6 +37,8 @@ void ObjectModel::render(const Camera &camera) {
         shader->setUniform("material.shininess", materials[materialIndex].shininess);
         shader->setUniform("useTexture", useTexture);
 
+        Model::render(camera);
+
         glDrawElementsBaseVertex(
                 GL_TRIANGLES,
                 meshes[i].numIndices,

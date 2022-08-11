@@ -6,20 +6,18 @@
 #include "entities/Orangutan.h"
 #include "entities/SquirrelMonkey.h"
 #include "shaders/PhongShader.h"
-
+Entity *gun;
+Entity *garage;
 Game::Game(GLFWwindow &window, const Camera &camera) : window(window), camera(camera) {
-    Shader *shader = new PhongShader();
 
-//    Model *nanosuitModel = new ObjectModel(shader, "../assets/Objects/Nanosuit/TTURDKN8VOY7P4PVHSULB36RF.obj");
-    Model *gunModel = new ObjectModel(shader, "../assets/Objects/Gun/ZE8FK2UU5PF8Y5F5777X34XII.obj");
+    Model *garageModel = new ObjectModel(new PhongShader(), "../assets/Objects/Garage/MUW04SKJGJ052IRMJUCT9DJ5E.obj");
+    Model *gunModel = new ObjectModel(new PhongShader(), "../assets/Objects/Gun/ZE8FK2UU5PF8Y5F5777X34XII.obj");
 
-//    Entity *nanosuit = new Orangutan(nanosuitModel);
-    Entity *gun = new SquirrelMonkey(gunModel);
-
-    gun->setScaling(1.0f);
+    gun = new SquirrelMonkey(gunModel);
+    garage = new Orangutan(garageModel);
 
     entities.push_back(gun);
-//    entities.push_back(nanosuit);
+    entities.push_back(garage);
 
 }
 

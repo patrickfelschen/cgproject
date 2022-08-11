@@ -6,7 +6,7 @@
 
 PhongShader::PhongShader() : Shader("../assets/shaders/shader.vert",
                                     "../assets/shaders/shader.frag") {
-    lightPos = Vector3f(-5.0f, 15.0f, -10.0f);
+    lightPos = Vector3f(0.0f, 1.0f, 0.0f);
 }
 
 void PhongShader::setUniforms(const Camera &camera) {

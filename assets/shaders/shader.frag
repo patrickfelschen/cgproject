@@ -37,7 +37,7 @@ bool blinn = true;
 void main() {
     vec3 lightColor = vec3(1.0f, 1.0f, 1.0f);
     Light light;
-    light.ambient = vec3(1.0f, 01.0f, 1.0f);
+    light.ambient = vec3(1.0f, 1.0f, 1.0f);
     light.diffuse = vec3(1.0f, 1.0f, 1.0f);
     light.specular = vec3(1.0f, 1.0f, 1.0f);
 
