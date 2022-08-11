@@ -49,6 +49,10 @@ void Shader::setUniform(const char *name, const Vector3f &value) {
     glUniform3f(getUniformLocation(name), value.x, value.y, value.z);
 }
 
+void Shader::setUniform(const char *name, const float &f1, const float &f2, const float &f3) {
+    glUniform3f(getUniformLocation(name), f1, f2, f3);
+}
+
 void Shader::setUniform(const char *name, const Matrix &value) {
     glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, value.m);
 }
@@ -60,7 +64,7 @@ GLint Shader::getUniformLocation(const char *name) {
 
     GLint locationId = glGetUniformLocation(id, name);
     if (locationId == -1) {
-        std::cerr << "ERROR::SHADER: can not find uniform location" << std::endl;
+        std::cerr << "ERROR::SHADER: can not find uniform location: " << name << std::endl;
         exit(EXIT_FAILURE);
     }
     uniformLocationCache[name] = locationId;

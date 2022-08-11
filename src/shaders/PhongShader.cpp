@@ -5,12 +5,18 @@
 #include "PhongShader.h"
 
 PhongShader::PhongShader() : Shader("../assets/shaders/shader.vert",
-                                    "../assets/shaders/shader.frag") {}
+                                    "../assets/shaders/shader.frag") {
+    lightPos = Vector3f(-5.0f, 15.0f, -10.0f);
+}
 
 void PhongShader::setUniforms(const Camera &camera) {
     Shader::setUniforms(camera);
-    setUniform("lightPos", Vector3f(0.0f, -2.0f, 2.0f));
+    setUniform("lightPos", lightPos);
     setUniform("camPos", camera.getPosition());
+}
+
+void PhongShader::moveLight(const Vector3f &v) {
+    lightPos = v;
 }
 
 PhongShader::~PhongShader() = default;

@@ -4,7 +4,6 @@
 
 #include "ObjectModel.h"
 #include "../utils/Vertex.h"
-
 ObjectModel::ObjectModel(Shader *shader, const char *filename) : Model(shader) {
     loadMesh(filename);
 }
@@ -14,8 +13,6 @@ void ObjectModel::update(float deltaTime) {
 }
 
 void ObjectModel::render(const Camera &camera) {
-    Model::render(camera);
-
     shader->activate(camera);
 
     glBindVertexArray(VAO);
@@ -23,11 +20,22 @@ void ObjectModel::render(const Camera &camera) {
     for (unsigned int i = 0; i < meshes.size(); i++) {
         unsigned int materialIndex = meshes[i].materialIndex;
 
-        assert(materialIndex < textures.size());
+        assert(materialIndex < materials.size());
 
-        if (textures[materialIndex]) {
-            textures[materialIndex]->activate(i);
+        if (materials[materialIndex].pDiffuse) {
+            useTexture = true;
+            materials[materialIndex].pDiffuse->activate(0);
         }
+        if(materials[materialIndex].pSpecular) {
+            useTexture = true;
+            materials[materialIndex].pSpecular->activate(1);
+        }
+
+        shader->setUniform("material.ambientColor", materials[materialIndex].ambientColor.R, materials[materialIndex].ambientColor.G, materials[materialIndex].ambientColor.B);
+        shader->setUniform("material.diffuseColor", materials[materialIndex].diffuseColor.R, materials[materialIndex].diffuseColor.G, materials[materialIndex].diffuseColor.B);
+        shader->setUniform("material.specularColor", materials[materialIndex].specularColor.R, materials[materialIndex].specularColor.G, materials[materialIndex].specularColor.B);
+        shader->setUniform("material.shininess", materials[materialIndex].shininess);
+        shader->setUniform("useTexture", useTexture);
 
         glDrawElementsBaseVertex(
                 GL_TRIANGLES,
@@ -37,7 +45,14 @@ void ObjectModel::render(const Camera &camera) {
                 meshes[i].baseVertex
         );
 
-        //textures[materialIndex]->deactivate();
+        if (materials[materialIndex].pDiffuse) {
+            materials[materialIndex].pDiffuse->deactivate();
+        }
+        if(materials[materialIndex].pSpecular) {
+            materials[materialIndex].pSpecular->deactivate();
+        }
+
+        useTexture = false;
     }
 
     glBindVertexArray(0);
@@ -70,7 +85,7 @@ bool ObjectModel::loadMesh(const char *filename) {
 }
 
 void ObjectModel::clear() {
-    std::destroy(textures.begin(), textures.end());
+    std::destroy(materials.begin(), materials.end());
 
     if (VAO != 0) {
         glDeleteVertexArrays(1, &VAO);
@@ -80,7 +95,7 @@ void ObjectModel::clear() {
 
 bool ObjectModel::initFromScene(const aiScene *pScene, const char *filename) {
     meshes.resize(pScene->mNumMeshes);
-    textures.resize(pScene->mNumMaterials);
+    materials.resize(pScene->mNumMaterials);
 
     unsigned int numVertices = 0;
     unsigned int numIndices = 0;
@@ -164,67 +179,113 @@ bool ObjectModel::initMaterials(const aiScene *pScene, const std::string &filena
     bool ret = true;
 
     for (unsigned int i = 0; i < pScene->mNumMaterials; i++) {
-        const aiMaterial *pMaterial = pScene->mMaterials[i];
+        const aiMaterial* pMaterial = pScene->mMaterials[i];
 
-        textures[i] = NULL;
-
-        if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
-            aiString path;
-
-            if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-                std::string p(path.data);
-
-                if (p.substr(0, 2) == ".\\")
-                    p = p.substr(2, p.size() - 2);
-
-                std::string fullPath = dir + "/" + p;
-
-                textures[i] = new Texture(fullPath.c_str());
-
-                if (!textures[i]) {
-                    std::cerr << "ERROR::MODEL: error loading texture" << std::endl;
-                    ret = false;
-                }
-            }
-        }
-
-        aiColor3D d;
-        Vector3f diffuseColor;
-        if (pMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, d) != AI_SUCCESS) {
-            diffuseColor = Vector3f(1.0f, 1.0f, 1.0f);
-        } else {
-            diffuseColor = Vector3f(d.r, d.g, d.b);
-        }
-
-        //std::cout << diffuseColor.x << diffuseColor.y << diffuseColor.z << std::endl;
-
-        aiColor3D s;
-        Vector3f specularColor;
-        if (pMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, s) != AI_SUCCESS) {
-            specularColor = Vector3f(1.0f, 1.0f, 1.0f);
-        } else {
-            specularColor = Vector3f(s.r, s.g, s.b);
-        }
-
-        //std::cout << specularColor.x << specularColor.y << specularColor.z << std::endl;
-
-        aiColor3D a;
-        Vector3f ambientColor;
-        if (pMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, a) != AI_SUCCESS) {
-            ambientColor = Vector3f(1.0f, 1.0f, 1.0f);
-        } else {
-            ambientColor = Vector3f(a.r, a.g, a.b);
-        }
-
-        //std::cout << ambientColor.x << ambientColor.y << ambientColor.z << std::endl;
-
-        shader->setUniform("uDiffuseColor", diffuseColor);
-        shader->setUniform("uSpecularColor", specularColor);
-        shader->setUniform("uAmbientColor", ambientColor);
+        loadTextures(dir, pMaterial, i);
+        loadColors(pMaterial, i);
     }
 
     return ret;
 }
+
+
+void ObjectModel::loadTextures(const std::string& dir, const aiMaterial* pMaterial, int index) {
+    loadDiffuseTexture(dir, pMaterial, index);
+    loadSpecularTexture(dir, pMaterial, index);
+}
+
+void ObjectModel::loadDiffuseTexture(const std::string &dir, const aiMaterial *pMaterial, int index) {
+    materials[index].pDiffuse = nullptr;
+
+    if(pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
+        aiString path;
+
+        if(pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
+            std::string p(path.data);
+
+            if (p.substr(0, 2) == ".\\") {
+                p = p.substr(2, p.size() - 2);
+            }
+
+            std::string fullPath = dir + "/" + p;
+
+            std::cout << fullPath << std::endl;
+
+            materials[index].pDiffuse = new Texture(fullPath.c_str());
+
+            if (!materials[index].pDiffuse) {
+                std::cerr << "ERROR::MODEL: error loading diffuse texture" << std::endl;
+            }
+        }
+    }
+}
+
+void ObjectModel::loadSpecularTexture(const std::string &dir, const aiMaterial *pMaterial, int index) {
+    materials[index].pSpecular = nullptr;
+
+    if(pMaterial->GetTextureCount(aiTextureType_SPECULAR) > 0) {
+        aiString path;
+
+        if(pMaterial->GetTexture(aiTextureType_SPECULAR, 0, &path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
+            std::string p(path.data);
+
+            if (p.substr(0, 2) == ".\\") {
+                p = p.substr(2, p.size() - 2);
+            }
+
+            std::string fullPath = dir + "/" + p;
+
+            materials[index].pSpecular = new Texture(fullPath.c_str());
+
+            if (!materials[index].pSpecular) {
+                std::cerr << "ERROR::MODEL: error loading specular texture" << std::endl;
+            }
+        }
+    }
+}
+
+void ObjectModel::loadColors(const aiMaterial *pMaterial, int index) {
+    aiColor3D ambientColor(0.0f, 0.0f, 0.0f);
+    aiColor3D diffuseColor(0.0f, 0.0f, 0.0f);
+    aiColor3D specularColor(0.0f, 0.0f, 0.0f);
+    float shininess;
+
+
+    if(pMaterial->Get(AI_MATKEY_COLOR_AMBIENT, ambientColor) == AI_SUCCESS) {
+        materials[index].ambientColor.R = ambientColor.r;
+        materials[index].ambientColor.G = ambientColor.g;
+        materials[index].ambientColor.B = ambientColor.b;
+    }
+    else {
+        materials[index].ambientColor = Color(1.0f, 1.0f, 1.0f);
+    }
+
+    if(pMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, diffuseColor) == AI_SUCCESS) {
+        materials[index].diffuseColor.R = diffuseColor.r;
+        materials[index].diffuseColor.G = diffuseColor.g;
+        materials[index].diffuseColor.B = diffuseColor.b;
+    }
+    else {
+        materials[index].diffuseColor = Color(1.0f, 1.0f, 1.0f);
+    }
+
+    if(pMaterial->Get(AI_MATKEY_COLOR_SPECULAR, specularColor) == AI_SUCCESS) {
+        materials[index].specularColor.R = specularColor.r;
+        materials[index].specularColor.G = specularColor.g;
+        materials[index].specularColor.B = specularColor.b;
+    }
+    else {
+        materials[index].specularColor = Color(1.0f, 1.0f, 1.0f);
+    }
+
+    if(aiGetMaterialFloat(pMaterial, AI_MATKEY_SHININESS, &shininess) == AI_SUCCESS) {
+        materials[index].shininess = shininess;
+    }
+    else {
+        materials[index].shininess = 20.0f;
+    }
+}
+
 
 void ObjectModel::populateBuffers() {
     glBindBuffer(GL_ARRAY_BUFFER, buffers[POS_VB]);

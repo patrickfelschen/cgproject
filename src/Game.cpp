@@ -6,22 +6,25 @@
 #include "entities/Orangutan.h"
 #include "entities/SquirrelMonkey.h"
 #include "shaders/PhongShader.h"
-Entity *pistol;
 
 Game::Game(GLFWwindow &window, const Camera &camera) : window(window), camera(camera) {
-    Model *pistolModel = new ObjectModel(new PhongShader(), "../assets/Objects/Pistol/Pistol_02.obj");
+    Shader *shader = new PhongShader();
 
-    pistol = new SquirrelMonkey(pistolModel);
-    Entity *pistol2 = new SquirrelMonkey(pistolModel);
+//    Model *nanosuitModel = new ObjectModel(shader, "../assets/Objects/Nanosuit/TTURDKN8VOY7P4PVHSULB36RF.obj");
+    Model *gunModel = new ObjectModel(shader, "../assets/Objects/Gun/ZE8FK2UU5PF8Y5F5777X34XII.obj");
 
-    entities.push_back(pistol);
-    entities.push_back(pistol2);
+//    Entity *nanosuit = new Orangutan(nanosuitModel);
+    Entity *gun = new SquirrelMonkey(gunModel);
+
+    gun->setScaling(1.0f);
+
+    entities.push_back(gun);
+//    entities.push_back(nanosuit);
+
 }
 
 void Game::update(float deltaTime) {
     camera.update(deltaTime);
-
-    pistol->setPosition(0, 10, 0);
 
     for (Entity *entity: entities) {
         entity->update(deltaTime);

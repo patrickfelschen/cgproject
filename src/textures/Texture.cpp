@@ -28,7 +28,7 @@ bool Texture::load(const char *filename) {
 
     FIBITMAP *pBitmap = FreeImage_Load(imageFormat, filename);
     if (pBitmap == NULL) {
-        std::cerr << "ERROR::TEXTURE: unable to open texture" << std::endl;
+        std::cerr << "ERROR::TEXTURE: unable to open texture: " << filename << std::endl;
         exit(EXIT_FAILURE);
     }
 

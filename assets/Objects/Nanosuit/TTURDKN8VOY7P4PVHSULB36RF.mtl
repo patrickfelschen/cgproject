@@ -1,0 +1,72 @@
+newmtl _7___Default
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 0.000000 0.000000 0.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd Nanosuit_us_Neck.jpg
+
+newmtl Material__59
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 1.000000 1.000000 1.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd NanoSuit_us.jpg
+
+newmtl noneeye_blue01
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 0.000000 0.000000 0.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd NanoSuit_us.jpg
+
+newmtl facesykes01
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 0.000000 0.000000 0.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd NanoSuit_us.jpg
+
+newmtl eye_overlayb01
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 1.000000 1.000000 1.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd NanoSuit_us.jpg
+
+newmtl mouthteeth_01
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 0.000000 0.000000 0.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd NanoSuit_us.jpg
+
+newmtl helmet_002na01
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 1.000000 1.000000 1.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd Nanosuit_us_Helmet.jpg
+
+newmtl glasses_002n01
+Ka 0.000000 0.000000 0.000000
+Kd 0.698039 0.698039 0.698039
+Ks 1.000000 1.000000 0.000000
+d 1.000000
+illum 2
+Ns 9.84916
+map_Kd Nanosuit_us_Visorlight.jpg
+
