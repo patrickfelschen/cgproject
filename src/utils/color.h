@@ -15,7 +15,7 @@ public:
 
     Color operator*(const Color &c) const;
 
-    Color operator*(const float Factor) const;
+    Color operator*(float Factor) const;
 
     Color operator+(const Color &c) const;
 

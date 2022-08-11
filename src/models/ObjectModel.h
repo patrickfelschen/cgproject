@@ -17,6 +17,7 @@
 #include "assimp/Importer.hpp"
 #include "../maths/Vector2f.h"
 #include "Model.h"
+#include "../utils/Material.h"
 
 #define ARRAY_SIZE_IN_ELEMENTS(a) (sizeof(a)/sizeof(a[0]))
 #define ASSIMP_LOAD_FLAGS (aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices)
@@ -48,24 +49,6 @@ struct BasicMeshEntry {
     unsigned int baseVertex;
     unsigned int baseIndex;
     unsigned int materialIndex;
-};
-
-struct Material {
-    Material() {
-        pDiffuse = nullptr;
-        pSpecular = nullptr;
-        ambientColor = Color(1.0f, 1.0f, 1.0f);
-        diffuseColor = Color(1.0f, 1.0f, 1.0f);
-        specularColor = Color(1.0f, 1.0f, 1.0f);
-        shininess = 0;
-    }
-
-    Texture* pDiffuse;
-    Texture* pSpecular;
-    Color ambientColor;
-    Color diffuseColor;
-    Color specularColor;
-    float shininess;
 };
 
 class ObjectModel : public Model {
