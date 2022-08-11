@@ -14,6 +14,8 @@ void ObjectModel::update(float deltaTime) {
 }
 
 void ObjectModel::render(const Camera &camera) {
+    Model::render(camera);
+
     shader->activate(camera);
 
     glBindVertexArray(VAO);
@@ -35,7 +37,7 @@ void ObjectModel::render(const Camera &camera) {
                 meshes[i].baseVertex
         );
 
-        textures[materialIndex]->deactivate();
+        //textures[materialIndex]->deactivate();
     }
 
     glBindVertexArray(0);
@@ -185,6 +187,40 @@ bool ObjectModel::initMaterials(const aiScene *pScene, const std::string &filena
                 }
             }
         }
+
+        aiColor3D d;
+        Vector3f diffuseColor;
+        if (pMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, d) != AI_SUCCESS) {
+            diffuseColor = Vector3f(1.0f, 1.0f, 1.0f);
+        } else {
+            diffuseColor = Vector3f(d.r, d.g, d.b);
+        }
+
+        //std::cout << diffuseColor.x << diffuseColor.y << diffuseColor.z << std::endl;
+
+        aiColor3D s;
+        Vector3f specularColor;
+        if (pMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, s) != AI_SUCCESS) {
+            specularColor = Vector3f(1.0f, 1.0f, 1.0f);
+        } else {
+            specularColor = Vector3f(s.r, s.g, s.b);
+        }
+
+        //std::cout << specularColor.x << specularColor.y << specularColor.z << std::endl;
+
+        aiColor3D a;
+        Vector3f ambientColor;
+        if (pMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, a) != AI_SUCCESS) {
+            ambientColor = Vector3f(1.0f, 1.0f, 1.0f);
+        } else {
+            ambientColor = Vector3f(a.r, a.g, a.b);
+        }
+
+        //std::cout << ambientColor.x << ambientColor.y << ambientColor.z << std::endl;
+
+        shader->setUniform("uDiffuseColor", diffuseColor);
+        shader->setUniform("uSpecularColor", specularColor);
+        shader->setUniform("uAmbientColor", ambientColor);
     }
 
     return ret;

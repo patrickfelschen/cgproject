@@ -33,16 +33,15 @@ void Entity::setScaling(float newScaling) {
 }
 
 void Entity::update(float deltaTime) {
+    this->model->update(deltaTime);
+}
+
+void Entity::render(const Camera &camera) {
     this->model->translate(position);
     this->model->rotateX(rotationX);
     this->model->rotateY(rotationY);
     this->model->rotateZ(rotationZ);
     this->model->scale(scaling);
-
-    this->model->update(deltaTime);
-}
-
-void Entity::render(const Camera &camera) {
     this->model->render(camera);
 }
 

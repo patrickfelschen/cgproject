@@ -9,11 +9,11 @@ Model::Model(Shader *shader) : shader(shader) {}
 Model::~Model() = default;
 
 void Model::update(float deltaTime) {
-    Matrix transformation = translation * rotationX * rotationY * rotationZ * scaling;
-    shader->setModelTransform(transformation);
 }
 
 void Model::render(const Camera &camera) {
+    Matrix transformation = translation * rotationX * rotationY * rotationZ * scaling;
+    shader->setModelTransform(transformation);
 }
 
 void Model::translate(const Vector3f &v) {
