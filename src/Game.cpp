@@ -3,8 +3,6 @@
 //
 
 #include "Game.h"
-#include "entities/Orangutan.h"
-#include "entities/SquirrelMonkey.h"
 #include "shaders/PhongShader.h"
 Entity *gun;
 Entity *garage;
@@ -13,8 +11,8 @@ Game::Game(GLFWwindow &window, const Camera &camera) : window(window), camera(ca
     Model *garageModel = new ObjectModel(new PhongShader(), "../assets/Objects/Garage/MUW04SKJGJ052IRMJUCT9DJ5E.obj");
     Model *gunModel = new ObjectModel(new PhongShader(), "../assets/Objects/Gun/ZE8FK2UU5PF8Y5F5777X34XII.obj");
 
-    gun = new SquirrelMonkey(gunModel);
-    garage = new Orangutan(garageModel);
+    gun = new Entity(gunModel);
+    garage = new Entity(garageModel);
 
     entities.push_back(gun);
     entities.push_back(garage);
