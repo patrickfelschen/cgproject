@@ -16,6 +16,8 @@
 
 class Shader {
 public:
+    Shader();
+
     Shader(const char *vsFilePath, const char *fsFilePath, bool useView);
 
     virtual ~Shader();
