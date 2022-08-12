@@ -7,10 +7,10 @@ in VS_OUT {
 } fs_in;
 
 uniform Material uMaterial;
-uniform sampler2D uTexture;
+uniform sampler2D uTexture0;
 
 out vec4 FragColor;
 
 void main() {
-    FragColor = texture(uTexture, fs_in.TexCoord);
+    FragColor = texture(uTexture0, fs_in.TexCoord);
 }
