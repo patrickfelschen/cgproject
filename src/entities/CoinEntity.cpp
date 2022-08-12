@@ -8,7 +8,7 @@ CoinEntity::CoinEntity(Model *model) : Entity(model) {
             );
     speed = rndFloat(2, 10);
 
-    setPosition(pos.x, pos.y, pos.z);
+    setPosition(pos);
     setScaling(0.05f);
 }
 
@@ -23,7 +23,7 @@ void CoinEntity::update(float deltaTime) {
 void CoinEntity::render(const Camera &camera) {
     Vector3f dirToPlayer = (camera.getPosition() - pos).normalize() *= (speed/1000);
     pos += dirToPlayer;
-    setPosition(pos.x, pos.y, pos.z);
+    setPosition(pos);
     Entity::render(camera);
 }
 
