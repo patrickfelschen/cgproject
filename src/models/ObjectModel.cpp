@@ -29,10 +29,10 @@ void ObjectModel::render(const Camera &camera) {
             materials[materialIndex].pSpecular->activate(1);
         }
 
-        shader->setUniform("material.ambientColor", materials[materialIndex].ambientColor);
-        shader->setUniform("material.diffuseColor", materials[materialIndex].diffuseColor);
-        shader->setUniform("material.specularColor", materials[materialIndex].specularColor);
-        shader->setUniform("material.shininess", materials[materialIndex].shininess);
+        shader->setUniform("uMaterial.ambientColor", materials[materialIndex].ambientColor);
+        shader->setUniform("uMaterial.diffuseColor", materials[materialIndex].diffuseColor);
+        shader->setUniform("uMaterial.specularColor", materials[materialIndex].specularColor);
+        shader->setUniform("uMaterial.shininess", materials[materialIndex].shininess);
 
         Model::render(camera);
 

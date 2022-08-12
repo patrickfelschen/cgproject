@@ -1,20 +1,23 @@
 #version 460 core
 
-layout (location = 0) in vec3 pos;
-layout (location = 1) in vec2 texCoords;
-layout (location = 2) in vec3 normal;
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec2 aTexCoord;
+layout (location = 2) in vec3 aNormal;
 
-uniform mat4 projection;
-uniform mat4 view;
-uniform mat4 transform;
+uniform mat4 uProjection;
+uniform mat4 uView;
+uniform mat4 uTransform;
 
-out vec2 texCoord;
-out vec3 currentPos;
-out vec3 outNormal;
+out VS_OUT {
+    vec3 Pos;
+    vec2 TexCoord;
+    vec3 Normal;
+} vs_out;
 
 void main() {
-    currentPos = vec3(transform * vec4(pos, 1.0f));
-    gl_Position = projection * view * transform  * vec4(pos, 1.0);
-    texCoord = texCoords;
-    outNormal = normal;
+    gl_Position = uProjection * uView * uTransform  * vec4(aPos, 1.0);
+
+    vs_out.Pos = vec3(uTransform * vec4(aPos, 1.0f));
+    vs_out.TexCoord = aTexCoord;
+    vs_out.Normal = aNormal;
 }

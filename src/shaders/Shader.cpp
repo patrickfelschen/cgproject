@@ -5,6 +5,13 @@
 
 #include "Shader.h"
 
+Shader::Shader() {
+    vsFilePath = "../assets/shaders/shader.vert";
+    fsFilePath = "../assets/shaders/shader.frag";
+    this->modelTransform.identity();
+    this->compile();
+}
+
 Shader::Shader(const char *vsFilePath, const char *fsFilePath) : vsFilePath(vsFilePath), fsFilePath(fsFilePath) {
     this->modelTransform.identity();
     this->compile();
@@ -16,9 +23,9 @@ void Shader::compile() {
 }
 
 void Shader::setUniforms(const Camera &camera) {
-    setUniform("projection", camera.getProj());
-    setUniform("view", camera.getView());
-    setUniform("transform", modelTransform);
+    setUniform("uProjection", camera.getProj());
+    setUniform("uView", camera.getView());
+    setUniform("uTransform", modelTransform);
 }
 
 void Shader::activate(const Camera &camera) {
