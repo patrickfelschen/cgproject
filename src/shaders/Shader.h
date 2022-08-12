@@ -56,7 +56,9 @@ private:
 
     std::unordered_map<const char *, GLint> uniformLocationCache;
 
-    void compile();
+    void compileShaders();
+
+    void addShader(const char *shaderText, GLenum shaderType) const;
 };
 
 

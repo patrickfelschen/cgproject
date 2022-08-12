@@ -9,25 +9,88 @@ Shader::Shader() {
     vsFilePath = "../assets/shaders/shader.vert";
     fsFilePath = "../assets/shaders/shader.frag";
     this->modelTransform.identity();
-    this->compile();
+    compileShaders();
 }
 
-Shader::Shader(const char *vsFilePath, const char *fsFilePath, bool useView) : vsFilePath(vsFilePath), fsFilePath(fsFilePath), useView(useView) {
+Shader::Shader(const char *vsFilePath, const char *fsFilePath, bool useView) : vsFilePath(vsFilePath),
+                                                                               fsFilePath(fsFilePath),
+                                                                               useView(useView) {
     this->modelTransform.identity();
-    this->compile();
+    compileShaders();
 }
 
-void Shader::compile() {
-    // Shader laden und kompilieren
-    id = Loader::compileShaders(vsFilePath, fsFilePath);
+void Shader::addShader(const char *shaderText, GLenum shaderType) const {
+    GLuint shaderObject = glCreateShader(shaderType);
+    if (shaderObject == 0) {
+        std::cerr << "ERROR::SHADER::ADDSHADER: Can not create shader type " << shaderType << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    const GLchar *p[1];
+    p[0] = shaderText;
+
+    GLint lengths[1];
+    lengths[0] = (GLint) strlen(shaderText);
+
+    glShaderSource(shaderObject, 1, p, lengths);
+    glCompileShader(shaderObject);
+
+    GLint success;
+    glGetShaderiv(shaderObject, GL_COMPILE_STATUS, &success);
+
+    if (!success) {
+        GLchar infoLog[1024];
+        glGetShaderInfoLog(shaderObject, 1024, nullptr, infoLog);
+        std::cerr << "ERROR::SHADER::ADDSHADER: " << infoLog << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    glAttachShader(id, shaderObject);
+    glDeleteShader(shaderObject);
+}
+
+void Shader::compileShaders() {
+    id = glCreateProgram();
+    if (id == 0) {
+        std::cerr << "ERROR::SHADER::COMPILESHADERS: Can not create shader program" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    std::string vs, fs;
+
+    Loader::readShaderFile(vsFilePath, vs);
+    addShader(vs.c_str(), GL_VERTEX_SHADER);
+
+    Loader::readShaderFile(fsFilePath, fs);
+    addShader(fs.c_str(), GL_FRAGMENT_SHADER);
+
+    GLint success = 0;
+    GLchar errorLog[1024] = {0};
+
+    glLinkProgram(id);
+
+    glGetProgramiv(id, GL_LINK_STATUS, &success);
+    if (success == 0) {
+        glGetProgramInfoLog(id, sizeof(errorLog), nullptr, errorLog);
+        std::cerr << "ERROR::SHADER::COMPILESHADERS: Can not link shader program: " << errorLog << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    glValidateProgram(id);
+    glGetProgramiv(id, GL_VALIDATE_STATUS, &success);
+    if (!success) {
+        glGetProgramInfoLog(id, sizeof(errorLog), nullptr, errorLog);
+        std::cerr << "ERROR::SHADER::COMPILESHADERS: Invalid shader program: " << errorLog << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    glUseProgram(id);
 }
 
 void Shader::setUniforms(const Camera &camera) {
     setUniform("uProjection", camera.getProj());
-    if(useView) {
+    if (useView) {
         setUniform("uView", camera.getView());
-    }
-    else {
+    } else {
         Matrix view;
         view.identity();
         setUniform("uView", view);
@@ -37,7 +100,7 @@ void Shader::setUniforms(const Camera &camera) {
 
 void Shader::activate(const Camera &camera) {
     if (id <= 0) {
-        std::cerr << "ERROR::SHADER: can not activate shader" << std::endl;
+        std::cerr << "ERROR::SHADER::ACTIVATE can not activate shader" << std::endl;
         exit(EXIT_FAILURE);
     }
     // Shader aktivieren
@@ -78,7 +141,7 @@ GLint Shader::getUniformLocation(const char *name) {
 
     GLint locationId = glGetUniformLocation(id, name);
     if (locationId == -1) {
-        std::cerr << "ERROR::SHADER: can not find uniform location: " << name << std::endl;
+        std::cerr << "ERROR::SHADER::GETUNIFORMLOCATION: can not find uniform location: " << name << std::endl;
         exit(EXIT_FAILURE);
     }
     uniformLocationCache[name] = locationId;
