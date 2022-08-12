@@ -4,8 +4,11 @@
 
 #include "GunEntity.h"
 
+#define TO_RAD(deg) (deg * std::numbers::pi / 180.0)
+#define TO_DEG(rad) (rad * 180.0 / std::numbers::pi)
+
 GunEntity::GunEntity(Model *model) : Entity(model) {
-    setScaling(0.005);
+    setScaling(0.025);
 }
 
 GunEntity::~GunEntity() {
@@ -17,9 +20,9 @@ void GunEntity::update(float deltaTime) {
 }
 
 void GunEntity::render(const Camera &camera) {
-    Vector3f gunPos = camera.getPosition();
 
-    this->setPosition(gunPos.x, gunPos.y, gunPos.z);
+    setPosition(Vector3f(0.026, -0.015, -0.045));
+    setRotationY(TO_RAD(-95));
 
     Entity::render(camera);
 }

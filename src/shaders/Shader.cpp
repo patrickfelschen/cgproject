@@ -5,7 +5,7 @@
 
 #include "Shader.h"
 
-Shader::Shader(const char *vsFilePath, const char *fsFilePath) : vsFilePath(vsFilePath), fsFilePath(fsFilePath) {
+Shader::Shader(const char *vsFilePath, const char *fsFilePath, bool useView) : vsFilePath(vsFilePath), fsFilePath(fsFilePath), useView(useView) {
     this->modelTransform.identity();
     this->compile();
 }
@@ -17,7 +17,14 @@ void Shader::compile() {
 
 void Shader::setUniforms(const Camera &camera) {
     setUniform("projection", camera.getProj());
-    setUniform("view", camera.getView());
+    if(useView) {
+        setUniform("view", camera.getView());
+    }
+    else {
+        Matrix view;
+        view.identity();
+        setUniform("view", view);
+    }
     setUniform("transform", modelTransform);
 }
 

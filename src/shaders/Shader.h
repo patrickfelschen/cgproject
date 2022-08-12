@@ -16,7 +16,7 @@
 
 class Shader {
 public:
-    Shader(const char *vsFilePath, const char *fsFilePath);
+    Shader(const char *vsFilePath, const char *fsFilePath, bool useView);
 
     virtual ~Shader();
 
@@ -49,6 +49,8 @@ private:
     // Pfad der Shaderdateien
     const char *vsFilePath;
     const char *fsFilePath;
+
+    bool useView;
 
     std::unordered_map<const char *, GLint> uniformLocationCache;
 

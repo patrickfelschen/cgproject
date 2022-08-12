@@ -13,7 +13,7 @@ out vec3 currentPos;
 out vec3 outNormal;
 
 void main() {
-    currentPos = vec3(transform * vec4(pos, 1.0f));
+    currentPos = (transform * vec4(pos, 1.0f)).xyz;
     gl_Position = projection * view * transform  * vec4(pos, 1.0);
     texCoord = texCoords;
     outNormal = normal;

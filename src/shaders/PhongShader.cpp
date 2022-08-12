@@ -5,7 +5,14 @@
 #include "PhongShader.h"
 
 PhongShader::PhongShader() : Shader("../assets/shaders/shader.vert",
-                                    "../assets/shaders/shader.frag") {
+                                    "../assets/shaders/shader.frag",
+                                    true) {
+    lightPos = Vector3f(0.0f, 1.0f, 0.0f);
+}
+
+PhongShader::PhongShader(bool useView) : Shader("../assets/shaders/shader.vert",
+                                                "../assets/shaders/shader.frag",
+                                                useView) {
     lightPos = Vector3f(0.0f, 1.0f, 0.0f);
 }
 
