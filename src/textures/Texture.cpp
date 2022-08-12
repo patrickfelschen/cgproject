@@ -81,6 +81,7 @@ bool Texture::load(const char *filename) {
     glBindTexture(GL_TEXTURE_2D, 0);
 
     delete[] data;
+    std::cout << filename << std::endl;
     return true;
 }
 
@@ -122,6 +123,3 @@ void Texture::deactivate() {
         glActiveTexture(GL_TEXTURE0 + currentTextureUnit - 1);
     currentTextureUnit = 0;
 }
-
-
-

@@ -12,6 +12,7 @@
 #include "../maths/Vector3f.h"
 #include "../maths/Matrix.h"
 #include "../utils/Camera.h"
+#include "../utils/color.h"
 
 class Shader {
 public:
@@ -28,6 +29,8 @@ public:
     void setUniform(const char *name, float value);
 
     void setUniform(const char *name, const Vector3f &value);
+
+    void setUniform(const char *name, const Color &value);
 
     void setUniform(const char *name, const float &f1, const float &f2, const float &f3);
 

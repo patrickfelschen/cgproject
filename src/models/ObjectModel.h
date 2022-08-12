@@ -64,8 +64,6 @@ public:
 private:
     GLuint VAO = 0;
 
-    bool useTexture = false;
-
     GLuint buffers[NUM_BUFFERS] = {0};
 
     std::vector<BasicMeshEntry> meshes;

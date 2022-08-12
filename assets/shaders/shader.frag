@@ -26,7 +26,6 @@ uniform sampler2D tex1;
 uniform Material material;
 uniform vec3 lightPos;
 uniform vec3 camPos;
-uniform bool useTexture;
 
 float sat(in float a) {
     return clamp(a, 0.0, 1.0);
@@ -41,7 +40,7 @@ void main() {
     light.diffuse = vec3(1.0f, 1.0f, 1.0f);
     light.specular = vec3(1.0f, 1.0f, 1.0f);
 
-    vec4 diffTex = useTexture ? texture(tex0, texCoord) : vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    vec4 diffTex = texture(tex0, texCoord);
     // ambient
     vec3 ambient = light.ambient * material.ambientColor;
 

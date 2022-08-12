@@ -17,34 +17,31 @@ void ObjectModel::render(const Camera &camera) {
 
     glBindVertexArray(VAO);
 
-    for (unsigned int i = 0; i < meshes.size(); i++) {
-        unsigned int materialIndex = meshes[i].materialIndex;
+    for (auto &mesh: meshes) {
+        unsigned int materialIndex = mesh.materialIndex;
 
         assert(materialIndex < materials.size());
 
         if (materials[materialIndex].pDiffuse) {
-            useTexture = true;
             materials[materialIndex].pDiffuse->activate(0);
         }
-        if(materials[materialIndex].pSpecular) {
-            useTexture = true;
+        if (materials[materialIndex].pSpecular) {
             materials[materialIndex].pSpecular->activate(1);
         }
 
-        shader->setUniform("material.ambientColor", materials[materialIndex].ambientColor.R, materials[materialIndex].ambientColor.G, materials[materialIndex].ambientColor.B);
-        shader->setUniform("material.diffuseColor", materials[materialIndex].diffuseColor.R, materials[materialIndex].diffuseColor.G, materials[materialIndex].diffuseColor.B);
-        shader->setUniform("material.specularColor", materials[materialIndex].specularColor.R, materials[materialIndex].specularColor.G, materials[materialIndex].specularColor.B);
+        shader->setUniform("material.ambientColor", materials[materialIndex].ambientColor);
+        shader->setUniform("material.diffuseColor", materials[materialIndex].diffuseColor);
+        shader->setUniform("material.specularColor", materials[materialIndex].specularColor);
         shader->setUniform("material.shininess", materials[materialIndex].shininess);
-        shader->setUniform("useTexture", useTexture);
 
         Model::render(camera);
 
         glDrawElementsBaseVertex(
                 GL_TRIANGLES,
-                meshes[i].numIndices,
+                mesh.numIndices,
                 GL_UNSIGNED_INT,
-                (void *) (sizeof(unsigned int) * meshes[i].baseIndex),
-                meshes[i].baseVertex
+                (void *) (sizeof(unsigned int) * mesh.baseIndex),
+                mesh.baseVertex
         );
 
         if (materials[materialIndex].pDiffuse) {
@@ -53,8 +50,6 @@ void ObjectModel::render(const Camera &camera) {
         if(materials[materialIndex].pSpecular) {
             materials[materialIndex].pSpecular->deactivate();
         }
-
-        useTexture = false;
     }
 
     glBindVertexArray(0);
@@ -210,8 +205,6 @@ void ObjectModel::loadDiffuseTexture(const std::string &dir, const aiMaterial *p
             }
 
             std::string fullPath = dir + "/" + p;
-
-            std::cout << fullPath << std::endl;
 
             materials[index].pDiffuse = new Texture(fullPath.c_str());
 

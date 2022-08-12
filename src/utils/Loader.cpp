@@ -20,6 +20,7 @@ void Loader::readFile(const char *filePath, std::string &outFile) {
             outFile.append("\n");
         }
         f.close();
+        std::cout << filePath << std::endl;
         return;
     } else {
         std::cerr << "ERROR::READFILE: " << filePath << std::endl;
