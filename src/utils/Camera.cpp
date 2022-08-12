@@ -27,7 +27,7 @@ Camera::Camera(GLFWwindow &window) : window(window) {
     proj.perspective(
             TO_RAD(65),
             (float) windowWidth / (float) windowHeight,
-            0.045f,
+            0.001f,
             1000.0f
     );
 }

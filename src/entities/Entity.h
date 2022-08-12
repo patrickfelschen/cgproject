@@ -16,9 +16,11 @@ public:
 
     virtual void update(float deltaTime);
 
-    void render(const Camera &camera);
+    virtual void render(const Camera &camera);
 
     void setPosition(float x, float y, float z);
+
+    void setPosition(const Vector3f &pos);
 
     void setRotationX(float newRotationX);
 
@@ -27,6 +29,7 @@ public:
     void setRotationZ(float newRotationZ);
 
     void setScaling(float newScaling);
+
 
 protected:
     Vector3f position;

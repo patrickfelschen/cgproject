@@ -16,6 +16,10 @@ void Entity::setPosition(float x, float y, float z) {
     this->position = Vector3f(x, y, z);
 }
 
+void Entity::setPosition(const Vector3f &pos) {
+    this->position = pos;
+}
+
 void Entity::setRotationX(float newRotationX) {
     this->rotationX = newRotationX;
 }
