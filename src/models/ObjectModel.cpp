@@ -247,27 +247,27 @@ void ObjectModel::loadColors(const aiMaterial *pMaterial, int index) {
 
 
     if(pMaterial->Get(AI_MATKEY_COLOR_AMBIENT, ambientColor) == AI_SUCCESS) {
-        materials[index].ambientColor.R = ambientColor.r;
-        materials[index].ambientColor.G = ambientColor.g;
-        materials[index].ambientColor.B = ambientColor.b;
+        materials[index].ambientColor.r = ambientColor.r;
+        materials[index].ambientColor.g = ambientColor.g;
+        materials[index].ambientColor.b = ambientColor.b;
     }
     else {
         materials[index].ambientColor = Color(1.0f, 1.0f, 1.0f);
     }
 
     if(pMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, diffuseColor) == AI_SUCCESS) {
-        materials[index].diffuseColor.R = diffuseColor.r;
-        materials[index].diffuseColor.G = diffuseColor.g;
-        materials[index].diffuseColor.B = diffuseColor.b;
+        materials[index].diffuseColor.r = diffuseColor.r;
+        materials[index].diffuseColor.g = diffuseColor.g;
+        materials[index].diffuseColor.b = diffuseColor.b;
     }
     else {
         materials[index].diffuseColor = Color(1.0f, 1.0f, 1.0f);
     }
 
     if(pMaterial->Get(AI_MATKEY_COLOR_SPECULAR, specularColor) == AI_SUCCESS) {
-        materials[index].specularColor.R = specularColor.r;
-        materials[index].specularColor.G = specularColor.g;
-        materials[index].specularColor.B = specularColor.b;
+        materials[index].specularColor.r = specularColor.r;
+        materials[index].specularColor.g = specularColor.g;
+        materials[index].specularColor.b = specularColor.b;
     }
     else {
         materials[index].specularColor = Color(1.0f, 1.0f, 1.0f);

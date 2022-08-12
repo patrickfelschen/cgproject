@@ -50,11 +50,7 @@ void Shader::setUniform(const char *name, const Vector3f &value) {
 }
 
 void Shader::setUniform(const char *name, const Color &value) {
-    glUniform3f(getUniformLocation(name), value.R, value.G, value.B);
-}
-
-void Shader::setUniform(const char *name, const float &f1, const float &f2, const float &f3) {
-    glUniform3f(getUniformLocation(name), f1, f2, f3);
+    glUniform3f(getUniformLocation(name), value.r, value.g, value.b);
 }
 
 void Shader::setUniform(const char *name, const Matrix &value) {

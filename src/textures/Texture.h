@@ -4,8 +4,8 @@
 
 #include "GL/glew.h"
 #include "FreeImage.h"
-#include "../utils/rgbimage.h"
-#include "../utils/color.h"
+#include "../utils/RGBImage.h"
+#include "../utils/Color.h"
 #include <iostream>
 #include <assert.h>
 

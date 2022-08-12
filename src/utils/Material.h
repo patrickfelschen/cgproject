@@ -6,7 +6,7 @@
 #define CG_MATERIAL_H
 
 
-#include "color.h"
+#include "Color.h"
 #include "../textures/Texture.h"
 
 class Material {
