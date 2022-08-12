@@ -7,6 +7,4 @@
 
 Vertex::Vertex() = default;
 
-Vertex::~Vertex() {
-
-}
+Vertex::~Vertex() = default;

@@ -17,8 +17,9 @@ public:
     virtual ~Vertex();
 
     Vector3f pos;
-    Vector2f texCoords;
     Vector3f normal;
+    Vector2f texCoord0;
+    Vector2f texCoord1;
 };
 
 

@@ -19,8 +19,14 @@ public:
 
     static unsigned char convertColorChannel(float f);
 
-protected:
-    std::vector<Color> imageData;
+    unsigned int getHeight() const;
+
+    unsigned int getWidth() const;
+
+    const std::vector<Color> &getData() const;
+
+private:
+    std::vector<Color> data;
     unsigned int height;
     unsigned int width;
 };
