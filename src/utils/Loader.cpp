@@ -37,13 +37,16 @@ void Loader::readImageFile(const char *filePath, RGBImage &outImage) {
         imageFormat = FreeImage_GetFIFFromFilename(filePath);
     }
     if (imageFormat == FIF_UNKNOWN) {
-        std::cout << "WARNING::LOADER::READIMAGEFILE: Unbekanntes Dateiformat!" << std::endl;
+        std::cout << "WARNING::LOADER::READIMAGEFILE: Unbekanntes Dateiformat! " << filePath << std::endl;
     }
     FIBITMAP *pBitMap = FreeImage_Load(imageFormat, filePath);
     if (pBitMap == nullptr) {
-        std::cout << "ERROR::LOADER::READIMAGEFILE: Dateiformat kann nicht geöffnet werden!" << std::endl;
+        std::cout << "ERROR::LOADER::READIMAGEFILE: Dateiformat kann nicht geoeffnet werden! " << filePath << std::endl;
         exit(EXIT_FAILURE);
     }
+
+    //
+    FreeImage_FlipVertical(pBitMap);
 
     FREE_IMAGE_TYPE type = FreeImage_GetImageType(pBitMap);
     assert(type == FIT_BITMAP);

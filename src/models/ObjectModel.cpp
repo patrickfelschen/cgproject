@@ -1,303 +1,140 @@
 //
-// Created by Patrick on 01.08.2022.
+// Created by Patrick on 17.08.2022.
+// https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/model.h
 //
 
 #include "ObjectModel.h"
-#include "../utils/Vertex.h"
-ObjectModel::ObjectModel(Shader *shader, const char *filename) : Model(shader) {
-    loadMesh(filename);
+
+
+ObjectModel::ObjectModel(Shader *shader, const std::string &filePath) : Model(shader) {
+    // read file via ASSIMP
+    Assimp::Importer importer;
+    const aiScene *scene = importer.ReadFile(
+            filePath,
+            aiProcess_Triangulate |
+            aiProcess_GenSmoothNormals |
+            aiProcess_FlipUVs |
+            aiProcess_CalcTangentSpace
+    );
+    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
+        std::cout << "ERROR::ASSIMP: " << importer.GetErrorString() << std::endl;
+        return;
+    }
+    // retrieve the directory path of the filepath
+    this->directory = filePath.substr(0, filePath.find_last_of('/'));
+    this->processNode(scene->mRootNode, scene);
+    this->setBoundingBox();
 }
+
+ObjectModel::~ObjectModel() = default;
 
 void ObjectModel::update(float deltaTime) {
     Model::update(deltaTime);
 }
 
 void ObjectModel::render(const Camera &camera) {
-    shader->activate(camera);
-
-    glBindVertexArray(VAO);
-
+    this->shader->activate(camera);
+    Model::render(camera);
     for (auto &mesh: meshes) {
-        unsigned int materialIndex = mesh.materialIndex;
+        mesh.render();
+    }
+    this->shader->deactivate();
+}
 
-        assert(materialIndex < materials.size());
+void ObjectModel::processNode(aiNode *node, const aiScene *scene) {
+    for (unsigned int i = 0; i < node->mNumMeshes; i++) {
+        aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
+        meshes.push_back(processMesh(mesh, scene));
+    }
+    for (unsigned int i = 0; i < node->mNumChildren; i++) {
+        processNode(node->mChildren[i], scene);
+    }
+}
 
-        if (materials[materialIndex].pDiffuse) {
-            materials[materialIndex].pDiffuse->activate(0);
+Mesh ObjectModel::processMesh(aiMesh *mesh, const aiScene *scene) {
+    std::vector<Vertex> vertices;
+    std::vector<unsigned int> indices;
+    std::vector<Texture> textures;
+
+    for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
+        Vertex vertex;
+        Vector3f vector;
+        // positions
+        vector.x = mesh->mVertices[i].x;
+        vector.y = mesh->mVertices[i].y;
+        vector.z = mesh->mVertices[i].z;
+        vertex.pos = vector;
+        // normals
+        if (mesh->HasNormals()) {
+            vector.x = mesh->mNormals[i].x;
+            vector.y = mesh->mNormals[i].y;
+            vector.z = mesh->mNormals[i].z;
+            vertex.normal = vector;
         }
-        if (materials[materialIndex].pSpecular) {
-            materials[materialIndex].pSpecular->activate(1);
+        // texture coordinates
+        Vector2f texCoord;
+        if (mesh->mTextureCoords[0]) {
+            texCoord.x = mesh->mTextureCoords[0][i].x;
+            texCoord.y = mesh->mTextureCoords[0][i].y;
+            vertex.texCoord0 = texCoord;
+        } else {
+            vertex.texCoord0 = Vector2f(0.0f, 0.0f);
         }
-
-        shader->setUniform("uMaterial.ambientColor", materials[materialIndex].ambientColor);
-        shader->setUniform("uMaterial.diffuseColor", materials[materialIndex].diffuseColor);
-        shader->setUniform("uMaterial.specularColor", materials[materialIndex].specularColor);
-        shader->setUniform("uMaterial.shininess", materials[materialIndex].shininess);
-
-        Model::render(camera);
-
-        glDrawElementsBaseVertex(
-                GL_TRIANGLES,
-                mesh.numIndices,
-                GL_UNSIGNED_INT,
-                (void *) (sizeof(unsigned int) * mesh.baseIndex),
-                mesh.baseVertex
-        );
-
-        if (materials[materialIndex].pDiffuse) {
-            materials[materialIndex].pDiffuse->deactivate();
+        if (mesh->mTextureCoords[1]) {
+            texCoord.x = mesh->mTextureCoords[1][i].x;
+            texCoord.y = mesh->mTextureCoords[1][i].y;
+            vertex.texCoord1 = texCoord;
+        } else {
+            vertex.texCoord1 = Vector2f(0.0f, 0.0f);
         }
-        if(materials[materialIndex].pSpecular) {
-            materials[materialIndex].pSpecular->deactivate();
-        }
+        vertices.push_back(vertex);
     }
 
-    glBindVertexArray(0);
-    shader->deactivate();
-}
-
-bool ObjectModel::loadMesh(const char *filename) {
-    clear();
-
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-
-    glGenBuffers(ARRAY_SIZE_IN_ELEMENTS(buffers), buffers);
-
-    bool ret = false;
-    Assimp::Importer importer;
-
-    const aiScene *pScene = importer.ReadFile(filename, ASSIMP_LOAD_FLAGS);
-
-    if (!pScene) {
-        std::cerr << "ERROR::MODEL: " << importer.GetErrorString() << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    ret = initFromScene(pScene, filename);
-
-    glBindVertexArray(0);
-
-    return ret;
-}
-
-void ObjectModel::clear() {
-    std::destroy(materials.begin(), materials.end());
-
-    if (VAO != 0) {
-        glDeleteVertexArrays(1, &VAO);
-        VAO = 0;
-    }
-}
-
-bool ObjectModel::initFromScene(const aiScene *pScene, const char *filename) {
-    meshes.resize(pScene->mNumMeshes);
-    materials.resize(pScene->mNumMaterials);
-
-    unsigned int numVertices = 0;
-    unsigned int numIndices = 0;
-
-    countVerticesAndIndices(pScene, numVertices, numIndices);
-
-    reserveSpace(numVertices, numIndices);
-
-    initAllMeshes(pScene);
-
-    if (!initMaterials(pScene, filename)) {
-        std::cerr << "ERROR::MODEL: could not initialize materials" << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    populateBuffers();
-
-    return true;
-}
-
-void ObjectModel::countVerticesAndIndices(const aiScene *pScene, unsigned int &numVertices, unsigned int &numIndices) {
-    for (unsigned int i = 0; i < meshes.size(); i++) {
-        meshes[i].materialIndex = pScene->mMeshes[i]->mMaterialIndex;
-        meshes[i].numIndices = pScene->mMeshes[i]->mNumFaces *
-                               3; // Flag: aiProcess_Triangulate -> alle Polygone werden zu Dreiecken, deswegen * 3
-        meshes[i].baseVertex = numVertices;
-        meshes[i].baseIndex = numIndices;
-
-        numVertices += pScene->mMeshes[i]->mNumVertices;
-        numIndices += meshes[i].numIndices;
-    }
-}
-
-void ObjectModel::reserveSpace(unsigned int numVertices, unsigned int numIndices) {
-    positions.reserve(numVertices);
-    normals.reserve(numVertices);
-    texCoords.reserve(numVertices);
-    indices.reserve(numIndices);
-}
-
-void ObjectModel::initAllMeshes(const aiScene *pScene) {
-    for (unsigned int i = 0; i < meshes.size(); i++) {
-        const aiMesh *pAiMesh = pScene->mMeshes[i];
-        initSingleMesh(pAiMesh);
-    }
-}
-
-void ObjectModel::initSingleMesh(const aiMesh *pAiMesh) {
-    const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
-
-    for (unsigned int i = 0; i < pAiMesh->mNumVertices; i++) {
-        const aiVector3D &pPos = pAiMesh->mVertices[i];
-        const aiVector3D &pNormal = pAiMesh->mNormals[i];
-        const aiVector3D &pTexCoord = pAiMesh->HasTextureCoords(0) ? pAiMesh->mTextureCoords[0][i] : Zero3D;
-
-        positions.push_back(Vector3f(pPos.x, pPos.y, pPos.z));
-        normals.push_back(Vector3f(pNormal.x, pNormal.y, pNormal.z));
-        texCoords.push_back(Vector2f(pTexCoord.x, pTexCoord.y));
-    }
-
-    for (unsigned int i = 0; i < pAiMesh->mNumFaces; i++) {
-        const aiFace &face = pAiMesh->mFaces[i];
-        assert(face.mNumIndices == 3);
-        indices.push_back(face.mIndices[0]);
-        indices.push_back(face.mIndices[1]);
-        indices.push_back(face.mIndices[2]);
-    }
-}
-
-bool ObjectModel::initMaterials(const aiScene *pScene, const std::string &filename) {
-    std::string::size_type slashIndex = filename.find_last_of("/");
-    std::string dir;
-
-    if (slashIndex == std::string::npos)
-        dir = ".";
-    else if (slashIndex == 0)
-        dir = "/";
-    else
-        dir = filename.substr(0, slashIndex);
-
-    bool ret = true;
-
-    for (unsigned int i = 0; i < pScene->mNumMaterials; i++) {
-        const aiMaterial* pMaterial = pScene->mMaterials[i];
-
-        loadTextures(dir, pMaterial, i);
-        loadColors(pMaterial, i);
-    }
-
-    return ret;
-}
-
-
-void ObjectModel::loadTextures(const std::string& dir, const aiMaterial* pMaterial, int index) {
-    loadDiffuseTexture(dir, pMaterial, index);
-    loadSpecularTexture(dir, pMaterial, index);
-}
-
-void ObjectModel::loadDiffuseTexture(const std::string &dir, const aiMaterial *pMaterial, int index) {
-    materials[index].pDiffuse = nullptr;
-
-    if(pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
-        aiString path;
-
-        if(pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-            std::string p(path.data);
-
-            if (p.substr(0, 2) == ".\\") {
-                p = p.substr(2, p.size() - 2);
-            }
-
-            std::string fullPath = dir + "/" + p;
-
-            materials[index].pDiffuse = new Texture(fullPath.c_str());
-
-            if (!materials[index].pDiffuse) {
-                std::cerr << "ERROR::MODEL: error loading diffuse texture" << std::endl;
-            }
+    for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
+        aiFace face = mesh->mFaces[i];
+        for (unsigned int j = 0; j < face.mNumIndices; j++) {
+            indices.push_back(face.mIndices[j]);
         }
     }
+    // process materials
+    aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
+    // 1. diffuse maps
+    std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+    // 2. specular maps
+    std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+    // 3. normal maps
+    std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+    textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+    // 4. height maps
+    std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+    textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+
+    // return a mesh object created from the extracted mesh data
+    return {vertices, indices, textures};
 }
 
-void ObjectModel::loadSpecularTexture(const std::string &dir, const aiMaterial *pMaterial, int index) {
-    materials[index].pSpecular = nullptr;
-
-    if(pMaterial->GetTextureCount(aiTextureType_SPECULAR) > 0) {
-        aiString path;
-
-        if(pMaterial->GetTexture(aiTextureType_SPECULAR, 0, &path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-            std::string p(path.data);
-
-            if (p.substr(0, 2) == ".\\") {
-                p = p.substr(2, p.size() - 2);
-            }
-
-            std::string fullPath = dir + "/" + p;
-
-            materials[index].pSpecular = new Texture(fullPath.c_str());
-
-            if (!materials[index].pSpecular) {
-                std::cerr << "ERROR::MODEL: error loading specular texture" << std::endl;
-            }
+std::vector<Texture> ObjectModel::loadMaterialTextures(
+        aiMaterial *mat,
+        aiTextureType type,
+        const std::string &typeName
+) {
+    std::vector<Texture> textures;
+    for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
+        aiString aiTexturePath;
+        mat->GetTexture(type, i, &aiTexturePath);
+        std::string filePath = this->directory + '/' + aiTexturePath.C_Str();
+        // Cache abfragen ob Textur zuvor geladen
+        if (textureCache.find(filePath) != textureCache.end()) {
+            textures.push_back(textureCache[filePath]);
+            //std::cout << "TextureCache HIT" << std::endl;
+            continue;
         }
+        // Cache füllen
+        Texture newTexture = Texture(filePath, typeName);
+        textureCache[filePath] = newTexture;
+        textures.push_back(newTexture);
     }
-}
-
-void ObjectModel::loadColors(const aiMaterial *pMaterial, int index) {
-    aiColor3D ambientColor(0.0f, 0.0f, 0.0f);
-    aiColor3D diffuseColor(0.0f, 0.0f, 0.0f);
-    aiColor3D specularColor(0.0f, 0.0f, 0.0f);
-    float shininess;
-
-
-    if(pMaterial->Get(AI_MATKEY_COLOR_AMBIENT, ambientColor) == AI_SUCCESS) {
-        materials[index].ambientColor.r = ambientColor.r;
-        materials[index].ambientColor.g = ambientColor.g;
-        materials[index].ambientColor.b = ambientColor.b;
-    }
-    else {
-        materials[index].ambientColor = Color(1.0f, 1.0f, 1.0f);
-    }
-
-    if(pMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, diffuseColor) == AI_SUCCESS) {
-        materials[index].diffuseColor.r = diffuseColor.r;
-        materials[index].diffuseColor.g = diffuseColor.g;
-        materials[index].diffuseColor.b = diffuseColor.b;
-    }
-    else {
-        materials[index].diffuseColor = Color(1.0f, 1.0f, 1.0f);
-    }
-
-    if(pMaterial->Get(AI_MATKEY_COLOR_SPECULAR, specularColor) == AI_SUCCESS) {
-        materials[index].specularColor.r = specularColor.r;
-        materials[index].specularColor.g = specularColor.g;
-        materials[index].specularColor.b = specularColor.b;
-    }
-    else {
-        materials[index].specularColor = Color(1.0f, 1.0f, 1.0f);
-    }
-
-    if(aiGetMaterialFloat(pMaterial, AI_MATKEY_SHININESS, &shininess) == AI_SUCCESS) {
-        materials[index].shininess = shininess;
-    }
-    else {
-        materials[index].shininess = 20.0f;
-    }
-}
-
-
-void ObjectModel::populateBuffers() {
-    glBindBuffer(GL_ARRAY_BUFFER, buffers[POS_VB]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(positions[0]) * positions.size(), &positions[0], GL_STATIC_DRAW);
-    glEnableVertexAttribArray(POSITION_LOCATION);
-    glVertexAttribPointer(POSITION_LOCATION, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, buffers[TEXCOORD_VB]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(texCoords[0]) * texCoords.size(), &texCoords[0], GL_STATIC_DRAW);
-    glEnableVertexAttribArray(TEX_COORD_LOCATION);
-    glVertexAttribPointer(TEX_COORD_LOCATION, 2, GL_FLOAT, GL_FALSE, 0, 0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, buffers[NORMAL_VB]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(normals[0]) * normals.size(), &normals[0], GL_STATIC_DRAW);
-    glEnableVertexAttribArray(NORMAL_LOCATION);
-    glVertexAttribPointer(NORMAL_LOCATION, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[INDEX_BUFFER]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * indices.size(), &indices[0], GL_STATIC_DRAW);
+    return textures;
 }

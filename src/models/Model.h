@@ -9,6 +9,8 @@
 #include "../maths/Matrix.h"
 #include "../utils/Camera.h"
 #include "../shaders/Shader.h"
+#include "../utils/Mesh.h"
+#include "../utils/Aabb.h"
 
 class Model {
 public:
@@ -32,12 +34,19 @@ public:
 
 protected:
     Shader *shader;
+    std::vector<Mesh> meshes;
+    AABB boundingBox;
+
+    void setBoundingBox();
+
 private:
     Matrix translation;
     Matrix rotationX;
     Matrix rotationY;
     Matrix rotationZ;
     Matrix scaling;
+
+    void drawBoundingBox();
 };
 
 

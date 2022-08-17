@@ -17,8 +17,9 @@ struct Material {
 
 in VS_OUT {
     vec3 Pos;
-    vec2 TexCoord;
     vec3 Normal;
+    vec2 TexCoord0;
+    vec2 TexCoord1;
 } fs_in;
 
 uniform Material uMaterial;
@@ -64,7 +65,7 @@ void main() {
     vec3 specular = light.specularColor * (spec * uMaterial.specularColor);
 
     vec4 result = vec4((ambient + diffuse + specular), 1.0f);
-    vec4 diffTex = texture(uTexture0, fs_in.TexCoord);
+    vec4 diffTex = texture(uTexture0, fs_in.TexCoord0);
 
     FragColor = result * diffTex;
 }

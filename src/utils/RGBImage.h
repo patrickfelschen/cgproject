@@ -9,6 +9,8 @@
 
 class RGBImage {
 public:
+    RGBImage();
+
     RGBImage(unsigned int width, unsigned height);
 
     ~RGBImage();

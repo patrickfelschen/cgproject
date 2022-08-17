@@ -1,5 +1,5 @@
 //
-// Created by Patrick on 05.08.2022.
+// Created by Patrick on 17.08.2022.
 //
 
 #ifndef CG_MATERIAL_H
@@ -7,7 +7,7 @@
 
 
 #include "Color.h"
-#include "../textures/Texture.h"
+#include "Texture.h"
 
 class Material {
 public:
@@ -15,12 +15,12 @@ public:
 
     virtual ~Material();
 
-    Texture *pDiffuse;
-    Texture *pSpecular;
-    Color ambientColor;
     Color diffuseColor;
     Color specularColor;
-    float shininess;
+    Color ambientColor;
+    float specularExponent;
+    const Texture *diffuseTexture;
+private:
 };
 
 

@@ -7,6 +7,7 @@
 
 
 #include "Entity.h"
+#include "../models/ObjectModel.h"
 
 class GunEntity : public Entity {
 public:

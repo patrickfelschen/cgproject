@@ -1,16 +1,15 @@
 //
-// Created by Patrick on 05.08.2022.
+// Created by Patrick on 17.08.2022.
 //
 
 #include "Material.h"
 
 Material::Material() {
-    pDiffuse = nullptr;
-    pSpecular = nullptr;
-    ambientColor = Color(1.0f, 1.0f, 1.0f);
-    diffuseColor = Color(1.0f, 1.0f, 1.0f);
-    specularColor = Color(1.0f, 1.0f, 1.0f);
-    shininess = 0;
+    this->diffuseColor = Color(1.0f, 1.0f, 1.0f);
+    this->specularColor = Color(0.3f, 0.3f, 0.3f);
+    this->ambientColor = Color(0.0f, 0.0f, 0.0f);
+    this->specularExponent = 10;
+    this->diffuseTexture = nullptr;
 }
 
 Material::~Material() {

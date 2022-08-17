@@ -4,6 +4,7 @@
 
 #include "GunEntity.h"
 
+
 #define TO_RAD(deg) (deg * std::numbers::pi / 180.0)
 #define TO_DEG(rad) (rad * 180.0 / std::numbers::pi)
 

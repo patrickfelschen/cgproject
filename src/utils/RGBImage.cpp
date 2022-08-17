@@ -1,5 +1,9 @@
 #include "RGBImage.h"
 
+RGBImage::RGBImage() : width(0), height(0) {
+
+}
+
 RGBImage::RGBImage(unsigned int width, unsigned height) : width(width), height(height) {
     data = std::vector<Color>(width * height, Color());
 }

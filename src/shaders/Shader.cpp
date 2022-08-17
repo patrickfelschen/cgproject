@@ -5,9 +5,10 @@
 
 #include "Shader.h"
 
-Shader::Shader() {
-    vsFilePath = "../assets/shaders/shader.vert";
-    fsFilePath = "../assets/shaders/shader.frag";
+#define vert "../assets/shaders/shader.vert"
+#define frag "../assets/shaders/shader.frag"
+
+Shader::Shader() : vsFilePath(vert), fsFilePath(frag), useView(true) {
     this->modelTransform.identity();
     compileShaders();
 }
