@@ -49,4 +49,24 @@ void Entity::render(const Camera &camera) {
     this->model->render(camera);
 }
 
+Model *Entity::getModel() const {
+    return model;
+}
+
+const AABB Entity::getTransformedBoundingBox() const {
+    Matrix transformation, translationMat, scalingmat, rotX, rotY, rotZ;
+    translationMat.translation(position);
+    scalingmat.scale(scaling);
+    rotX.rotationX(rotationX);
+    rotY.rotationY(rotationY);
+    rotZ.rotationZ(rotationZ);
+
+    transformation = translationMat * rotX * rotY * rotZ * scalingmat;
+
+    AABB box = model->getBoundingBox().transform(transformation);
+
+    return model->getBoundingBox().transform(transformation);
+
+}
+
 Entity::~Entity() = default;

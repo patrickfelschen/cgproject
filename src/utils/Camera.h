@@ -36,6 +36,12 @@ public:
 
     Vector3f getRight() const;
 
+    float getYaw() const;
+
+    float getPitch() const;
+
+    const Vector3f & getDirection() const;
+
     void handleKeyboardInputs(float deltaTime);
 
     void handleMouseInputs(float deltaTime);

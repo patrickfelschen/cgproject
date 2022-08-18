@@ -12,7 +12,7 @@ void Model::update(float deltaTime) {
 }
 
 void Model::render(const Camera &camera) {
-    Matrix transformation = translation * rotationX * rotationY * rotationZ * scaling;
+    transformation = translation * rotationX * rotationY * rotationZ * scaling;
     shader->setModelTransform(transformation);
     drawBoundingBox();
 }
@@ -95,6 +95,10 @@ void Model::drawBoundingBox() {
     glVertex3f(-boundingBox.Min.x, boundingBox.Min.y, boundingBox.Min.z); // 2
 
     glEnd();
+}
+
+AABB Model::getBoundingBox() const {
+    return boundingBox;
 }
 
 

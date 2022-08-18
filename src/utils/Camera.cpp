@@ -124,3 +124,7 @@ void Camera::handleMouseInputs(float deltaTime) {
     if (pitch > 89.0f) pitch = 89.0f;
     if (pitch < -89.0f) pitch = -89.0f;
 }
+
+const Vector3f & Camera::getDirection() const {
+    return target;
+}

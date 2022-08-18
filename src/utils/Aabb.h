@@ -1,49 +1,39 @@
-//
-//  Aabb.hpp
-//  CGXcode
-//
-//  Created by Philipp Lensing on 02.11.16.
-//  Copyright © 2016 Philipp Lensing. All rights reserved.
-//
+#ifndef CG_AABB_H
+#define CG_AABB_H
 
-#ifndef Aabb_hpp
-#define Aabb_hpp
 
-#include <cstdio>
-#include "../maths/Matrix.h"
 #include "../maths/Vector3f.h"
 #include "../maths/Matrix.h"
+struct Ray {
+    Ray() {
+        origin = Vector3f();
+        direction = Vector3f();
+    }
+
+    Vector3f origin;
+    Vector3f direction;
+
+};
 
 class AABB {
 public:
     Vector3f Min;
     Vector3f Max;
-
     AABB();
-
-    AABB(const Vector3f &min, const Vector3f &max);
-
+    AABB(const Vector3f& min, const Vector3f& max);
     AABB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ);
-
     Vector3f size() const;
-
-    AABB transform(const Matrix &m) const;
-
-    AABB merge(const AABB &a, const AABB &b) const;
-
-    AABB &merge(const AABB &a);
-
+    AABB transform(const Matrix& m) const;
+    AABB merge(const AABB& a, const AABB& b) const;
+    AABB& merge(const AABB& a);
     Vector3f center() const;
-
     void corners(Vector3f c[8]) const;
-
-    void fromPoints(const Vector3f *Points, unsigned int PointCount);
-
-    static const AABB &unitBox();
-
+    void fromPoints(const Vector3f* Points, unsigned int PointCount);
+    static const AABB& unitBox();
+    bool intersection(const Ray &ray) const;
 protected:
     static AABB UnitBox;
 };
 
 
-#endif /* Aabb_hpp */
+#endif //CG_AABB_H

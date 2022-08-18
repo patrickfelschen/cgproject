@@ -30,6 +30,10 @@ public:
 
     void setScaling(float newScaling);
 
+    Model *getModel() const;
+
+    const AABB getTransformedBoundingBox() const;
+
 
 protected:
     Vector3f position;

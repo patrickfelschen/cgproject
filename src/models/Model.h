@@ -32,6 +32,8 @@ public:
 
     void rotateZ(float angle);
 
+    AABB getBoundingBox() const;
+
 protected:
     Shader *shader;
     std::vector<Mesh> meshes;
@@ -40,6 +42,7 @@ protected:
     void setBoundingBox();
 
 private:
+    Matrix transformation;
     Matrix translation;
     Matrix rotationX;
     Matrix rotationY;

@@ -15,6 +15,8 @@ void processInput(GLFWwindow *window);
 
 void glfwErrorCallback(int, const char *errorMsg);
 
+void drawCrosshair();
+
 void GLAPIENTRY glErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
                                 const GLchar *message, const void *userParam);
 
@@ -78,6 +80,9 @@ int main(int argc, char **argv) {
             // Render start
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glClearColor(0.2, 0.2, 0.2, 1.0f);
+
+            drawCrosshair();
+
             game.update((float) deltaTime);
             game.render();
             // Render end
@@ -87,6 +92,34 @@ int main(int argc, char **argv) {
 
     glfwTerminate();
     exit(EXIT_SUCCESS);
+}
+
+void drawCrosshair()
+{
+    glPushMatrix();
+    glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0, SCR_WIDTH, SCR_HEIGHT, 0, -1, 1);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    glColor3ub(240, 240, 240);//white
+    glLineWidth(2.0);
+    glBegin(GL_LINES);
+    //horizontal line
+    glVertex2i(SCR_WIDTH / 2 - 7, SCR_HEIGHT / 2);
+    glVertex2i(SCR_WIDTH / 2 + 7, SCR_HEIGHT / 2);
+    glEnd();
+    //vertical line
+    glBegin(GL_LINES);
+    glVertex2i(SCR_WIDTH / 2, SCR_HEIGHT / 2 + 7);
+    glVertex2i(SCR_WIDTH / 2, SCR_HEIGHT / 2 - 7);
+    glEnd();
+
+    glPopMatrix();
+
+
 }
 
 void processInput(GLFWwindow *window) {

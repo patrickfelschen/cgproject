@@ -25,6 +25,7 @@ private:
     GLFWwindow &window;
     Camera camera;
     std::vector<Entity *> entities;
+    std::vector<Entity *> targets;
 };
 
 
