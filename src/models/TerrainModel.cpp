@@ -6,7 +6,7 @@
 #include "TerrainModel.h"
 #include "../utils/Vertex.h"
 
-TerrainModel::TerrainModel(Shader *shader) : Model(shader), width(100), height(1), depth(100) {
+TerrainModel::TerrainModel(Shader *shader) : Model(shader), width(100), height(0.5), depth(100) {
     generate();
 }
 
@@ -34,12 +34,12 @@ void TerrainModel::generate() {
             float z = (i * widthScale - (width / 2));
 
             vertices[index].pos = Vector3f(x, y, z);
-            // Texturkoordinaten für Grastextur
+            // Texturkoordinaten für Mixtextur
             vertices[index].texCoord0.x = (i / (float) imgWidth - 1);
             vertices[index].texCoord0.y = (j / (float) imgHeight - 1);
-            // Texturkoordinaten für Steintextur
-            vertices[index].texCoord1.x = (i / ((float) imgWidth - 1) * 100);
-            vertices[index].texCoord1.y = (j / ((float) imgHeight - 1) * 100);
+            // Texturkoordinaten für Grastextur und Steintextur
+            vertices[index].texCoord1.x = (i / ((float) imgWidth - 1) * 1000);
+            vertices[index].texCoord1.y = (j / ((float) imgHeight - 1) * 1000);
         }
     }
     int pos = 0;
@@ -79,13 +79,13 @@ void TerrainModel::generate() {
     }
 
     // Texturen
-    Texture grassTexture = Texture("../assets/Terrain/grass.bmp", "");
+    Texture grassTexture = Texture("../assets/Terrain/grass2.bmp", "");
     Texture rockTexture = Texture("../assets/Terrain/rock.bmp", "");
-    //Texture mixTexture = Texture("../assets/Terrain/mixmap.bmp", "");
+    Texture mixTexture = Texture("../assets/Terrain/mixmap.bmp", "");
 
     textures.push_back(grassTexture);
     textures.push_back(rockTexture);
-    //textures.push_back(mixTexture);
+    textures.push_back(mixTexture);
 
     Material material;
     Mesh terrainMash = Mesh(vertices, indices, textures, material);

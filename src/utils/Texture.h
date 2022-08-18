@@ -17,11 +17,11 @@ public:
 
     virtual ~Texture();
 
-    void activate(unsigned int slot = 0) const;
+    void activate(unsigned int unit) const;
 
     void deactivate() const;
 
-    unsigned int id;
+    GLuint id;
 private:
     std::string type;
     std::string filePath;

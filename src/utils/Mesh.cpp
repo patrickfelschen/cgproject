@@ -60,14 +60,16 @@ void Mesh::setupMesh() {
 
 void Mesh::render(Shader *shader) {
     // Texturen aktivieren
-    for (unsigned int i = 0; i < textures.size(); i++) {
+    for (int i = 0; i < textures.size(); i++) {
         textures[i].activate(i);
+        shader->setUniform("uTexture" + std::to_string(i), i);
     }
     // Material Eigenschaften setzen
     shader->setUniform("uMaterial.ambient", material.ambient);
     shader->setUniform("uMaterial.diffuse", material.diffuse);
     shader->setUniform("uMaterial.specular", material.specular);
     shader->setUniform("uMaterial.shininess", material.shininess);
+
     // Mesh zeichnen
     glBindVertexArray(VAO);
     glDrawElements(

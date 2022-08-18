@@ -2,6 +2,8 @@
 // Created by Patrick on 17.08.2022.
 //
 
+
+
 #include "Texture.h"
 
 Texture::Texture() : id(0), filePath(""), type("") {}
@@ -43,8 +45,8 @@ Texture::Texture(const std::string &filePath, const std::string &type) : id(0), 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 }
 
-void Texture::activate(unsigned int slot) const {
-    glActiveTexture(GL_TEXTURE0 + slot);
+void Texture::activate(unsigned int unit) const {
+    glActiveTexture(GL_TEXTURE0 + unit);
     glBindTexture(GL_TEXTURE_2D, id);
 }
 

@@ -28,15 +28,15 @@ public:
 
     void setModelTransform(const Matrix &modelTransform);
 
-    void setUniform(const char *name, float value);
+    void setUniform(const std::string &name, float value);
 
-    void setUniform(const char *name, const Vector3f &value);
+    void setUniform(const std::string &name, const Vector3f &value);
 
-    void setUniform(const char *name, const Color &value);
+    void setUniform(const std::string &name, const Color &value);
 
-    void setUniform(const char *name, int value);
+    void setUniform(const std::string &name, int value);
 
-    void setUniform(const char *name, const Matrix &value);
+    void setUniform(const std::string &name, const Matrix &value);
 
 protected:
     virtual void setUniforms(const Camera &camera);
@@ -52,13 +52,13 @@ private:
 
     Matrix modelTransform;
 
-    std::unordered_map<const char *, GLint> uniformLocationCache;
+    std::unordered_map<std::string, GLint> uniformLocationCache;
 
     void compileShaders();
 
     void addShader(const char *shaderText, GLenum shaderType) const;
 
-    GLint getUniformLocation(const char *name);
+    GLint getUniformLocation(const std::string &name);
 };
 
 

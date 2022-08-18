@@ -8,6 +8,7 @@
 #include "entities/CoinEntity.h"
 #include "entities/BulletEntity.h"
 #include "models/TerrainModel.h"
+#include "shaders/TerrainShader.h"
 
 Model *garageModel;
 Model *gunModel;
@@ -25,7 +26,7 @@ Game::Game(GLFWwindow &window, const Camera &camera) : window(window), camera(ca
     gunModel = new ObjectModel(new PhongShader(false), "../assets/Objects/Gun/ZE8FK2UU5PF8Y5F5777X34XII.obj");
     coinModel = new ObjectModel(new PhongShader(), "../assets/Objects/Coin/I89O58TBZ353I4X9ANHTRFF5K.obj");
     skyboxModel = new ObjectModel(new PhongShader(), "../assets/Objects/SkyBox/skybox.obj");
-    terrainModel = new TerrainModel(new PhongShader());
+    terrainModel = new TerrainModel(new TerrainShader());
 
     gunEntity = new GunEntity(gunModel, window);
     garageEntity = new Entity(garageModel);

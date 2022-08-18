@@ -14,7 +14,7 @@ void Model::update(float deltaTime) {
 void Model::render(const Camera &camera) {
     transformation = translation * rotationX * rotationY * rotationZ * scaling;
     shader->setModelTransform(transformation);
-    drawBoundingBox();
+    //drawBoundingBox();
 }
 
 void Model::translate(const Vector3f &v) {

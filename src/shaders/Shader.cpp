@@ -64,6 +64,8 @@ void Shader::compileShaders() {
     Loader::readShaderFile(fsFilePath, fs);
     addShader(fs.c_str(), GL_FRAGMENT_SHADER);
 
+    std::cout << "SHADER::COMPILED: " << vsFilePath << " " << fsFilePath << std::endl;
+
     GLint success = 0;
     GLchar errorLog[1024] = {0};
 
@@ -106,7 +108,6 @@ void Shader::activate(const Camera &camera) {
     }
     // Shader aktivieren
     glUseProgram(id);
-
     // Uniform setzen
     setUniforms(camera);
 }
@@ -115,38 +116,38 @@ void Shader::deactivate() const {
     glUseProgram(0);
 }
 
-void Shader::setUniform(const char *name, int value) {
+void Shader::setUniform(const std::string &name, int value) {
     glUniform1i(getUniformLocation(name), value);
 }
 
-void Shader::setUniform(const char *name, float value) {
+void Shader::setUniform(const std::string &name, float value) {
     glUniform1f(getUniformLocation(name), value);
 }
 
-void Shader::setUniform(const char *name, const Vector3f &value) {
+void Shader::setUniform(const std::string &name, const Vector3f &value) {
     glUniform3f(getUniformLocation(name), value.x, value.y, value.z);
 }
 
-void Shader::setUniform(const char *name, const Color &value) {
+void Shader::setUniform(const std::string &name, const Color &value) {
     glUniform3f(getUniformLocation(name), value.r, value.g, value.b);
 }
 
-void Shader::setUniform(const char *name, const Matrix &value) {
+void Shader::setUniform(const std::string &name, const Matrix &value) {
     glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, value.m);
 }
 
-GLint Shader::getUniformLocation(const char *name) {
+GLint Shader::getUniformLocation(const std::string &name) {
     if (uniformLocationCache.find(name) != uniformLocationCache.end()) {
+        //std::cout << "Cache HIT" << std::endl;
         return uniformLocationCache[name];
     }
-
-    GLint locationId = glGetUniformLocation(id, name);
+    GLint locationId = glGetUniformLocation(id, name.c_str());
     if (locationId == -1) {
-        std::cerr << "ERROR::SHADER::GETUNIFORMLOCATION: can not find uniform location: " << name << std::endl;
+        std::cerr << "ERROR::SHADER::GETUNIFORMLOCATION: " << fsFilePath << ": can not find uniform location: " << name
+                  << std::endl;
         exit(EXIT_FAILURE);
     }
     uniformLocationCache[name] = locationId;
-
     return locationId;
 }
 
