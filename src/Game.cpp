@@ -68,7 +68,7 @@ void Game::update(float deltaTime) {
 void Game::render() {
     if(targets.size() < 15) {
         if((rand() % 100) < 1) {
-            Entity *newEnt = new CoinEntity(coinModel);
+            CoinEntity *newEnt = new CoinEntity(coinModel);
             targets.push_back(newEnt);
             gunEntity->setTargets(&targets);
         }

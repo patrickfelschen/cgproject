@@ -10,6 +10,7 @@
 #include <vector>
 #include "utils/Camera.h"
 #include "entities/Entity.h"
+#include "entities/CoinEntity.h"
 
 class Game {
 public:
@@ -25,7 +26,7 @@ private:
     GLFWwindow &window;
     Camera camera;
     std::vector<Entity *> entities;
-    std::vector<Entity *> targets;
+    std::vector<CoinEntity *> targets;
 };
 
 
