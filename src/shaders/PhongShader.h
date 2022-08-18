@@ -12,15 +12,12 @@ class PhongShader : public Shader {
 public:
     PhongShader();
 
-    PhongShader(bool useView);
+    explicit PhongShader(bool useView);
 
     ~PhongShader() override;
 
 protected:
     void setUniforms(const Camera &camera) override;
-
-private:
-    Vector3f lightPos;
 };
 
 

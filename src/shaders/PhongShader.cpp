@@ -7,22 +7,25 @@
 #define vert "../assets/shaders/phongShader.vert"
 #define frag "../assets/shaders/phongShader.frag"
 
-PhongShader::PhongShader() : Shader(vert, frag, true) {
-    lightPos = Vector3f(0.0f, 1.0f, 0.0f);
-}
+PhongShader::PhongShader() : Shader(vert, frag, true) {}
 
-PhongShader::PhongShader(bool useView) : Shader(vert, frag, useView) {
-    lightPos = Vector3f(0.0f, 1.0f, 0.0f);
-}
+PhongShader::PhongShader(bool useView) : Shader(vert, frag, useView) {}
 
 void PhongShader::setUniforms(const Camera &camera) {
     Shader::setUniforms(camera);
-    setUniform("uLightPos", lightPos);
+    // Kamera Position
     setUniform("uCamPos", camera.getPosition());
-    setUniform("uMaterial.ambientColor", Color(0.0f, 0.0f, 0.0f));
-    setUniform("uMaterial.diffuseColor", Color(1.0f, 1.0f, 1.0f));
-    setUniform("uMaterial.specularColor", Color(0.3f, 0.3f, 0.3f));
-    setUniform("uMaterial.shininess", 10.0f);
+    // Licht
+    Vector3f lightPos = Vector3f(-3.0f, 3.0f, 0.0f);
+    Color light = Color(1.0f, 1.0f, 1.0f);
+    Color lightDiffuse = light * 0.8;
+    Color lightAmbient = lightDiffuse * 0.6f;
+    Color lightSpecular = Color(1.0f, 1.0f, 1.0f);
+
+    setUniform("uLight.position", lightPos);
+    setUniform("uLight.ambient", lightAmbient);
+    setUniform("uLight.diffuse", lightDiffuse);
+    setUniform("uLight.specular", lightSpecular);
 }
 
 PhongShader::~PhongShader() = default;

@@ -87,7 +87,8 @@ void Terrain::generate() {
     textures.push_back(rockTexture);
     textures.push_back(mixTexture);
 
-    Mesh terrainMash = Mesh(vertices, indices, textures);
+    Material material;
+    Mesh terrainMash = Mesh(vertices, indices, textures, material);
 
     this->meshes.push_back(terrainMash);
 }
@@ -100,7 +101,7 @@ void Terrain::render(const Camera &camera) {
     this->shader->activate(camera);
     Model::render(camera);
     for (auto &mesh: meshes) {
-        mesh.render();
+        mesh.render(shader);
     }
     this->shader->deactivate();
 }

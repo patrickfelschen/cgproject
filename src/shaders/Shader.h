@@ -39,10 +39,6 @@ public:
     void setUniform(const char *name, const Matrix &value);
 
 protected:
-    Matrix modelTransform;
-
-    GLint getUniformLocation(const char *name);
-
     virtual void setUniforms(const Camera &camera);
 
 private:
@@ -54,11 +50,15 @@ private:
 
     bool useView;
 
+    Matrix modelTransform;
+
     std::unordered_map<const char *, GLint> uniformLocationCache;
 
     void compileShaders();
 
     void addShader(const char *shaderText, GLenum shaderType) const;
+
+    GLint getUniformLocation(const char *name);
 };
 
 

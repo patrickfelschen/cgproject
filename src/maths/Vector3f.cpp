@@ -94,6 +94,12 @@ Vector3f Vector3f::reflection(const Vector3f &normal) const {
     return *this - normal * (2 * this->dot(normal));
 }
 
+void Vector3f::print() {
+    std::cout << x << " ";
+    std::cout << y << " ";
+    std::cout << z << std::endl;
+}
+
 
 
 

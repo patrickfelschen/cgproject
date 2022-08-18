@@ -30,13 +30,11 @@ public:
 
     Vector3f getPosition() const;
 
-    Vector3f getTarget();
+    Vector3f getTarget() const;
 
     Vector3f getUp() const;
 
-    Vector3f getRight();
-
-    Vector3f getDirection() const;
+    Vector3f getRight() const;
 
     void handleKeyboardInputs(float deltaTime);
 

@@ -58,13 +58,7 @@ Vector3f Camera::getPosition() const {
     return position;
 }
 
-Vector3f Camera::getTarget() {
-    target.x = cos(TO_RAD(yaw)) * cos(TO_RAD(pitch));
-    target.y = sin(TO_RAD(pitch));
-    target.z = sin(TO_RAD(yaw)) * cos(TO_RAD(pitch));
-
-    target.normalize();
-
+Vector3f Camera::getTarget() const {
     return target;
 }
 
@@ -72,15 +66,23 @@ Vector3f Camera::getUp() const {
     return up;
 }
 
+Vector3f Camera::getRight() const {
+    return target.cross(up).normalize();
+}
+
 void Camera::update(float deltaTime) {
     handleKeyboardInputs(deltaTime);
     handleMouseInputs(deltaTime);
 
-    view.lookAt(getTarget() + getPosition(), getUp(), getPosition());
+    target.x = cos(TO_RAD(yaw)) * cos(TO_RAD(pitch));
+    target.y = sin(TO_RAD(pitch));
+    target.z = sin(TO_RAD(yaw)) * cos(TO_RAD(pitch));
+    target.normalize();
+    view.lookAt(target + position, up, position);
 }
 
 void Camera::handleKeyboardInputs(float deltaTime) {
-    float speed = 10.0f * deltaTime;
+    float speed = 0.7f * deltaTime;
 
     if (glfwGetKey(&window, GLFW_KEY_W) == GLFW_PRESS) {
         position += (target * speed);
@@ -122,10 +124,3 @@ void Camera::handleMouseInputs(float deltaTime) {
     if (pitch > 89.0f) pitch = 89.0f;
     if (pitch < -89.0f) pitch = -89.0f;
 }
-
-Vector3f Camera::getRight() {
-    return getTarget().cross(getUp()).normalize();
-}
-
-
-

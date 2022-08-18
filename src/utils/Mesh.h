@@ -9,24 +9,29 @@
 #include "Vertex.h"
 #include "Texture.h"
 #include "../shaders/Shader.h"
+#include "Material.h"
 
 class Mesh {
 public:
     Mesh();
 
-    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
+    Mesh(const std::vector<Vertex> &vertices,
+         const std::vector<unsigned int> &indices,
+         const std::vector<Texture> &textures,
+         const Material &material);
 
     virtual ~Mesh();
+
+    void render(Shader *shader);
 
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
     std::vector<Texture> textures;
-
-    void render();
-
-    unsigned int materialIndex;
+    Material material;
 private:
-    unsigned int VAO, VBO, EBO;
+    unsigned int VAO = 0;
+    unsigned int VBO = 0;
+    unsigned int EBO = 0;
 
     void setupMesh();
 };

@@ -5,9 +5,7 @@
 #ifndef CG_MATERIAL_H
 #define CG_MATERIAL_H
 
-
 #include "Color.h"
-#include "Texture.h"
 
 class Material {
 public:
@@ -15,12 +13,10 @@ public:
 
     virtual ~Material();
 
-    Color diffuseColor;
-    Color specularColor;
-    Color ambientColor;
-    float specularExponent;
-    const Texture *diffuseTexture;
-private:
+    Color diffuse;
+    Color specular;
+    Color ambient;
+    float shininess;
 };
 
 

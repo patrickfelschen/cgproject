@@ -1,6 +1,8 @@
 #ifndef CG_COLOR_H
 #define CG_COLOR_H
 
+#include "assimp/types.h"
+
 class Color {
 public:
     float r;
@@ -9,6 +11,8 @@ public:
     float a;
 
     Color();
+
+    explicit Color(const aiColor3D &aiColor);
 
     Color(float r, float g, float b, float a);
 

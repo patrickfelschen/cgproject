@@ -6,15 +6,14 @@
 #include "Mesh.h"
 
 
-Mesh::Mesh() {
+Mesh::Mesh() = default;
 
-}
-
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) {
+Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices,
+           const std::vector<Texture> &textures, const Material &material) {
     this->vertices = vertices;
     this->indices = indices;
     this->textures = textures;
-
+    this->material = material;
     this->setupMesh();
 }
 
@@ -59,12 +58,17 @@ void Mesh::setupMesh() {
     glBindVertexArray(0);
 }
 
-void Mesh::render() {
-    // bind textures
+void Mesh::render(Shader *shader) {
+    // Texturen aktivieren
     for (unsigned int i = 0; i < textures.size(); i++) {
         textures[i].activate(i);
     }
-    // render mesh
+    // Material Eigenschaften setzen
+    shader->setUniform("uMaterial.ambient", material.ambient);
+    shader->setUniform("uMaterial.diffuse", material.diffuse);
+    shader->setUniform("uMaterial.specular", material.specular);
+    shader->setUniform("uMaterial.shininess", material.shininess);
+    // Mesh zeichnen
     glBindVertexArray(VAO);
     glDrawElements(
             GL_TRIANGLES,
@@ -73,11 +77,11 @@ void Mesh::render() {
             nullptr
     );
     glBindVertexArray(0);
-
-    // unbind textures
+    // Texturen deaktivieren
     for (auto &texture: textures) {
         texture.deactivate();
     }
-
     glActiveTexture(GL_TEXTURE0);
 }
+
+

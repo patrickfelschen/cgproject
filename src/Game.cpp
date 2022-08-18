@@ -48,12 +48,12 @@ void Game::update(float deltaTime) {
 }
 
 void Game::render() {
-//    if(entities.size() < 15) {
-//        if((rand() % 100) < 1) {
-//            Entity *newEnt = new CoinEntity(coinModel);
-//            entities.push_back(newEnt);
-//        }
-//    }
+    if (entities.size() < 15) {
+        if ((rand() % 100) < 1) {
+            Entity *newEnt = new CoinEntity(coinModel);
+            entities.push_back(newEnt);
+        }
+    }
 
     //terrain->render(camera);
 

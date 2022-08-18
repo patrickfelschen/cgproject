@@ -5,13 +5,10 @@
 #include "Material.h"
 
 Material::Material() {
-    this->diffuseColor = Color(1.0f, 1.0f, 1.0f);
-    this->specularColor = Color(0.3f, 0.3f, 0.3f);
-    this->ambientColor = Color(0.0f, 0.0f, 0.0f);
-    this->specularExponent = 10;
-    this->diffuseTexture = nullptr;
+    this->diffuse = Color(1.0f, 1.0f, 1.0f);
+    this->specular = Color(0.3f, 0.3f, 0.3f);
+    this->ambient = Color(0.1f, 0.1f, 0.1f);
+    this->shininess = 1.0f;
 }
 
-Material::~Material() {
-
-}
+Material::~Material() = default;

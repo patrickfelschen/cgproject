@@ -40,6 +40,7 @@ public:
 
     Vector3f reflection(const Vector3f &normal) const;
 
+    void print();
 };
 
 #endif /* defined(__SimpleRayTracer__Vector3f__) */
