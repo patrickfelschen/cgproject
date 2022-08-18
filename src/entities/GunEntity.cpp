@@ -48,6 +48,7 @@ void GunEntity::shoot(const Camera &camera) {
             bool intersection = targets->at(i)->getTransformedBoundingBox().intersection(ray);
             if(intersection) {
                 printf("hit\n");
+                delete targets->at(i);
                 targets->erase(targets->begin() + i);
                 break;
             }
