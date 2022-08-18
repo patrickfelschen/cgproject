@@ -2,18 +2,18 @@
 // Created by Patrick on 12.08.2022.
 //
 
-#ifndef CG_TERRAIN_H
-#define CG_TERRAIN_H
+#ifndef CG_TERRAINMODEL_H
+#define CG_TERRAINMODEL_H
 
 
 #include "../shaders/Shader.h"
-#include "../models/Model.h"
+#include "Model.h"
 
-class Terrain : public Model {
+class TerrainModel : public Model {
 public:
-    explicit Terrain(Shader *shader);
+    explicit TerrainModel(Shader *shader);
 
-    ~Terrain() override = default;
+    ~TerrainModel() override = default;
 
     void update(float deltaTime) override;
 
@@ -28,4 +28,4 @@ private:
 };
 
 
-#endif //CG_TERRAIN_H
+#endif //CG_TERRAINMODEL_H

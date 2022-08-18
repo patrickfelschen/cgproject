@@ -3,14 +3,14 @@
 // https://www.braynzarsoft.net/viewtutorial/q16390-30-heightmap-terrain
 //
 
-#include "Terrain.h"
-#include "Vertex.h"
+#include "TerrainModel.h"
+#include "../utils/Vertex.h"
 
-Terrain::Terrain(Shader *shader) : Model(shader), width(10), height(1), depth(10) {
+TerrainModel::TerrainModel(Shader *shader) : Model(shader), width(100), height(1), depth(100) {
     generate();
 }
 
-void Terrain::generate() {
+void TerrainModel::generate() {
     RGBImage image;
     Loader::readImageFile("../assets/Terrain/heightmap.bmp", image);
 
@@ -81,11 +81,11 @@ void Terrain::generate() {
     // Texturen
     Texture grassTexture = Texture("../assets/Terrain/grass.bmp", "");
     Texture rockTexture = Texture("../assets/Terrain/rock.bmp", "");
-    Texture mixTexture = Texture("../assets/Terrain/mixmap.bmp", "");
+    //Texture mixTexture = Texture("../assets/Terrain/mixmap.bmp", "");
 
     textures.push_back(grassTexture);
     textures.push_back(rockTexture);
-    textures.push_back(mixTexture);
+    //textures.push_back(mixTexture);
 
     Material material;
     Mesh terrainMash = Mesh(vertices, indices, textures, material);
@@ -93,11 +93,11 @@ void Terrain::generate() {
     this->meshes.push_back(terrainMash);
 }
 
-void Terrain::update(float deltaTime) {
+void TerrainModel::update(float deltaTime) {
     Model::update(deltaTime);
 }
 
-void Terrain::render(const Camera &camera) {
+void TerrainModel::render(const Camera &camera) {
     this->shader->activate(camera);
     Model::render(camera);
     for (auto &mesh: meshes) {

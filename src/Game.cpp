@@ -7,28 +7,50 @@
 #include "entities/GunEntity.h"
 #include "entities/CoinEntity.h"
 #include "entities/BulletEntity.h"
+#include "models/TerrainModel.h"
 
-GunEntity *gun;
-Entity *garage;
-Entity *skybox;
+Model *garageModel;
+Model *gunModel;
 Model *coinModel;
+Model *skyboxModel;
+Model *terrainModel;
+
+GunEntity *gunEntity;
+Entity *garageEntity;
+Entity *skyboxEntity;
+Entity *terrainEntity;
+
 Game::Game(GLFWwindow &window, const Camera &camera) : window(window), camera(camera) {
-
-    Model *garageModel = new ObjectModel(new PhongShader(), "../assets/Objects/Garage/MUW04SKJGJ052IRMJUCT9DJ5E.obj");
-    Model *gunModel = new ObjectModel(new PhongShader(false), "../assets/Objects/Gun/ZE8FK2UU5PF8Y5F5777X34XII.obj");
-//    Model *bulletModel = new ObjectModel(new PhongShader(), "../assets/Objects/Bullet/50_Barrett.obj");
+    garageModel = new ObjectModel(new PhongShader(), "../assets/Objects/Garage/MUW04SKJGJ052IRMJUCT9DJ5E.obj");
+    gunModel = new ObjectModel(new PhongShader(false), "../assets/Objects/Gun/ZE8FK2UU5PF8Y5F5777X34XII.obj");
     coinModel = new ObjectModel(new PhongShader(), "../assets/Objects/Coin/I89O58TBZ353I4X9ANHTRFF5K.obj");
-//    Model *skyboxModel = new ObjectModel(new PhongShader(), "../assets/Objects/SkyBox/skybox.obj");
+    skyboxModel = new ObjectModel(new PhongShader(), "../assets/Objects/SkyBox/skybox.obj");
+    terrainModel = new TerrainModel(new PhongShader());
 
-    gun = new GunEntity(gunModel, window);
-    garage = new Entity(garageModel);
-//    skybox = new Entity(skyboxModel);
+    gunEntity = new GunEntity(gunModel, window);
+    garageEntity = new Entity(garageModel);
+    skyboxEntity = new Entity(skyboxModel);
+    terrainEntity = new Entity(terrainModel);
+    terrainEntity->setPosition(0, -0.5, 0);
 
-    entities.push_back(gun);
-    entities.push_back(garage);
-//    entities.push_back(skybox);
+    entities.push_back(gunEntity);
+    entities.push_back(garageEntity);
+    entities.push_back(skyboxEntity);
+    entities.push_back(terrainEntity);
 
     srand(time(0));
+}
+
+Game::~Game() {
+    delete garageModel;
+    delete gunModel;
+    delete coinModel;
+    delete skyboxModel;
+    delete terrainModel;
+    delete gunEntity;
+    delete garageEntity;
+    delete skyboxEntity;
+    delete terrainEntity;
 }
 
 void Game::update(float deltaTime) {
@@ -48,7 +70,7 @@ void Game::render() {
         if((rand() % 100) < 1) {
             Entity *newEnt = new CoinEntity(coinModel);
             targets.push_back(newEnt);
-            gun->setTargets(&targets);
+            gunEntity->setTargets(&targets);
         }
     }
 

@@ -3,15 +3,16 @@
 #version 460 core
 
 struct Light {
-    vec3 ambientColor;
-    vec3 diffuseColor;
-    vec3 specularColor;
-} light;
+    vec3 position;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
 
 struct Material {
-    vec3 ambientColor;
-    vec3 diffuseColor;
-    vec3 specularColor;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
     float shininess;
 };
 
@@ -22,9 +23,10 @@ in VS_OUT {
     vec2 TexCoord1;
 } fs_in;
 
-uniform Material uMaterial;
-uniform vec3 uLightPos;
 uniform vec3 uCamPos;
+
+uniform Material uMaterial;
+uniform Light uLight;
 
 uniform sampler2D uTexture0;
 uniform sampler2D uTexture1;

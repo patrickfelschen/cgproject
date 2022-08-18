@@ -15,7 +15,7 @@ class Game {
 public:
     explicit Game(GLFWwindow &window, const Camera &camera);
 
-    ~Game() = default;
+    virtual ~Game();
 
     void update(float deltaTime);
 
