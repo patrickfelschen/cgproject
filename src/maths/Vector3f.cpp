@@ -100,6 +100,14 @@ void Vector3f::print() const {
     std::cout << z << std::endl;
 }
 
+float Vector3f::distanceTo(const Vector3f &v) const {
+    float diffX = this->x - v.x;
+    float diffY = this->y - v.y;
+    float diffZ = this->z - v.z;
+
+    return sqrtf(powf(diffX,2) + powf(diffY,2) + powf(diffZ,2));
+}
+
 
 
 

@@ -42,6 +42,8 @@ public:
 
     void print() const;
 
+    float distanceTo(const Vector3f &v) const;
+
 };
 
 #endif /* defined(__SimpleRayTracer__Vector3f__) */

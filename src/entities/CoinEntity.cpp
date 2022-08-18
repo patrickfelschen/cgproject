@@ -24,9 +24,20 @@ void CoinEntity::render(const Camera &camera) {
     Vector3f dirToPlayer = (camera.getPosition() - pos).normalize() *= (speed/1000);
     pos += dirToPlayer;
     setPosition(pos);
+
+    setDistanceToPlayer(pos.distanceTo(camera.getPosition()));
+
     Entity::render(camera);
 }
 
 float CoinEntity::rndFloat(float min, float max) {
     return ((float(rand()) / float(RAND_MAX)) * (max - min)) + min;
+}
+
+float CoinEntity::getDistanceToPlayer() const {
+    return distanceToPlayer;
+}
+
+void CoinEntity::setDistanceToPlayer(float distanceToPlayer) {
+    CoinEntity::distanceToPlayer = distanceToPlayer;
 }

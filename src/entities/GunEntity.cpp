@@ -43,22 +43,23 @@ void GunEntity::shoot(const Camera &camera) {
         ray.origin = camera.getPosition();
         ray.direction = camera.getDirection() * 3;
 
+        std::sort(targets->begin(), targets->end(), sortPosAsc());
 
         for(unsigned int i = 0; i < targets->size(); i++) {
             bool intersection = targets->at(i)->getTransformedBoundingBox().intersection(ray);
             if(intersection) {
-                printf("hit\n");
                 delete targets->at(i);
                 targets->erase(targets->begin() + i);
                 break;
             }
+            printf("Element: %i - Distance: %f\n", i, targets->at(i)->getDistanceToPlayer());
         }
 
         readyToFire = false;
     }
 }
 
-void GunEntity::setTargets(std::vector<Entity *> *v) {
+void GunEntity::setTargets(std::vector<CoinEntity *> *v) {
     targets = v;
 }
 

@@ -12,11 +12,18 @@ public:
     void update(float deltaTime) override;
 
     void render(const Camera &camera);
+
+    float getDistanceToPlayer() const;
+
+    void setDistanceToPlayer(float distanceToPlayer);
+
 private:
-    float rndFloat(float min, float max);
     Vector3f pos;
     float rotation = 0;
     float speed;
+    float distanceToPlayer = 0;
+
+    float rndFloat(float min, float max);
 };
 
 

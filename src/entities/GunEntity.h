@@ -8,7 +8,13 @@
 
 #include "Entity.h"
 #include "BulletEntity.h"
+#include "CoinEntity.h"
 
+struct sortPosAsc {
+    bool operator()(CoinEntity *c1, CoinEntity *c2) const {
+        return c1->getDistanceToPlayer() < c2->getDistanceToPlayer();
+    }
+};
 
 class GunEntity : public Entity {
 public:
@@ -20,14 +26,14 @@ public:
 
     void render(const Camera &camera);
 
-    void setTargets(std::vector<Entity*> *v);
+    void setTargets(std::vector<CoinEntity*> *v);
 
 private:
     GLFWwindow &window;
 
     bool readyToFire = true;
 
-    std::vector<Entity*> *targets;
+    std::vector<CoinEntity*> *targets;
     Vector3f weaponOffset;
 
     void shoot(const Camera &camera);
