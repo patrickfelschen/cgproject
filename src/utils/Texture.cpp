@@ -6,22 +6,30 @@
 
 #include "Texture.h"
 
-Texture::Texture() : id(0), filePath(""), type("") {}
+Texture::Texture() : id(0) {
+    // Weiße Textur für texturlose Objekte
+    RGBImage image(1, 1);
+    image.setPixelColor(1, 1, Color(1.0, 1.0, 1.0, 1.0f));
+    create(image);
+}
+
+Texture::Texture(const std::string &filePath, const std::string &type) : id(0), filePath(filePath), type(type) {
+    RGBImage image;
+    Loader::readImageFile(filePath.c_str(), image);
+    create(image);
+}
 
 Texture::~Texture() {
     //glDeleteTextures(1, &id);
 }
 
-Texture::Texture(const std::string &filePath, const std::string &type) : id(0), filePath(filePath), type(type) {
+void Texture::create(RGBImage &image) {
     glGenTextures(1, &id);
     glBindTexture(GL_TEXTURE_2D, id);
 
-    RGBImage image;
-    Loader::readImageFile(filePath.c_str(), image);
-
     glTexStorage2D(
             GL_TEXTURE_2D,
-            4, // num mipmaps
+            1, // num mipmaps
             GL_RGBA32F,
             image.getWidth(),
             image.getHeight()
@@ -50,7 +58,8 @@ void Texture::activate(unsigned int unit) const {
     glBindTexture(GL_TEXTURE_2D, id);
 }
 
-void Texture::deactivate() const {
+void Texture::deactivate(unsigned int unit) const {
+    glActiveTexture(GL_TEXTURE0 + unit);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 

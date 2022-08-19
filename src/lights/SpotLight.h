@@ -6,8 +6,20 @@
 #define CG_SPOTLIGHT_H
 
 
-class SpotLight {
+#include "../maths/Vector3f.h"
+#include "Light.h"
 
+class SpotLight : Light {
+public:
+    SpotLight();
+
+    SpotLight(const Vector3f &position, const Vector3f &attenuation, const Color &color, const Vector3f &direction,
+              float innerRadius, float outerRadius);
+
+protected:
+    Vector3f direction;
+    float innerRadius;
+    float outerRadius;
 };
 
 

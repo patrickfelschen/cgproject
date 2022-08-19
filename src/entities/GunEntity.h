@@ -7,7 +7,6 @@
 
 
 #include "Entity.h"
-#include "BulletEntity.h"
 #include "CoinEntity.h"
 
 struct sortPosAsc {
@@ -24,17 +23,16 @@ public:
 
     void update(float deltaTime) override;
 
-    void render(const Camera &camera);
+    void render(const Camera &camera) override;
 
-    void setTargets(std::vector<CoinEntity*> *v);
+    void setTargets(const std::vector<CoinEntity *> &v);
 
 private:
     GLFWwindow &window;
 
     bool readyToFire = true;
 
-    std::vector<CoinEntity*> *targets;
-    Vector3f weaponOffset;
+    std::vector<CoinEntity *> targets;
 
     void shoot(const Camera &camera);
 };

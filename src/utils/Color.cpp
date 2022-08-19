@@ -3,6 +3,9 @@
 Color::Color() : r(0), g(0), b(0), a(0) {
 }
 
+Color::Color(float rgba) : r(rgba), g(rgba), b(rgba), a(rgba) {
+}
+
 Color::Color(const aiColor3D &aiColor) : r(aiColor.r), g(aiColor.g), b(aiColor.b) {
 
 }

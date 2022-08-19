@@ -22,7 +22,7 @@ public:
 
     virtual ~Mesh();
 
-    void render(Shader *shader);
+    void render(Shader *shader) const;
 
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;

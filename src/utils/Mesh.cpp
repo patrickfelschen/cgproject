@@ -58,7 +58,7 @@ void Mesh::setupMesh() {
     glBindVertexArray(0);
 }
 
-void Mesh::render(Shader *shader) {
+void Mesh::render(Shader *shader) const {
     // Texturen aktivieren
     for (int i = 0; i < textures.size(); i++) {
         textures[i].activate(i);
@@ -80,8 +80,8 @@ void Mesh::render(Shader *shader) {
     );
     glBindVertexArray(0);
     // Texturen deaktivieren
-    for (auto &texture: textures) {
-        texture.deactivate();
+    for (int i = 0; i < textures.size(); i++) {
+        textures[i].deactivate(i);
     }
     glActiveTexture(GL_TEXTURE0);
 }

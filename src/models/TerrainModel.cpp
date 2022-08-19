@@ -6,7 +6,7 @@
 #include "TerrainModel.h"
 #include "../utils/Vertex.h"
 
-TerrainModel::TerrainModel(Shader *shader) : Model(shader), width(100), height(0.5), depth(100) {
+TerrainModel::TerrainModel(Shader *shader) : Model(shader), width(1000), height(0.5), depth(1000) {
     generate();
 }
 
@@ -38,8 +38,8 @@ void TerrainModel::generate() {
             vertices[index].texCoord0.x = (i / (float) imgWidth - 1);
             vertices[index].texCoord0.y = (j / (float) imgHeight - 1);
             // Texturkoordinaten für Grastextur und Steintextur
-            vertices[index].texCoord1.x = (i / ((float) imgWidth - 1) * 1000);
-            vertices[index].texCoord1.y = (j / ((float) imgHeight - 1) * 1000);
+            vertices[index].texCoord1.x = (i / ((float) imgWidth - 1) * 200);
+            vertices[index].texCoord1.y = (j / ((float) imgHeight - 1) * 200);
         }
     }
     int pos = 0;
@@ -79,7 +79,7 @@ void TerrainModel::generate() {
     }
 
     // Texturen
-    Texture grassTexture = Texture("../assets/Terrain/grass2.bmp", "");
+    Texture grassTexture = Texture("../assets/Terrain/grass.bmp", "");
     Texture rockTexture = Texture("../assets/Terrain/rock.bmp", "");
     Texture mixTexture = Texture("../assets/Terrain/mixmap.bmp", "");
 
@@ -93,13 +93,13 @@ void TerrainModel::generate() {
     this->meshes.push_back(terrainMash);
 }
 
-void TerrainModel::update(float deltaTime) {
+void TerrainModel::update(float deltaTime) const {
     Model::update(deltaTime);
 }
 
-void TerrainModel::render(const Camera &camera) {
+void TerrainModel::render(const Camera &camera, const Matrix &transform) const {
     this->shader->activate(camera);
-    Model::render(camera);
+    Model::render(camera, transform);
     for (auto &mesh: meshes) {
         mesh.render(shader);
     }

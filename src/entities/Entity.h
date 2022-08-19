@@ -10,7 +10,7 @@
 
 class Entity {
 public:
-    explicit Entity(Model *model);
+    explicit Entity(const Model *model);
 
     virtual ~Entity();
 
@@ -30,19 +30,17 @@ public:
 
     void setScaling(float newScaling);
 
-    Model *getModel() const;
-
-    const AABB getTransformedBoundingBox() const;
-
+    AABB getTransformedBoundingBox() const;
 
 protected:
+    Matrix transformation;
     Vector3f position;
-    float rotationX;
-    float rotationY;
-    float rotationZ;
-    float scaling;
+    float rotAngleX;
+    float rotAngleY;
+    float rotAngleZ;
+    float scaleFactor;
 private:
-    Model *model;
+    const Model *model;
 };
 
 

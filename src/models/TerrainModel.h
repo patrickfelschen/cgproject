@@ -15,9 +15,9 @@ public:
 
     ~TerrainModel() override = default;
 
-    void update(float deltaTime) override;
+    void update(float deltaTime) const override;
 
-    void render(const Camera &camera) override;
+    void render(const Camera &camera, const Matrix &transform) const override;
 
 private:
     float width;

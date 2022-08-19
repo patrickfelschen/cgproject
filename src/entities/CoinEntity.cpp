@@ -1,32 +1,35 @@
 #include "CoinEntity.h"
 
-CoinEntity::CoinEntity(Model *model) : Entity(model) {
-    pos = Vector3f(
-            rndFloat(-0.35, 0.95),
-            rndFloat(-0.15, 0.15),
-            rndFloat(-1.15, 1.15)
-            );
-    speed = rndFloat(2, 10);
-
-    setPosition(pos);
+CoinEntity::CoinEntity(const Model *model) : Entity(model) {
     setScaling(0.05f);
+    respawn(Vector3f());
 }
 
-CoinEntity::~CoinEntity() {}
+CoinEntity::~CoinEntity() = default;
+
+void CoinEntity::respawn(const Vector3f &pos) {
+    float range = 5.0f;
+    this->hit = false;
+
+    float x = rndFloat(pos.x - range, pos.x + range);
+    float y = rndFloat(pos.y, pos.y);
+    float z = rndFloat(pos.z - range, pos.z + range);
+
+    setPosition(x, y, z);
+    speed = rndFloat(2, 10);
+}
 
 void CoinEntity::update(float deltaTime) {
-    rotation += deltaTime;
+    rotation += deltaTime * 100;
     setRotationY(rotation);
     Entity::update(deltaTime);
 }
 
 void CoinEntity::render(const Camera &camera) {
-    Vector3f dirToPlayer = (camera.getPosition() - pos).normalize() *= (speed/1000);
-    pos += dirToPlayer;
-    setPosition(pos);
-
-    setDistanceToPlayer(pos.distanceTo(camera.getPosition()));
-
+    Vector3f dirToPlayer = (camera.getPosition() - position).normalize() *= (speed / 1000);
+    position += dirToPlayer;
+    setPosition(position);
+    setDistanceToPlayer(position.distanceTo(camera.getPosition()));
     Entity::render(camera);
 }
 
@@ -38,6 +41,6 @@ float CoinEntity::getDistanceToPlayer() const {
     return distanceToPlayer;
 }
 
-void CoinEntity::setDistanceToPlayer(float distanceToPlayer) {
-    CoinEntity::distanceToPlayer = distanceToPlayer;
+void CoinEntity::setDistanceToPlayer(float distance) {
+    CoinEntity::distanceToPlayer = distance;
 }

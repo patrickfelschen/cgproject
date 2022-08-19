@@ -18,19 +18,9 @@ public:
 
     virtual ~Model();
 
-    virtual void update(float deltaTime);
+    virtual void update(float deltaTime) const;
 
-    virtual void render(const Camera &camera);
-
-    void translate(const Vector3f &v);
-
-    void scale(const float &v);
-
-    void rotateX(float angle);
-
-    void rotateY(float angle);
-
-    void rotateZ(float angle);
+    virtual void render(const Camera &camera, const Matrix &transform) const;
 
     AABB getBoundingBox() const;
 
@@ -43,13 +33,8 @@ protected:
 
 private:
     Matrix transformation;
-    Matrix translation;
-    Matrix rotationX;
-    Matrix rotationY;
-    Matrix rotationZ;
-    Matrix scaling;
 
-    void drawBoundingBox();
+    void drawBoundingBox() const;
 };
 
 

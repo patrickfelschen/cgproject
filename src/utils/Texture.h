@@ -19,12 +19,14 @@ public:
 
     void activate(unsigned int unit) const;
 
-    void deactivate() const;
+    void deactivate(unsigned int unit) const;
 
     GLuint id;
 private:
     std::string type;
     std::string filePath;
+
+    void create(RGBImage &image);
 };
 
 

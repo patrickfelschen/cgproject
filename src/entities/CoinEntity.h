@@ -5,22 +5,24 @@
 
 class CoinEntity : public Entity {
 public:
-    explicit CoinEntity(Model *model);
+    explicit CoinEntity(const Model *model);
 
     ~CoinEntity() override;
 
     void update(float deltaTime) override;
 
-    void render(const Camera &camera);
+    void render(const Camera &camera) override;
 
     float getDistanceToPlayer() const;
 
-    void setDistanceToPlayer(float distanceToPlayer);
+    void setDistanceToPlayer(float distance);
 
+    void respawn(const Vector3f &playerPos);
+
+    bool hit = false;
 private:
-    Vector3f pos;
     float rotation = 0;
-    float speed;
+    float speed = 0;
     float distanceToPlayer = 0;
 
     float rndFloat(float min, float max);

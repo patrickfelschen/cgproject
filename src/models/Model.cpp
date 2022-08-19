@@ -8,33 +8,10 @@ Model::Model(Shader *shader) : shader(shader) {}
 
 Model::~Model() = default;
 
-void Model::update(float deltaTime) {
-}
+void Model::update(float deltaTime) const {}
 
-void Model::render(const Camera &camera) {
-    transformation = translation * rotationX * rotationY * rotationZ * scaling;
-    shader->setModelTransform(transformation);
-    //drawBoundingBox();
-}
-
-void Model::translate(const Vector3f &v) {
-    translation.translation(v);
-}
-
-void Model::scale(const float &v) {
-    scaling.scale(v);
-}
-
-void Model::rotateX(float angle) {
-    rotationX.rotationX(angle);
-}
-
-void Model::rotateY(float angle) {
-    rotationY.rotationY(angle);
-}
-
-void Model::rotateZ(float angle) {
-    rotationZ.rotationZ(angle);
+void Model::render(const Camera &camera, const Matrix &transform) const {
+    shader->setModelTransform(transform);
 }
 
 void Model::setBoundingBox() {
@@ -55,7 +32,11 @@ void Model::setBoundingBox() {
     this->boundingBox.Max = max;
 }
 
-void Model::drawBoundingBox() {
+AABB Model::getBoundingBox() const {
+    return boundingBox;
+}
+
+void Model::drawBoundingBox() const {
     glBegin(GL_LINES);
 
     glVertex3f(boundingBox.Min.x, boundingBox.Min.y, boundingBox.Min.z); // 1
@@ -97,8 +78,8 @@ void Model::drawBoundingBox() {
     glEnd();
 }
 
-AABB Model::getBoundingBox() const {
-    return boundingBox;
-}
+
+
+
 
 

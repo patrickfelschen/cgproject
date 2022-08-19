@@ -4,7 +4,6 @@
 //
 
 #include "ObjectModel.h"
-#include "../utils/Material.h"
 
 
 ObjectModel::ObjectModel(Shader *shader, const std::string &filePath) : Model(shader) {
@@ -24,18 +23,19 @@ ObjectModel::ObjectModel(Shader *shader, const std::string &filePath) : Model(sh
     // retrieve the directory path of the filepath
     this->directory = filePath.substr(0, filePath.find_last_of('/'));
     this->processNode(scene->mRootNode, scene);
+    std::cout << "OBJECTMODEL::LOADED: " << filePath << std::endl;
     this->setBoundingBox();
 }
 
 ObjectModel::~ObjectModel() = default;
 
-void ObjectModel::update(float deltaTime) {
+void ObjectModel::update(float deltaTime) const {
     Model::update(deltaTime);
 }
 
-void ObjectModel::render(const Camera &camera) {
+void ObjectModel::render(const Camera &camera, const Matrix &transform) const {
     this->shader->activate(camera);
-    Model::render(camera);
+    Model::render(camera, transform);
     for (auto &mesh: meshes) {
         mesh.render(shader);
     }
@@ -79,14 +79,14 @@ Mesh ObjectModel::processMesh(aiMesh *mesh, const aiScene *scene) {
             texCoord.y = mesh->mTextureCoords[0][i].y;
             vertex.texCoord0 = texCoord;
         } else {
-            vertex.texCoord0 = Vector2f(0.0f, 0.0f);
+            vertex.texCoord0 = Vector2f(1.0f, 1.0f);
         }
         if (mesh->mTextureCoords[1]) {
             texCoord.x = mesh->mTextureCoords[1][i].x;
             texCoord.y = mesh->mTextureCoords[1][i].y;
             vertex.texCoord1 = texCoord;
         } else {
-            vertex.texCoord1 = Vector2f(0.0f, 0.0f);
+            vertex.texCoord1 = Vector2f(1.0f, 1.0f);
         }
         vertices.push_back(vertex);
     }
@@ -123,6 +123,11 @@ Mesh ObjectModel::processMesh(aiMesh *mesh, const aiScene *scene) {
     uiMaterial->Get(AI_MATKEY_SHININESS, shininess);
     material.shininess = shininess;
 
+    if (textures.empty()) {
+        Texture whiteTex;
+        textures.push_back(whiteTex);
+    }
+
     // return a mesh object created from the extracted mesh data
     return {vertices, indices, textures, material};
 }
@@ -140,7 +145,7 @@ std::vector<Texture> ObjectModel::loadMaterialTextures(
         // Cache abfragen ob Textur zuvor geladen
         if (textureCache.find(filePath) != textureCache.end()) {
             textures.push_back(textureCache[filePath]);
-            //std::cout << "TextureCache HIT" << std::endl;
+            //std::cout << "TextureCache HIT" << filePath << std::endl;
             continue;
         }
         // Cache füllen

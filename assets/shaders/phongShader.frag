@@ -32,7 +32,6 @@ uniform Light uLight;
 
 uniform sampler2D uTexture0;
 uniform sampler2D uTexture1;
-uniform sampler2D uTexture2;
 
 out vec4 FragColor;
 
@@ -51,7 +50,12 @@ void main() {
     vec3 specular = uLight.specular * (spec * uMaterial.specular);
     vec3 resultColor = ambient + diffuse + specular;
     // Texture Color
-    vec4 diffTex = texture(uTexture0, fs_in.TexCoord0);
 
-    FragColor = vec4(diffTex.rgb * resultColor, diffTex.a);
+    ivec2 size = textureSize(uTexture0, 0);
+    if (size.x > 1){
+        vec4 diffTex = texture(uTexture0, fs_in.TexCoord0);
+        FragColor = vec4(diffTex.rgb * resultColor, diffTex.a);
+    } else {
+        FragColor = vec4(resultColor, 1.0f);
+    }
 }

@@ -3,13 +3,14 @@
 //
 
 #include "Entity.h"
+#define TO_RAD(deg) (deg * std::numbers::pi / 180.0)
 
-Entity::Entity(Model *model) : model(model) {
+Entity::Entity(const Model *model) : model(model) {
     this->position = Vector3f();
-    this->scaling = 1.0;
-    this->rotationX = 0;
-    this->rotationY = 0;
-    this->rotationZ = 0;
+    this->scaleFactor = 1.0;
+    this->rotAngleX = 0;
+    this->rotAngleY = 0;
+    this->rotAngleZ = 0;
 }
 
 void Entity::setPosition(float x, float y, float z) {
@@ -21,52 +22,40 @@ void Entity::setPosition(const Vector3f &pos) {
 }
 
 void Entity::setRotationX(float newRotationX) {
-    this->rotationX = newRotationX;
+    this->rotAngleX = newRotationX;
 }
 
 void Entity::setRotationY(float newRotationY) {
-    this->rotationY = newRotationY;
+    this->rotAngleY = newRotationY;
 }
 
 void Entity::setRotationZ(float newRotationZ) {
-    this->rotationZ = newRotationZ;
+    this->rotAngleZ = newRotationZ;
 }
 
 void Entity::setScaling(float newScaling) {
-    this->scaling = newScaling;
+    this->scaleFactor = newScaling;
 }
 
 void Entity::update(float deltaTime) {
+    Matrix translation, rotationX, rotationY, rotationZ, scaling;
+
+    translation.translation(this->position);
+    rotationX.rotationX(TO_RAD(this->rotAngleX));
+    rotationY.rotationY(TO_RAD(this->rotAngleY));
+    rotationZ.rotationZ(TO_RAD(this->rotAngleZ));
+    scaling.scale(this->scaleFactor);
+
+    this->transformation = translation * rotationX * rotationY * rotationZ * scaling;
     this->model->update(deltaTime);
 }
 
 void Entity::render(const Camera &camera) {
-    this->model->translate(position);
-    this->model->rotateX(rotationX);
-    this->model->rotateY(rotationY);
-    this->model->rotateZ(rotationZ);
-    this->model->scale(scaling);
-    this->model->render(camera);
+    this->model->render(camera, transformation);
 }
 
-Model *Entity::getModel() const {
-    return model;
-}
-
-const AABB Entity::getTransformedBoundingBox() const {
-    Matrix transformation, translationMat, scalingmat, rotX, rotY, rotZ;
-    translationMat.translation(position);
-    scalingmat.scale(scaling);
-    rotX.rotationX(rotationX);
-    rotY.rotationY(rotationY);
-    rotZ.rotationZ(rotationZ);
-
-    transformation = translationMat * rotX * rotY * rotZ * scalingmat;
-
-    AABB box = model->getBoundingBox().transform(transformation);
-
+AABB Entity::getTransformedBoundingBox() const {
     return model->getBoundingBox().transform(transformation);
-
 }
 
 Entity::~Entity() = default;

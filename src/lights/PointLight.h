@@ -6,8 +6,17 @@
 #define CG_POINTLIGHT_H
 
 
-class PointLight {
+#include "Light.h"
 
+class PointLight : public Light {
+public:
+    PointLight();
+
+    PointLight(const Vector3f &position, const Vector3f &attenuation, const Color &color);
+
+    ~PointLight() override;
+
+    LightType type() override;
 };
 
 
