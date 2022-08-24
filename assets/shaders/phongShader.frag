@@ -6,15 +6,15 @@
 
 struct Light {
     vec3 position;
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
+    vec4 ambient;
+    vec4 diffuse;
+    vec4 specular;
 };
 
 struct Material {
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
+    vec4 ambient;
+    vec4 diffuse;
+    vec4 specular;
     float shininess;
 };
 
@@ -37,25 +37,24 @@ out vec4 FragColor;
 
 void main() {
     // Ambient Color
-    vec3 ambient = uLight.ambient * uMaterial.ambient;
+    vec4 ambient = uLight.ambient * uMaterial.ambient;
     // Diffuse Color
     vec3 normal = normalize(fs_in.Normal);
     vec3 lightDir = normalize(uLight.position - fs_in.Pos);
     float diff = max(dot(normal, lightDir), 0.0f);
-    vec3 diffuse = uLight.diffuse * (diff * uMaterial.diffuse);
+    vec4 diffuse = uLight.diffuse * (diff * uMaterial.diffuse);
     // Specular Color
     vec3 camDir = normalize(uCamPos - fs_in.Pos);
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(camDir, reflectDir), 0.0f), uMaterial.shininess);
-    vec3 specular = uLight.specular * (spec * uMaterial.specular);
-    vec3 resultColor = ambient + diffuse + specular;
+    vec4 specular = uLight.specular * (spec * uMaterial.specular);
+    vec4 resultColor = ambient + diffuse + specular;
     // Texture Color
-
     ivec2 size = textureSize(uTexture0, 0);
     if (size.x > 1){
         vec4 diffTex = texture(uTexture0, fs_in.TexCoord0);
-        FragColor = vec4(diffTex.rgb * resultColor, diffTex.a);
+        FragColor = diffTex * resultColor;
     } else {
-        FragColor = vec4(resultColor, 1.0f);
+        FragColor = resultColor;
     }
 }
