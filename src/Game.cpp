@@ -10,6 +10,7 @@
 #include "shaders/TerrainShader.h"
 #include "entities/TerrainEntity.h"
 #include "ParticleManager.h"
+#include "entities/SkyboxEntity.h"
 
 #define TARGET_COUNT 20
 
@@ -24,7 +25,7 @@ Entity *garageEntity1;
 Entity *garageEntity2;
 Entity *garageEntity3;
 Entity *garageEntity4;
-Entity *skyboxEntity;
+SkyboxEntity *skyboxEntity;
 Entity *terrainEntity;
 
 ParticleManager *particleManager;
@@ -41,12 +42,10 @@ Game::Game(GLFWwindow &window, const Camera &camera) : window(window), camera(ca
     particleManager = new ParticleManager(100);
 
     // Himmel
-    //skyboxEntity = new Entity(skyboxModel);
-
+    skyboxEntity = new SkyboxEntity(skyboxModel);
     // Umgebung
     terrainEntity = new TerrainEntity(terrainModel);
     //terrainEntity->setPosition(0, -0.5, 0);
-
     // Waffe
     gunEntity = new GunEntity(gunModel, window);
 
@@ -74,7 +73,7 @@ Game::Game(GLFWwindow &window, const Camera &camera) : window(window), camera(ca
 //    entities.push_back(garageEntity2);
 //    entities.push_back(garageEntity3);
 //    entities.push_back(garageEntity4);
-//    entities.push_back(skyboxEntity);
+    entities.push_back(skyboxEntity);
     entities.push_back(terrainEntity);
 
     // Ziele
