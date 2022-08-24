@@ -15,18 +15,14 @@ public:
 
     virtual ~ParticleManager();
 
-    void update(const Entity *entity, float deltaTime);
+    void update(float deltaTime);
 
     void render(const Camera &camera);
 
+    void spawn(const Vector3f &origin);
+
 private:
-    unsigned int numParticles;
-    unsigned int lastUsedParticle = 0;
     std::vector<ParticleEntity *> particleEntities;
-
-    unsigned int firstUnusedParticle();
-
-    void respawnParticle(ParticleEntity *particle, const Entity *entity, Vector3f offset);
 
     float rndFloat(float min, float max);
 };

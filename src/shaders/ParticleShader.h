@@ -14,29 +14,15 @@ public:
 
     ~ParticleShader() override;
 
-    const Matrix &getTransform() const;
+    void setTransform(const Matrix &t);
 
-    void setTransform(const Matrix &transform);
+    void setView(const Matrix &v);
 
-    const Matrix &getView() const;
+    void setProjection(const Matrix &p);
 
-    void setView(const Matrix &view);
+    void setColor(const Color &c);
 
-    const Matrix &getProjection() const;
-
-    void setProjection(const Matrix &projection);
-
-    const Vector3f &getCameraPosition() const;
-
-    void setCameraPosition(const Vector3f &cameraPosition);
-
-    const Vector3f &getOffset() const;
-
-    void setOffset(const Vector3f &offset);
-
-    const Color &getColor() const;
-
-    void setColor(const Color &color);
+    void setScale(float scale);
 
 protected:
     void setUniforms() override;
@@ -45,9 +31,8 @@ private:
     Matrix transform;
     Matrix view;
     Matrix projection;
-    Vector3f cameraPosition;
-    Vector3f offset;
     Color color;
+    float scale;
 };
 
 

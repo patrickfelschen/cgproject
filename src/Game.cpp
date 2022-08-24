@@ -38,7 +38,7 @@ Game::Game(GLFWwindow &window, const Camera &camera) : window(window), camera(ca
     skyboxModel = new ObjectModel(new PhongShader(), "../assets/Objects/SkyBox/skybox.obj");
     terrainModel = new TerrainModel(new TerrainShader());
 
-    particleManager = new ParticleManager(200);
+    particleManager = new ParticleManager(100);
 
     // Himmel
     //skyboxEntity = new Entity(skyboxModel);
@@ -97,17 +97,21 @@ void Game::update(float deltaTime) {
     // Alle Ziele aktualisieren
     for (CoinEntity *entity: targets) {
         if (entity->hit) {
+            particleManager->spawn(entity->getPosition());
             entity->respawn(camera.getPosition());
             hitCount++;
             std::cout << "Treffer: " << hitCount << std::endl;
         }
+        entity->setTargetPosition(camera.getPosition());
         entity->update(deltaTime);
     }
+    particleManager->update(deltaTime);
+
     // Alle Einheiten aktualisieren
     for (Entity *entity: entities) {
         entity->update(deltaTime);
     }
-    particleManager->update(gunEntity, deltaTime);
+
 }
 
 void Game::render() {

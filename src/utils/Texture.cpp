@@ -8,7 +8,7 @@
 
 Texture::Texture() : id(0) {
     // Weiße Textur für texturlose Objekte
-    RGBImage image(1, 1);
+    RGBImage image(1, 1, GL_RGBA);
     image.setPixelColor(1, 1, Color(1.0, 1.0, 1.0, 1.0f));
     create(image);
 }
@@ -47,8 +47,8 @@ void Texture::create(RGBImage &image) {
             image.getData().data()
     );
     glGenerateMipmap(GL_TEXTURE_2D);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, image.getFormat() == GL_RGBA ? GL_CLAMP_TO_EDGE : GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, image.getFormat() == GL_RGBA ? GL_CLAMP_TO_EDGE : GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 }

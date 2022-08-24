@@ -109,7 +109,7 @@ Mesh ObjectModel::processMesh(aiMesh *mesh, const aiScene *scene) {
     // std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
     // textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
     Material material;
-    aiColor3D aiColor;
+    aiColor4D aiColor;
     float shininess = 1;
     uiMaterial->Get(AI_MATKEY_COLOR_AMBIENT, aiColor);
     material.ambient = Color(aiColor);

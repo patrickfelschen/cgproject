@@ -11,7 +11,7 @@ ParticleShader::ParticleShader() : Shader(VERT, FRAG) {
     this->projection.identity();
     this->transform.identity();
     this->view.identity();
-    this->offset = Vector3f();
+    this->scale = 0.01f;
     this->color = Color(1.0f);
 }
 
@@ -19,59 +19,28 @@ ParticleShader::~ParticleShader() = default;
 
 void ParticleShader::setUniforms() {
     setUniform("uProjection", projection);
-    //setUniform("uTransform", transform);
-    //setUniform("uView", view);
-
-    // Kamera Position
-    //setUniform("uCamPos", cameraPosition);
-    setUniform("uOffset", offset);
+    setUniform("uTransform", transform);
+    setUniform("uView", view);
     setUniform("uColor", color);
+    setUniform("uScale", scale);
 }
 
-const Matrix &ParticleShader::getTransform() const {
-    return transform;
+void ParticleShader::setTransform(const Matrix &t) {
+    this->transform = t;
 }
 
-void ParticleShader::setTransform(const Matrix &transform) {
-    ParticleShader::transform = transform;
+void ParticleShader::setView(const Matrix &v) {
+    this->view = v;
 }
 
-const Matrix &ParticleShader::getView() const {
-    return view;
+void ParticleShader::setProjection(const Matrix &p) {
+    this->projection = p;
 }
 
-void ParticleShader::setView(const Matrix &view) {
-    ParticleShader::view = view;
+void ParticleShader::setColor(const Color &c) {
+    this->color = c;
 }
 
-const Matrix &ParticleShader::getProjection() const {
-    return projection;
-}
-
-void ParticleShader::setProjection(const Matrix &projection) {
-    ParticleShader::projection = projection;
-}
-
-const Vector3f &ParticleShader::getCameraPosition() const {
-    return cameraPosition;
-}
-
-void ParticleShader::setCameraPosition(const Vector3f &cameraPosition) {
-    ParticleShader::cameraPosition = cameraPosition;
-}
-
-const Vector3f &ParticleShader::getOffset() const {
-    return offset;
-}
-
-void ParticleShader::setOffset(const Vector3f &offset) {
-    ParticleShader::offset = offset;
-}
-
-const Color &ParticleShader::getColor() const {
-    return color;
-}
-
-void ParticleShader::setColor(const Color &color) {
-    ParticleShader::color = color;
+void ParticleShader::setScale(float s) {
+    this->scale = s;
 }

@@ -21,11 +21,13 @@ public:
 
     AABB getTransformedBoundingBox() const;
 
+    void setTargetPosition(const Vector3f &targetPosition);
+
     bool hit = false;
 private:
-    float rotation = 0;
     float speed = 0;
     float distanceToPlayer = 0;
+    Vector3f targetPosition;
 
     float rndFloat(float min, float max);
 

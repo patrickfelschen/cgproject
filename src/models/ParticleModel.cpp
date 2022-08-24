@@ -24,8 +24,8 @@ ParticleModel::ParticleModel(ParticleShader *shader) : shader(shader) {
             Vertex(Vector3f(-1, 1, 1), Vector3f(), Vector2f(0, 1), Vector2f()),
     };
     std::vector<Texture> textures = {
-            //Texture("../assets/Textures/fire.png", "")
-            Texture()
+            Texture("../assets/Objects/Coin/coin.jpg", "")
+            //Texture()
     };
     Mesh particleMesh(vertices, indices, textures);
     this->meshes.push_back(particleMesh);

@@ -18,35 +18,28 @@ public:
 
     virtual void render(const Camera &camera) = 0;
 
-    void setPosition(float x, float y, float z);
-
     void setPosition(const Vector3f &pos);
-
-    void setRotationX(float newRotationX);
-
-    void setRotationY(float newRotationY);
-
-    void setRotationZ(float newRotationZ);
 
     void setScaling(float newScaling);
 
     const Vector3f &getPosition() const;
 
-    float getRotAngleX() const;
+    void setPositionVelocity(const Vector3f &positionVelocity);
 
-    float getRotAngleY() const;
-
-    float getRotAngleZ() const;
-
-    float getScaleFactor() const;
+    void setRotationVelocity(const Vector3f &rotationVelocity);
 
 protected:
     Matrix transformation;
+
     Vector3f position;
-    float rotAngleX;
-    float rotAngleY;
-    float rotAngleZ;
+    Vector3f positionVelocity;
+
+    Vector3f rotation;
+    Vector3f rotationVelocity;
+
     float scaleFactor;
+
+    void setRotation(const Vector3f rot);
 };
 
 

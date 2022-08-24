@@ -11,8 +11,8 @@ GunEntity::GunEntity(ObjectModel *model, GLFWwindow &window) : Entity(), window(
     this->model = model;
 
     setScaling(0.025);
-    setPosition(0.026, -0.015, -0.045);
-    setRotationY(-95);
+    setPosition(Vector3f(0.026, -0.015, -0.045));
+    setRotation(Vector3f(0, -95, 0));
 }
 
 GunEntity::~GunEntity() = default;
