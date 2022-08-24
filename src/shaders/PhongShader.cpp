@@ -4,17 +4,22 @@
 
 #include "PhongShader.h"
 
-#define vert "../assets/shaders/phongShader.vert"
-#define frag "../assets/shaders/phongShader.frag"
+#define VERT "../assets/shaders/phongShader.vert"
+#define FRAG "../assets/shaders/phongShader.frag"
 
-PhongShader::PhongShader() : Shader(vert, frag, true) {}
+PhongShader::PhongShader() : Shader(VERT, FRAG) {
+    this->projection.identity();
+    this->transform.identity();
+    this->view.identity();
+}
 
-PhongShader::PhongShader(bool useView) : Shader(vert, frag, useView) {}
+void PhongShader::setUniforms() {
+    setUniform("uProjection", projection);
+    setUniform("uTransform", transform);
+    setUniform("uView", view);
 
-void PhongShader::setUniforms(const Camera &camera) {
-    Shader::setUniforms(camera);
     // Kamera Position
-    setUniform("uCamPos", camera.getPosition());
+    setUniform("uCamPos", cameraPosition);
     // Licht
     Vector3f lightPos = Vector3f(-3.0f, 10.0f, 0.0f);
     Color light = Color(1.0f, 1.0f, 1.0f);
@@ -26,6 +31,22 @@ void PhongShader::setUniforms(const Camera &camera) {
     setUniform("uLight.ambient", lightAmbient);
     setUniform("uLight.diffuse", lightDiffuse);
     setUniform("uLight.specular", lightSpecular);
+}
+
+void PhongShader::setTransform(const Matrix &t) {
+    this->transform = t;
+}
+
+void PhongShader::setView(const Matrix &v) {
+    this->view = v;
+}
+
+void PhongShader::setProjection(const Matrix &p) {
+    this->projection = p;
+}
+
+void PhongShader::setCameraPosition(const Vector3f &c) {
+    this->cameraPosition = c;
 }
 
 PhongShader::~PhongShader() = default;

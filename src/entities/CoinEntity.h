@@ -5,7 +5,7 @@
 
 class CoinEntity : public Entity {
 public:
-    explicit CoinEntity(const Model *model);
+    explicit CoinEntity(const ObjectModel *model);
 
     ~CoinEntity() override;
 
@@ -19,6 +19,8 @@ public:
 
     void respawn(const Vector3f &playerPos);
 
+    AABB getTransformedBoundingBox() const;
+
     bool hit = false;
 private:
     float rotation = 0;
@@ -26,6 +28,8 @@ private:
     float distanceToPlayer = 0;
 
     float rndFloat(float min, float max);
+
+    const ObjectModel *model;
 };
 
 

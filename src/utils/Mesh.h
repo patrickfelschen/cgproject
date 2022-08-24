@@ -20,6 +20,10 @@ public:
          const std::vector<Texture> &textures,
          const Material &material);
 
+    Mesh(const std::vector<Vertex> &vertices,
+         const std::vector<unsigned int> &indices,
+         const std::vector<Texture> &textures);
+
     virtual ~Mesh();
 
     void render(Shader *shader) const;
@@ -32,6 +36,8 @@ private:
     unsigned int VAO = 0;
     unsigned int VBO = 0;
     unsigned int EBO = 0;
+
+    bool hasMaterial;
 
     void setupMesh();
 };

@@ -12,18 +12,18 @@
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
 #include "assimp/scene.h"
+#include "../shaders/PhongShader.h"
 #include <unordered_map>
 
 class ObjectModel : public Model {
 public:
-    explicit ObjectModel(Shader *shader, const std::string &filePath);
+    explicit ObjectModel(PhongShader *shader, const std::string &filePath);
 
     ~ObjectModel() override;
 
-    void update(float deltaTime) const override;
+    void render() const override;
 
-    void render(const Camera &camera, const Matrix &transform) const override;
-
+    PhongShader *shader;
 private:
     std::unordered_map<std::string, Texture> textureCache;
     std::string directory;
@@ -33,6 +33,7 @@ private:
     Mesh processMesh(aiMesh *mesh, const aiScene *scene);
 
     std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, const std::string &typeName);
+
 };
 
 

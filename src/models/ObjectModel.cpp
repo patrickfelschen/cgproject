@@ -4,9 +4,11 @@
 //
 
 #include "ObjectModel.h"
+#include "../shaders/PhongShader.h"
 
 
-ObjectModel::ObjectModel(Shader *shader, const std::string &filePath) : Model(shader) {
+ObjectModel::ObjectModel(PhongShader *shader, const std::string &filePath) : Model() {
+    this->shader = shader;
     // read file via ASSIMP
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(
@@ -29,13 +31,8 @@ ObjectModel::ObjectModel(Shader *shader, const std::string &filePath) : Model(sh
 
 ObjectModel::~ObjectModel() = default;
 
-void ObjectModel::update(float deltaTime) const {
-    Model::update(deltaTime);
-}
-
-void ObjectModel::render(const Camera &camera, const Matrix &transform) const {
-    this->shader->activate(camera);
-    Model::render(camera, transform);
+void ObjectModel::render() const {
+    this->shader->activate();
     for (auto &mesh: meshes) {
         mesh.render(shader);
     }

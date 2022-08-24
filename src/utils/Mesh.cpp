@@ -14,6 +14,16 @@ Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> 
     this->indices = indices;
     this->textures = textures;
     this->material = material;
+    this->hasMaterial = true;
+    this->setupMesh();
+}
+
+Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices,
+           const std::vector<Texture> &textures) {
+    this->vertices = vertices;
+    this->indices = indices;
+    this->textures = textures;
+    this->hasMaterial = false;
     this->setupMesh();
 }
 
@@ -65,10 +75,12 @@ void Mesh::render(Shader *shader) const {
         shader->setUniform("uTexture" + std::to_string(i), i);
     }
     // Material Eigenschaften setzen
-    shader->setUniform("uMaterial.ambient", material.ambient);
-    shader->setUniform("uMaterial.diffuse", material.diffuse);
-    shader->setUniform("uMaterial.specular", material.specular);
-    shader->setUniform("uMaterial.shininess", material.shininess);
+    if (hasMaterial) {
+        shader->setUniform("uMaterial.ambient", material.ambient);
+        shader->setUniform("uMaterial.diffuse", material.diffuse);
+        shader->setUniform("uMaterial.specular", material.specular);
+        shader->setUniform("uMaterial.shininess", material.shininess);
+    }
 
     // Mesh zeichnen
     glBindVertexArray(VAO);
@@ -85,5 +97,7 @@ void Mesh::render(Shader *shader) const {
     }
     glActiveTexture(GL_TEXTURE0);
 }
+
+
 
 

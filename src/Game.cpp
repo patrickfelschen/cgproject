@@ -8,14 +8,16 @@
 #include "entities/CoinEntity.h"
 #include "models/TerrainModel.h"
 #include "shaders/TerrainShader.h"
+#include "entities/TerrainEntity.h"
+#include "ParticleManager.h"
 
 #define TARGET_COUNT 20
 
-Model *garageModel;
-Model *gunModel;
-Model *coinModel;
-Model *skyboxModel;
-Model *terrainModel;
+ObjectModel *garageModel;
+ObjectModel *gunModel;
+ObjectModel *coinModel;
+ObjectModel *skyboxModel;
+TerrainModel *terrainModel;
 
 GunEntity *gunEntity;
 Entity *garageEntity1;
@@ -25,50 +27,54 @@ Entity *garageEntity4;
 Entity *skyboxEntity;
 Entity *terrainEntity;
 
+ParticleManager *particleManager;
+
 unsigned int hitCount = 0;
 
 Game::Game(GLFWwindow &window, const Camera &camera) : window(window), camera(camera) {
     garageModel = new ObjectModel(new PhongShader(), "../assets/Objects/Garage/MUW04SKJGJ052IRMJUCT9DJ5E.obj");
-    gunModel = new ObjectModel(new PhongShader(false), "../assets/Objects/Gun/ZE8FK2UU5PF8Y5F5777X34XII.obj");
+    gunModel = new ObjectModel(new PhongShader(), "../assets/Objects/Gun/ZE8FK2UU5PF8Y5F5777X34XII.obj");
     coinModel = new ObjectModel(new PhongShader(), "../assets/Objects/Coin/I89O58TBZ353I4X9ANHTRFF5K.obj");
     skyboxModel = new ObjectModel(new PhongShader(), "../assets/Objects/SkyBox/skybox.obj");
     terrainModel = new TerrainModel(new TerrainShader());
 
+    particleManager = new ParticleManager(200);
+
     // Himmel
-    skyboxEntity = new Entity(skyboxModel);
+    //skyboxEntity = new Entity(skyboxModel);
 
     // Umgebung
-    terrainEntity = new Entity(terrainModel);
+    terrainEntity = new TerrainEntity(terrainModel);
     //terrainEntity->setPosition(0, -0.5, 0);
 
     // Waffe
     gunEntity = new GunEntity(gunModel, window);
 
     // Garagen
-    garageEntity1 = new Entity(garageModel);
-    garageEntity1->setScaling(2.0f);
-    garageEntity1->setPosition(3, 1, 3);
-
-    garageEntity2 = new Entity(garageModel);
-    garageEntity2->setScaling(2.0f);
-    garageEntity2->setPosition(-3, 1, 3);
-    garageEntity2->setRotationY(180);
-
-    garageEntity3 = new Entity(garageModel);
-    garageEntity3->setScaling(2.0f);
-    garageEntity3->setPosition(3, 1, -3);
-
-    garageEntity4 = new Entity(garageModel);
-    garageEntity4->setScaling(2.0f);
-    garageEntity4->setPosition(-3, 1, -3);
-    garageEntity4->setRotationY(180);
+//    garageEntity1 = new Entity(garageModel);
+//    garageEntity1->setScaling(2.0f);
+//    garageEntity1->setPosition(3, 1, 3);
+//
+//    garageEntity2 = new Entity(garageModel);
+//    garageEntity2->setScaling(2.0f);
+//    garageEntity2->setPosition(-3, 1, 3);
+//    garageEntity2->setRotationY(180);
+//
+//    garageEntity3 = new Entity(garageModel);
+//    garageEntity3->setScaling(2.0f);
+//    garageEntity3->setPosition(3, 1, -3);
+//
+//    garageEntity4 = new Entity(garageModel);
+//    garageEntity4->setScaling(2.0f);
+//    garageEntity4->setPosition(-3, 1, -3);
+//    garageEntity4->setRotationY(180);
 
     entities.push_back(gunEntity);
-    entities.push_back(garageEntity1);
-    entities.push_back(garageEntity2);
-    entities.push_back(garageEntity3);
-    entities.push_back(garageEntity4);
-    entities.push_back(skyboxEntity);
+//    entities.push_back(garageEntity1);
+//    entities.push_back(garageEntity2);
+//    entities.push_back(garageEntity3);
+//    entities.push_back(garageEntity4);
+//    entities.push_back(skyboxEntity);
     entities.push_back(terrainEntity);
 
     // Ziele
@@ -101,6 +107,7 @@ void Game::update(float deltaTime) {
     for (Entity *entity: entities) {
         entity->update(deltaTime);
     }
+    particleManager->update(gunEntity, deltaTime);
 }
 
 void Game::render() {
@@ -112,4 +119,5 @@ void Game::render() {
     for (Entity *entity: entities) {
         entity->render(camera);
     }
+    particleManager->render(camera);
 }

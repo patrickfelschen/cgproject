@@ -5,7 +5,7 @@
 #include "Entity.h"
 #define TO_RAD(deg) (deg * std::numbers::pi / 180.0)
 
-Entity::Entity(const Model *model) : model(model) {
+Entity::Entity() {
     this->position = Vector3f();
     this->scaleFactor = 1.0;
     this->rotAngleX = 0;
@@ -47,15 +47,26 @@ void Entity::update(float deltaTime) {
     scaling.scale(this->scaleFactor);
 
     this->transformation = translation * rotationX * rotationY * rotationZ * scaling;
-    this->model->update(deltaTime);
 }
 
-void Entity::render(const Camera &camera) {
-    this->model->render(camera, transformation);
+const Vector3f &Entity::getPosition() const {
+    return position;
 }
 
-AABB Entity::getTransformedBoundingBox() const {
-    return model->getBoundingBox().transform(transformation);
+float Entity::getRotAngleX() const {
+    return rotAngleX;
+}
+
+float Entity::getRotAngleY() const {
+    return rotAngleY;
+}
+
+float Entity::getRotAngleZ() const {
+    return rotAngleZ;
+}
+
+float Entity::getScaleFactor() const {
+    return scaleFactor;
 }
 
 Entity::~Entity() = default;

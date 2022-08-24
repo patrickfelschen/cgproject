@@ -14,8 +14,22 @@ public:
 
     ~TerrainShader() override;
 
+    void setTransform(const Matrix &t);
+
+    void setView(const Matrix &v);
+
+    void setProjection(const Matrix &p);
+
+    void setCameraPosition(const Vector3f &c);
+
 protected:
-    void setUniforms(const Camera &camera) override;
+    void setUniforms() override;
+
+private:
+    Matrix transform;
+    Matrix view;
+    Matrix projection;
+    Vector3f cameraPosition;
 };
 
 

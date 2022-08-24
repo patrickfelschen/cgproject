@@ -10,13 +10,13 @@
 
 class Entity {
 public:
-    explicit Entity(const Model *model);
+    explicit Entity();
 
     virtual ~Entity();
 
     virtual void update(float deltaTime);
 
-    virtual void render(const Camera &camera);
+    virtual void render(const Camera &camera) = 0;
 
     void setPosition(float x, float y, float z);
 
@@ -30,7 +30,15 @@ public:
 
     void setScaling(float newScaling);
 
-    AABB getTransformedBoundingBox() const;
+    const Vector3f &getPosition() const;
+
+    float getRotAngleX() const;
+
+    float getRotAngleY() const;
+
+    float getRotAngleZ() const;
+
+    float getScaleFactor() const;
 
 protected:
     Matrix transformation;
@@ -39,8 +47,6 @@ protected:
     float rotAngleY;
     float rotAngleZ;
     float scaleFactor;
-private:
-    const Model *model;
 };
 
 

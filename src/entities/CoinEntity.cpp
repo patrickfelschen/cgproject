@@ -1,6 +1,8 @@
 #include "CoinEntity.h"
 
-CoinEntity::CoinEntity(const Model *model) : Entity(model) {
+CoinEntity::CoinEntity(const ObjectModel *model) : Entity() {
+    this->model = model;
+
     setScaling(0.05f);
     respawn(Vector3f());
 }
@@ -30,7 +32,13 @@ void CoinEntity::render(const Camera &camera) {
     position += dirToPlayer;
     setPosition(position);
     setDistanceToPlayer(position.distanceTo(camera.getPosition()));
-    Entity::render(camera);
+
+    this->model->shader->setCameraPosition(camera.getPosition());
+    this->model->shader->setProjection(camera.getProj());
+    this->model->shader->setView(camera.getView());
+    this->model->shader->setTransform(transformation);
+
+    this->model->render();
 }
 
 float CoinEntity::rndFloat(float min, float max) {
@@ -43,4 +51,8 @@ float CoinEntity::getDistanceToPlayer() const {
 
 void CoinEntity::setDistanceToPlayer(float distance) {
     CoinEntity::distanceToPlayer = distance;
+}
+
+AABB CoinEntity::getTransformedBoundingBox() const {
+    return this->model->getBoundingBox().transform(transformation);
 }
