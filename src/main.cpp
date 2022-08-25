@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
     glDebugMessageCallback(glErrorCallback, nullptr);
 
     GUIManager::getInstance().init(window, SCR_WIDTH, SCR_HEIGHT);
-    GUIManager::getInstance().setFont("../assets/Fonts/font.ttf", 100);
+    GUIManager::getInstance().setFont("../assets/Fonts/font.ttf");
 
     camera = new Camera(window);
     game = new Game(camera);

@@ -31,7 +31,7 @@ public:
 
     void startDraw();
 
-    void setFont(const char* path, unsigned int size);
+    void setFont(const char* path);
 
     void updateAmmoWindow(unsigned int ammoCount, unsigned int magazines);
 
@@ -40,6 +40,8 @@ public:
     void updateSpinner(float radius, float speed, float thickness);
 
     void drawCrosshair(float thickness, float size, Color color, bool isEmpty);
+
+    void drawFPSCounter();
 
     void render();
 };

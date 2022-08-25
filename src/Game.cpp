@@ -134,6 +134,7 @@ void Game::update(float deltaTime) {
     camera->setPosition(Vector3f(camera->getPosition().x, playerHeight + 1.0f, camera->getPosition().z));
 
     GUIManager::getInstance().updateScoreWindow(hitCount);
+    GUIManager::getInstance().drawFPSCounter();
 }
 
 void Game::render() {

@@ -12,7 +12,6 @@ void GUIManager::init(GLFWwindow *window, unsigned int width, unsigned int heigh
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    io = ImGui::GetIO(); (void)io;
 
     ImGui::StyleColorsDark();
 
@@ -23,8 +22,9 @@ void GUIManager::init(GLFWwindow *window, unsigned int width, unsigned int heigh
     this->SCR_HEIGHT = height;
 }
 
-void GUIManager::setFont(const char *path, unsigned int size) {
-    io.Fonts->AddFontFromFileTTF(path, size);
+void GUIManager::setFont(const char *path) {
+    float size = 50 * (SCR_WIDTH / SCR_HEIGHT);
+    ImGui::GetIO().Fonts->AddFontFromFileTTF(path, size);
 }
 
 void GUIManager::startDraw() {
@@ -48,7 +48,7 @@ void GUIManager::updateAmmoWindow(unsigned int ammoCount, unsigned int magazines
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     ImGui::SetNextWindowBgAlpha(0.0f);
     ImGui::SetNextWindowSize(ImVec2(200.0f, 100.0f));
-    ImGui::SetNextWindowPos(ImVec2(SCR_WIDTH - (250.0f * (SCR_WIDTH/SCR_HEIGHT)), SCR_HEIGHT - (150.0f * (SCR_WIDTH/SCR_HEIGHT))));
+    ImGui::SetNextWindowPos(ImVec2(SCR_WIDTH - 150.0f, SCR_HEIGHT - 75.0f));
     ImGui::Begin("ammo", nullptr, WINDOW_FLAGS);
     ImGui::Text("%i | %i", ammoCount, magazines);
     ImGui::End();
@@ -118,6 +118,17 @@ void GUIManager::drawCrosshair(float thickness, float size, Color color, bool is
         drawlist->AddLine(ImVec2(SCR_WIDTH/2,SCR_HEIGHT/2  - size), ImVec2(SCR_WIDTH/2,SCR_HEIGHT/2 + size), ImGui::ColorConvertFloat4ToU32(ImVec4(color.r, color.g, color.b, color.a)), thickness);
     }
 
+    ImGui::End();
+    ImGui::PopStyleVar();
+}
+
+void GUIManager::drawFPSCounter() {
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    ImGui::SetNextWindowBgAlpha(0.0f);
+    ImGui::SetNextWindowSize(ImVec2(SCR_WIDTH, 100.0f));
+    ImGui::SetNextWindowPos(ImVec2(SCR_WIDTH - 150.0f, 0.0f));
+    ImGui::Begin("fps", nullptr, WINDOW_FLAGS);
+    ImGui::Text("%f", ImGui::GetIO().Framerate);
     ImGui::End();
     ImGui::PopStyleVar();
 }
