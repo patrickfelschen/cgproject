@@ -21,7 +21,6 @@ public:
     TerrainShader *shader;
 
 private:
-
     float width;
     float height;
     float depth;

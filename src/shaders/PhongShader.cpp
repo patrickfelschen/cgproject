@@ -21,7 +21,7 @@ void PhongShader::setUniforms() {
     // Kamera Position
     setUniform("uCamPos", cameraPosition);
     // Licht
-    Vector3f lightPos = Vector3f(-3.0f, 10.0f, 0.0f);
+    Vector3f lightPos = Vector3f(100.0f, 100.0f, 0.0f);
     Color light = Color(1.0f, 1.0f, 1.0f);
     Color lightDiffuse = light * 0.8;
     Color lightAmbient = lightDiffuse * 0.7f;
