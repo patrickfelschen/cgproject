@@ -80,7 +80,7 @@ void Camera::update(float deltaTime) {
 }
 
 void Camera::handleKeyboardInputs(float deltaTime) {
-    float speed = 2.0f * deltaTime;
+    float speed = 3.0f * deltaTime;
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
         position += (target * speed);

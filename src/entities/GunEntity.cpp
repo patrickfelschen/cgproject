@@ -67,7 +67,7 @@ void GunEntity::startShoot(const Camera &camera) {
             targets.at(i)->hit = true;
             break;
         }
-        printf("Element: %i - Distance: %f\n", i, targets.at(i)->getDistanceToPlayer());
+        //printf("Element: %i - Distance: %f\n", i, targets.at(i)->getDistanceToPlayer());
     }
     readyToFire = false;
 

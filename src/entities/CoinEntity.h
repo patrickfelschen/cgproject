@@ -29,8 +29,6 @@ private:
     float distanceToPlayer = 0;
     Vector3f targetPosition;
 
-    float rndFloat(float min, float max);
-
     const ObjectModel *model;
 };
 

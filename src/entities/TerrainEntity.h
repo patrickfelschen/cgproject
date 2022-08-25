@@ -19,6 +19,7 @@ public:
 
     void render(const Camera &camera) override;
 
+    Vector3f getRandomPosition() const;
 private:
     const TerrainModel *model;
 };

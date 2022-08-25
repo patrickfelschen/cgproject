@@ -8,6 +8,7 @@
 
 Entity::Entity() {
     this->position = Vector3f();
+    this->positionOffset = Vector3f();
     this->positionVelocity = Vector3f();
     this->rotation = Vector3f();
     this->rotationVelocity = Vector3f();
@@ -41,7 +42,7 @@ void Entity::update(float deltaTime) {
 
     Matrix translation, rotationX, rotationY, rotationZ, scaling;
 
-    translation.translation(this->position);
+    translation.translation(this->position + this->positionOffset);
     rotationX.rotationX(TO_RAD(this->rotation.x));
     rotationY.rotationY(TO_RAD(this->rotation.y));
     rotationZ.rotationZ(TO_RAD(this->rotation.z));
@@ -52,6 +53,10 @@ void Entity::update(float deltaTime) {
 
 const Vector3f &Entity::getPosition() const {
     return position;
+}
+
+void Entity::setPositionOffset(const Vector3f &p) {
+    this->positionOffset = p;
 }
 
 Entity::~Entity() = default;
