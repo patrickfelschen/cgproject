@@ -5,18 +5,10 @@
 
 #include "Shader.h"
 
-#define vert "../assets/shaders/shader.vert"
-#define frag "../assets/shaders/shader.frag"
 
-Shader::Shader() : vsFilePath(vert), fsFilePath(frag), useView(true) {
-    this->modelTransform.identity();
-    compileShaders();
-}
-
-Shader::Shader(const char *vsFilePath, const char *fsFilePath, bool useView) : vsFilePath(vsFilePath),
-                                                                               fsFilePath(fsFilePath),
-                                                                               useView(useView) {
-    this->modelTransform.identity();
+Shader::Shader(const char *vsFilePath, const char *fsFilePath) {
+    this->vsFilePath = vsFilePath;
+    this->fsFilePath = fsFilePath;
     compileShaders();
 }
 
@@ -89,19 +81,7 @@ void Shader::compileShaders() {
     glUseProgram(id);
 }
 
-void Shader::setUniforms(const Camera &camera) {
-    setUniform("uProjection", camera.getProj());
-    if (useView) {
-        setUniform("uView", camera.getView());
-    } else {
-        Matrix view;
-        view.identity();
-        setUniform("uView", view);
-    }
-    setUniform("uTransform", modelTransform);
-}
-
-void Shader::activate(const Camera &camera) {
+void Shader::activate() {
     if (id <= 0) {
         std::cerr << "ERROR::SHADER::ACTIVATE can not activate shader" << std::endl;
         exit(EXIT_FAILURE);
@@ -109,7 +89,7 @@ void Shader::activate(const Camera &camera) {
     // Shader aktivieren
     glUseProgram(id);
     // Uniform setzen
-    setUniforms(camera);
+    setUniforms();
 }
 
 void Shader::deactivate() const {
@@ -151,8 +131,5 @@ GLint Shader::getUniformLocation(const std::string &name) {
     return locationId;
 }
 
-void Shader::setModelTransform(const Matrix &mt) {
-    this->modelTransform = mt;
-}
 
 Shader::~Shader() = default;

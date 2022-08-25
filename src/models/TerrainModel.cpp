@@ -6,7 +6,11 @@
 #include "TerrainModel.h"
 #include "../utils/Vertex.h"
 
-TerrainModel::TerrainModel(Shader *shader) : Model(shader), width(1000), height(0.5), depth(1000) {
+TerrainModel::TerrainModel(TerrainShader *shader) : Model() {
+    this->shader = shader;
+    this->width = 1000;
+    this->height = 0.5;
+    this->depth = 1000;
     generate();
 }
 
@@ -93,13 +97,8 @@ void TerrainModel::generate() {
     this->meshes.push_back(terrainMash);
 }
 
-void TerrainModel::update(float deltaTime) const {
-    Model::update(deltaTime);
-}
-
-void TerrainModel::render(const Camera &camera, const Matrix &transform) const {
-    this->shader->activate(camera);
-    Model::render(camera, transform);
+void TerrainModel::render() const {
+    this->shader->activate();
     for (auto &mesh: meshes) {
         mesh.render(shader);
     }

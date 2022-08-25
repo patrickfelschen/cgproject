@@ -4,7 +4,7 @@ RGBImage::RGBImage() : width(0), height(0) {
 
 }
 
-RGBImage::RGBImage(unsigned int width, unsigned height) : width(width), height(height) {
+RGBImage::RGBImage(unsigned int width, unsigned height, GLenum format) : width(width), height(height), format(format) {
     data = std::vector<Color>(width * height, Color());
 }
 
@@ -37,4 +37,8 @@ unsigned int RGBImage::getWidth() const {
 
 const std::vector<Color> &RGBImage::getData() const {
     return data;
+}
+
+GLenum RGBImage::getFormat() const {
+    return format;
 }

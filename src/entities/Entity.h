@@ -10,37 +10,36 @@
 
 class Entity {
 public:
-    explicit Entity(const Model *model);
+    explicit Entity();
 
     virtual ~Entity();
 
     virtual void update(float deltaTime);
 
-    virtual void render(const Camera &camera);
-
-    void setPosition(float x, float y, float z);
+    virtual void render(const Camera &camera) = 0;
 
     void setPosition(const Vector3f &pos);
 
-    void setRotationX(float newRotationX);
-
-    void setRotationY(float newRotationY);
-
-    void setRotationZ(float newRotationZ);
-
     void setScaling(float newScaling);
 
-    AABB getTransformedBoundingBox() const;
+    const Vector3f &getPosition() const;
+
+    void setPositionVelocity(const Vector3f &positionVelocity);
+
+    void setRotationVelocity(const Vector3f &rotationVelocity);
 
 protected:
     Matrix transformation;
+
     Vector3f position;
-    float rotAngleX;
-    float rotAngleY;
-    float rotAngleZ;
+    Vector3f positionVelocity;
+
+    Vector3f rotation;
+    Vector3f rotationVelocity;
+
     float scaleFactor;
-private:
-    const Model *model;
+
+    void setRotation(const Vector3f rot);
 };
 
 

@@ -8,18 +8,20 @@
 
 #include "../shaders/Shader.h"
 #include "Model.h"
+#include "../shaders/TerrainShader.h"
 
 class TerrainModel : public Model {
 public:
-    explicit TerrainModel(Shader *shader);
+    explicit TerrainModel(TerrainShader *shader);
 
     ~TerrainModel() override = default;
 
-    void update(float deltaTime) const override;
+    void render() const override;
 
-    void render(const Camera &camera, const Matrix &transform) const override;
+    TerrainShader *shader;
 
 private:
+
     float width;
     float height;
     float depth;

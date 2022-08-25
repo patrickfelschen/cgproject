@@ -55,18 +55,27 @@ void Loader::readImageFile(const char *filePath, RGBImage &outImage) {
     unsigned int width = FreeImage_GetWidth(pBitMap);
     unsigned int height = FreeImage_GetHeight(pBitMap);
     unsigned int bpp = FreeImage_GetBPP(pBitMap);
-    assert(bpp == 16 || bpp == 24 || bpp == 32);
-
+    assert(bpp == 24 || bpp == 32);
+    GLenum format;
+    if (bpp == 24) {
+        format = GL_RGB;
+    } else {
+        format = GL_RGBA;
+    }
     // Speicherplatz für alle Pixel erstellen
-    RGBImage image(width, height);
-
+    RGBImage image(width, height, format);
     // Speicherplatz für einzelnen Pixel erstellen
     RGBQUAD color;
     // Pixel Farbe auslesen und abspeichern
     for (unsigned int x = 0; x < width; x++) {
         for (unsigned int y = 0; y < width; y++) {
             FreeImage_GetPixelColor(pBitMap, x, y, &color);
-            Color pixelColor = Color(color.rgbRed, color.rgbGreen, color.rgbBlue, color.rgbReserved);
+            Color pixelColor;
+            if (bpp == 32) {
+                pixelColor = Color(color.rgbRed, color.rgbGreen, color.rgbBlue, color.rgbReserved);
+            } else {
+                pixelColor = Color(color.rgbRed, color.rgbGreen, color.rgbBlue);
+            }
             image.setPixelColor(x, y, pixelColor);
         }
     }

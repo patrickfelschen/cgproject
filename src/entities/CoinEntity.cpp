@@ -1,6 +1,7 @@
 #include "CoinEntity.h"
 
-CoinEntity::CoinEntity(const Model *model) : Entity(model) {
+CoinEntity::CoinEntity(const ObjectModel *model) : Entity() {
+    this->model = model;
     setScaling(0.05f);
     respawn(Vector3f());
 }
@@ -15,22 +16,27 @@ void CoinEntity::respawn(const Vector3f &pos) {
     float y = rndFloat(pos.y, pos.y);
     float z = rndFloat(pos.z - range, pos.z + range);
 
-    setPosition(x, y, z);
-    speed = rndFloat(2, 10);
+    setPosition(Vector3f(x, y, z));
+    speed = rndFloat(2, 4);
 }
 
 void CoinEntity::update(float deltaTime) {
-    rotation += deltaTime * 100;
-    setRotationY(rotation);
+    Vector3f dirToTarget = (targetPosition - position).normalize();
+    setRotationVelocity(Vector3f(0.0f, 100.0f, 0.0f));
+    setPositionVelocity(dirToTarget);
+
+    setDistanceToPlayer(position.distanceTo(targetPosition));
+
     Entity::update(deltaTime);
 }
 
 void CoinEntity::render(const Camera &camera) {
-    Vector3f dirToPlayer = (camera.getPosition() - position).normalize() *= (speed / 1000);
-    position += dirToPlayer;
-    setPosition(position);
-    setDistanceToPlayer(position.distanceTo(camera.getPosition()));
-    Entity::render(camera);
+    this->model->shader->setCameraPosition(camera.getPosition());
+    this->model->shader->setProjection(camera.getProj());
+    this->model->shader->setView(camera.getView());
+    this->model->shader->setTransform(transformation);
+
+    this->model->render();
 }
 
 float CoinEntity::rndFloat(float min, float max) {
@@ -43,4 +49,12 @@ float CoinEntity::getDistanceToPlayer() const {
 
 void CoinEntity::setDistanceToPlayer(float distance) {
     CoinEntity::distanceToPlayer = distance;
+}
+
+AABB CoinEntity::getTransformedBoundingBox() const {
+    return this->model->getBoundingBox().transform(transformation);
+}
+
+void CoinEntity::setTargetPosition(const Vector3f &targetPosition) {
+    this->targetPosition = targetPosition;
 }

@@ -14,26 +14,21 @@
 
 class Model {
 public:
-    explicit Model(Shader *shader);
+    explicit Model();
 
     virtual ~Model();
 
-    virtual void update(float deltaTime) const;
-
-    virtual void render(const Camera &camera, const Matrix &transform) const;
+    virtual void render() const = 0;
 
     AABB getBoundingBox() const;
 
 protected:
-    Shader *shader;
     std::vector<Mesh> meshes;
     AABB boundingBox;
 
     void setBoundingBox();
 
 private:
-    Matrix transformation;
-
     void drawBoundingBox() const;
 };
 

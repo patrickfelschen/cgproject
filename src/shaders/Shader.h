@@ -16,17 +16,13 @@
 
 class Shader {
 public:
-    Shader();
-
-    Shader(const char *vsFilePath, const char *fsFilePath, bool useView);
+    explicit Shader(const char *vsFilePath, const char *fsFilePath);
 
     virtual ~Shader();
 
-    void activate(const Camera &camera);
+    void activate();
 
     void deactivate() const;
-
-    void setModelTransform(const Matrix &modelTransform);
 
     void setUniform(const std::string &name, float value);
 
@@ -39,7 +35,7 @@ public:
     void setUniform(const std::string &name, const Matrix &value);
 
 protected:
-    virtual void setUniforms(const Camera &camera);
+    virtual void setUniforms() = 0;
 
 private:
     // ID des shaders
@@ -47,10 +43,6 @@ private:
     // Pfad der Shaderdateien
     const char *vsFilePath;
     const char *fsFilePath;
-
-    bool useView;
-
-    Matrix modelTransform;
 
     std::unordered_map<std::string, GLint> uniformLocationCache;
 

@@ -12,7 +12,7 @@ public:
 
     Color();
 
-    explicit Color(const aiColor3D &aiColor);
+    explicit Color(const aiColor4D &aiColor);
 
     Color(float rgba);
 

@@ -4,15 +4,9 @@
 
 #include "Model.h"
 
-Model::Model(Shader *shader) : shader(shader) {}
+Model::Model() = default;
 
 Model::~Model() = default;
-
-void Model::update(float deltaTime) const {}
-
-void Model::render(const Camera &camera, const Matrix &transform) const {
-    shader->setModelTransform(transform);
-}
 
 void Model::setBoundingBox() {
     Vector3f min = Vector3f(0, 0, 0);
