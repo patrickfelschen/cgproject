@@ -43,7 +43,7 @@ private:
     bool readyToFire = true;
 
     bool reloading = false;
-    float reloadTime = 0.5f ;
+    float reloadTime = 1.25f;
     float reloadTimer = 0;
 
     unsigned int ammo = 30;
