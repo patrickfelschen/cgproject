@@ -4,6 +4,7 @@
 
 #include "GunEntity.h"
 
+
 #define TO_RAD(deg) (deg * std::numbers::pi / 180.0)
 #define TO_DEG(rad) (rad * 180.0 / std::numbers::pi)
 
@@ -19,6 +20,7 @@ GunEntity::~GunEntity() = default;
 
 void GunEntity::update(float deltaTime) {
 //    printf("Targets: %i\n", targets->size());
+    GUIManager::getInstance().updateAmmoWindow(ammo);
     Entity::update(deltaTime);
 }
 
@@ -39,6 +41,7 @@ void GunEntity::render(const Camera &camera) {
 
 void GunEntity::shoot(const Camera &camera) {
     if (readyToFire) {
+        ammo--;
         Ray ray;
         ray.origin = camera.getPosition();
         ray.direction = camera.getDirection() * 3;

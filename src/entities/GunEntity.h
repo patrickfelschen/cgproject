@@ -8,6 +8,7 @@
 
 #include "Entity.h"
 #include "CoinEntity.h"
+#include "../gui/GUIManager.h"
 
 struct sortPosAsc {
     bool operator()(CoinEntity *c1, CoinEntity *c2) const {
@@ -37,6 +38,8 @@ private:
     std::vector<CoinEntity *> targets;
 
     void shoot(const Camera &camera);
+
+    unsigned int ammo = 30;
 };
 
 

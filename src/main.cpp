@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <iostream>
 #include "Game.h"
+#include "gui/GUIManager.h"
 
 void glfwFramebufferSizeCallback(GLFWwindow *window, int width, int height);
 
@@ -68,6 +69,9 @@ int main(int argc, char **argv) {
 
     glDebugMessageCallback(glErrorCallback, nullptr);
 
+    GUIManager::getInstance().init(window, SCR_WIDTH, SCR_HEIGHT);
+    GUIManager::getInstance().setFont("../assets/Fonts/font.ttf", 100);
+
     Camera camera(*window);
     Game game(*window, camera);
 
@@ -79,6 +83,9 @@ int main(int argc, char **argv) {
             lastTime = now;
             processInput(window);
             glfwPollEvents();
+
+            GUIManager::getInstance().startDraw();
+
             // Render start
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glClearColor(0.2, 0.2, 0.2, 1.0f);
@@ -87,11 +94,13 @@ int main(int argc, char **argv) {
 
             game.update((float) deltaTime);
             game.render();
+            GUIManager::getInstance().render();
             // Render end
             glfwSwapBuffers(window);
         }
     }
 
+    GUIManager::getInstance().destroy();
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }

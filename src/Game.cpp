@@ -111,6 +111,7 @@ void Game::update(float deltaTime) {
         entity->update(deltaTime);
     }
 
+    GUIManager::getInstance().updateScoreWindow(hitCount);
 }
 
 void Game::render() {
