@@ -38,15 +38,12 @@ private:
     const ObjectModel *model;
     std::vector<CoinEntity *> targets;
 
+    float range = 10.0f;
+
     bool readyToFire = true;
-    bool autoFire = false;
 
     bool reloading = false;
-
-    float shootTime = 1000;
-    float shootTimer = 0;
-
-    float reloadTime = 2 ;
+    float reloadTime = 0.5f ;
     float reloadTimer = 0;
 
     unsigned int ammo = 30;
