@@ -7,10 +7,11 @@
 #include "../utils/Vertex.h"
 
 TerrainModel::TerrainModel(TerrainShader *shader) : Model() {
+    this->size = 500;
     this->shader = shader;
-    this->width = 200;
-    this->height = 5.0f;
-    this->depth = 200;
+    this->width = size;
+    this->height = 6.5;
+    this->depth = size;
     generate();
 }
 
@@ -18,13 +19,15 @@ void TerrainModel::generate() {
     RGBImage image;
     Loader::readImageFile("../assets/Terrain/heightmap.bmp", image);
 
-    unsigned int imgWidth = image.getWidth();
-    unsigned int imgHeight = image.getHeight();
+    imgWidth = image.getWidth();
+    imgHeight = image.getHeight();
 
     float widthScale = width / imgWidth;
     float heightScale = depth / imgHeight;
 
     unsigned int vertexCount = imgWidth * imgHeight;
+
+    heights.resize(vertexCount);
 
     std::vector<Vertex> vertices = std::vector<Vertex>(vertexCount);
     std::vector<unsigned int> indices = std::vector<unsigned int>(6 * (imgWidth - 1) * (imgHeight - 1));
@@ -36,6 +39,8 @@ void TerrainModel::generate() {
             float x = (j * heightScale - (depth / 2));
             float y = image.getPixelColor(i, j).r * this->height;
             float z = (i * widthScale - (width / 2));
+
+            heights[j * imgWidth + i] = y;
 
             vertices[index].pos = Vector3f(x, y, z);
             // Texturkoordinaten für Mixtextur
@@ -103,4 +108,65 @@ void TerrainModel::render() const {
         mesh.render(shader);
     }
     this->shader->deactivate();
+}
+
+//https://www.youtube.com/watch?v=6E2zjfzMs7c
+const float TerrainModel::getHeightOfTerrain(float worldX, float worldZ) const {
+    // Welt-Position auf dem Terrain (Start in Mittelpunkt)
+    float terrainX = worldX + width / 2;
+    float terrainZ = worldZ + depth / 2;
+//    std::cout << "X: " << terrainX << std::endl;
+//    std::cout << "Z " << terrainZ << std::endl;
+
+    // Größe eines Quadrats des Terrains
+    float gridSquareSize = size / (float)(imgWidth - 1);
+//    std::cout << gridSquareSize << std::endl;
+
+    // Koordinaten des aktuellen Quadrats
+    float gridX = std::floor(terrainX / gridSquareSize);
+    float gridZ = std::floor(terrainZ / gridSquareSize);
+//    std::cout << "X: " << gridX << std::endl;
+//    std::cout << "Z " << gridZ << std::endl;
+
+    if((int)gridX >= imgWidth - 1 || (int)gridZ >= imgWidth - 1 || (int)gridX < -(int)(imgWidth - 1) || (int)gridX < -(int)(imgWidth - 1))  {
+        std::cout << "TERRAIN::GET_HEIGHT: OUT OF BOUNDS" << std::endl;
+        return 0;
+    }
+
+    // Position im Quadrat
+    float xCoord = fmod(terrainX, gridSquareSize) / gridSquareSize;
+    float zCoord = fmod(terrainZ, gridSquareSize) / gridSquareSize;
+//    std::cout << xCoord << std::endl;
+//    std::cout << zCoord << std::endl;
+
+    // 1 - zCoord = Diagonale des Quadrats, Prüfung in welcher Hälfte (Quadrat bestehend aus 2 Dreiecken) man sich befindet
+    // Danach Lage des Punktes im Dreieck bestimmen
+    float terrainHeight = 0;
+    if(xCoord <= (1-zCoord)) {
+        terrainHeight = baryCentric(
+                Vector3f(0, heights[(gridX * imgWidth) + gridZ], 0),
+                Vector3f(1,heights[((gridX + 1) * imgWidth) + gridZ], 0),
+                Vector3f(0, heights[(gridX * imgWidth) + (gridZ + 1)], 1),
+                Vector2f(xCoord, zCoord)
+        );
+    }
+    else {
+        terrainHeight = baryCentric(
+                Vector3f(1, heights[((gridX + 1) * imgWidth) + gridZ], 0),
+                Vector3f(1, heights[((gridX + 1) * imgWidth) + (gridZ + 1)], 1),
+                Vector3f(0, heights[(gridX * imgWidth) + (gridZ + 1)], 1),
+                Vector2f(xCoord, zCoord)
+        );
+    }
+
+    return terrainHeight;
+}
+
+// https://de.wikipedia.org/wiki/Baryzentrische_Koordinaten#:~:text=tfrac%20%7B1%7D%7B2%7D%7D)%5C%3B.%7D-,In%20einer%20Ebene%20(n%3D3%2C%20Dreieck),-%5BBearbeiten%20%7C
+float TerrainModel::baryCentric(Vector3f p1, Vector3f p2, Vector3f p3, Vector2f pos) const {
+    float det = (p2.z - p3.z) * (p1.x - p3.x) + (p3.x - p2.x) * (p1.z - p3.z);
+    float l1 = ((p2.z - p3.z) * (pos.x - p3.x) + (p3.x - p2.x) * (pos.y - p3.z)) / det;
+    float l2 = ((p3.z - p1.z) * (pos.x - p3.x) + (p1.x - p3.x) * (pos.y - p3.z)) / det;
+    float l3 = 1.0f - l1 - l2;
+    return l1 * p1.y + l2 * p2.y + l3 * p3.y;
 }

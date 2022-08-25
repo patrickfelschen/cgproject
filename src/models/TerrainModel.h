@@ -20,10 +20,20 @@ public:
 
     TerrainShader *shader;
 
+    const float getHeightOfTerrain(float worldX, float worldZ) const;
+
 private:
+    unsigned int imgWidth;
+    unsigned int imgHeight;
+
+    float size;
     float width;
     float height;
     float depth;
+
+    std::vector<float> heights;
+
+    float baryCentric(Vector3f p1, Vector3f p2, Vector3f p3, Vector2f pos) const;
 
     void generate();
 };

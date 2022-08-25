@@ -127,6 +127,9 @@ void Game::update(float deltaTime) {
 
     particleManager->update(deltaTime);
 
+    float playerHeight = terrainModel->getHeightOfTerrain(camera->getPosition().x, camera->getPosition().z);
+    camera->setPosition(Vector3f(camera->getPosition().x, playerHeight + 1.0f, camera->getPosition().z));
+
     GUIManager::getInstance().updateScoreWindow(hitCount);
 }
 
