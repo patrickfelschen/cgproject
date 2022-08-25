@@ -48,8 +48,7 @@ void GunEntity::reload() {
 }
 
 void GunEntity::startShoot(const Camera &camera) {
-    if (!readyToFire || ammo == 0 || reloading) return;
-    float range = 5.0f;
+    if (!readyToFire || ammo == 0) return;
 
     ammo--;
     Ray ray;

@@ -98,7 +98,7 @@ void Game::processKeyInput(int key, int action) {
     if (key == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
         gunEntity->endShoot();
     }
-    if (key == GLFW_KEY_R && action == GLFW_RELEASE) {
+    if (key == GLFW_KEY_R && action == GLFW_PRESS) {
         gunEntity->reload();
     }
 }
