@@ -28,7 +28,7 @@ void GunEntity::update(float deltaTime) {
         }
     }
 
-    GUIManager::getInstance().updateAmmoWindow(ammo);
+    GUIManager::getInstance().updateAmmoWindow(ammo, magazines);
     Entity::update(deltaTime);
 }
 
@@ -41,13 +41,14 @@ void GunEntity::render(const Camera &camera) {
 }
 
 void GunEntity::reload() {
-    if (ammo < maxAmmo) {
+    if (ammo < maxAmmo && !reloading && (magazines > 0)) {
         this->reloading = true;
+        magazines--;
     }
 }
 
 void GunEntity::startShoot(const Camera &camera) {
-    if (!readyToFire || ammo == 0) return;
+    if (!readyToFire || ammo == 0 || reloading) return;
 
     ammo--;
     Ray ray;

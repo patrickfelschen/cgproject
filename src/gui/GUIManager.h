@@ -28,7 +28,7 @@ public:
 
     void setFont(const char* path, unsigned int size);
 
-    void updateAmmoWindow(unsigned int ammoCount);
+    void updateAmmoWindow(unsigned int ammoCount, unsigned int magazines);
 
     void updateScoreWindow(unsigned int score);
 
