@@ -51,6 +51,7 @@ private:
 
     unsigned int ammo = 30;
     unsigned int maxAmmo = 30;
+    unsigned int magazines = 5;
 };
 
 

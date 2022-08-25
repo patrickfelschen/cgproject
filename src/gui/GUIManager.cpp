@@ -42,13 +42,13 @@ void GUIManager::render() {
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void GUIManager::updateAmmoWindow(unsigned int ammoCount) {
+void GUIManager::updateAmmoWindow(unsigned int ammoCount, unsigned int magazines) {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     ImGui::SetNextWindowBgAlpha(0.0f);
-    ImGui::SetNextWindowSize(ImVec2(100.0f, 100.0f));
-    ImGui::SetNextWindowPos(ImVec2(SCR_WIDTH - (150.0f * (SCR_WIDTH/SCR_HEIGHT)), SCR_HEIGHT - (150.0f * (SCR_WIDTH/SCR_HEIGHT))));
+    ImGui::SetNextWindowSize(ImVec2(200.0f, 100.0f));
+    ImGui::SetNextWindowPos(ImVec2(SCR_WIDTH - (250.0f * (SCR_WIDTH/SCR_HEIGHT)), SCR_HEIGHT - (150.0f * (SCR_WIDTH/SCR_HEIGHT))));
     ImGui::Begin("ammo", nullptr, ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoResize|ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoScrollbar|ImGuiWindowFlags_NoSavedSettings|ImGuiWindowFlags_NoInputs);
-    ImGui::Text("%i", ammoCount);
+    ImGui::Text("%i | %i", ammoCount, magazines);
     ImGui::End();
     ImGui::PopStyleVar();
 }
