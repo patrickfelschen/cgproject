@@ -18,7 +18,7 @@ struct sortPosAsc {
 
 class GunEntity : public Entity {
 public:
-    explicit GunEntity(ObjectModel *model, GLFWwindow &window);
+    explicit GunEntity(ObjectModel *model);
 
     ~GunEntity() override;
 
@@ -28,18 +28,29 @@ public:
 
     void setTargets(const std::vector<CoinEntity *> &v);
 
+    void startShoot(const Camera &camera);
+
+    void endShoot();
+
+    void reload();
+
 private:
     const ObjectModel *model;
-
-    GLFWwindow &window;
-
-    bool readyToFire = true;
-
     std::vector<CoinEntity *> targets;
 
-    void shoot(const Camera &camera);
+    bool readyToFire = true;
+    bool autoFire = false;
+
+    bool reloading = false;
+
+    float shootTime = 1000;
+    float shootTimer = 0;
+
+    float reloadTime = 2 ;
+    float reloadTimer = 0;
 
     unsigned int ammo = 30;
+    unsigned int maxAmmo = 30;
 };
 
 

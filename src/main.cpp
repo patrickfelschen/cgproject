@@ -14,6 +14,12 @@ void glfwFramebufferSizeCallback(GLFWwindow *window, int width, int height);
 
 void processInput(GLFWwindow *window);
 
+void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int modes);
+
+void glfwCursorPosCallback(GLFWwindow *window, double xpos, double ypos);
+
+void glfwMouseButtonCallback(GLFWwindow *window, int button, int action, int mods);
+
 void glfwErrorCallback(int, const char *errorMsg);
 
 void drawCrosshair();
@@ -23,6 +29,9 @@ void GLAPIENTRY glErrorCallback(GLenum source, GLenum type, GLuint id, GLenum se
 
 const unsigned int SCR_WIDTH = 960;
 const unsigned int SCR_HEIGHT = 540;
+
+Camera* camera;
+Game* game;
 
 int main(int argc, char **argv) {
     if (glfwInit() == GLFW_FALSE) {
@@ -47,7 +56,12 @@ int main(int argc, char **argv) {
     }
 
     glfwMakeContextCurrent(window);
+
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetCursorPosCallback(window, glfwCursorPosCallback);
+    glfwSetMouseButtonCallback(window, glfwMouseButtonCallback);
+    glfwSetKeyCallback(window, glfwKeyCallback);
+
     glfwSetFramebufferSizeCallback(window, glfwFramebufferSizeCallback);
     glfwSetErrorCallback(glfwErrorCallback);
 
@@ -62,18 +76,18 @@ int main(int argc, char **argv) {
 
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 
-    glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDepthFunc(GL_LESS);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
 
     glDebugMessageCallback(glErrorCallback, nullptr);
 
     GUIManager::getInstance().init(window, SCR_WIDTH, SCR_HEIGHT);
     GUIManager::getInstance().setFont("../assets/Fonts/font.ttf", 100);
 
-    Camera camera(*window);
-    Game game(*window, camera);
+    camera = new Camera(window);
+    game = new Game(camera);
 
     {
         double lastTime = 0;
@@ -81,19 +95,18 @@ int main(int argc, char **argv) {
             double now = glfwGetTime();
             double deltaTime = now - lastTime;
             lastTime = now;
-            processInput(window);
             glfwPollEvents();
 
             GUIManager::getInstance().startDraw();
 
             // Render start
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            glClearColor(0.2, 0.2, 0.2, 1.0f);
+            glClearColor(1.0, 1.0, 1.0, 1.0);
 
             drawCrosshair();
 
-            game.update((float) deltaTime);
-            game.render();
+            game->update((float) deltaTime);
+            game->render();
             GUIManager::getInstance().render();
             // Render end
             glfwSwapBuffers(window);
@@ -102,11 +115,12 @@ int main(int argc, char **argv) {
 
     GUIManager::getInstance().destroy();
     glfwTerminate();
+    delete game;
+    delete camera;
     exit(EXIT_SUCCESS);
 }
 
-void drawCrosshair()
-{
+void drawCrosshair() {
     glPushMatrix();
     glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
     glMatrixMode(GL_PROJECTION);
@@ -129,14 +143,21 @@ void drawCrosshair()
     glEnd();
 
     glPopMatrix();
-
-
 }
 
-void processInput(GLFWwindow *window) {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int modes){
+    if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
         glfwSetWindowShouldClose(window, true);
     }
+    game->processKeyInput(key, action);
+}
+
+void glfwMouseButtonCallback(GLFWwindow *window, int button, int action, int mods){
+    game->processKeyInput(button, action);
+}
+
+void glfwCursorPosCallback(GLFWwindow *window, double xpos, double ypos){
+    game->processMouseInput((float)xpos, (float)ypos);
 }
 
 void glfwFramebufferSizeCallback(GLFWwindow *window, int width, int height) {
@@ -147,8 +168,13 @@ void glfwErrorCallback(int, const char *errorMsg) {
     std::cerr << "ERROR::GLFW: " << errorMsg << std::endl;
 }
 
-void GLAPIENTRY glErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
-                                const GLchar *message, const void *userParam) {
+void GLAPIENTRY glErrorCallback(GLenum source,
+                                GLenum type,
+                                GLuint id,
+                                GLenum severity,
+                                GLsizei length,
+                                const GLchar *message,
+                                const void *userParam) {
     if (type == GL_DEBUG_TYPE_ERROR) {
         std::cerr << message << std::endl;
     }

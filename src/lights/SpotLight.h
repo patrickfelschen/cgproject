@@ -16,10 +16,25 @@ public:
     SpotLight(const Vector3f &position, const Vector3f &attenuation, const Color &color, const Vector3f &direction,
               float innerRadius, float outerRadius);
 
+    const Vector3f &getDirection() const;
+
+    void setDirection(const Vector3f &direction);
+
+    float getInnerRadius() const;
+
+    void setInnerRadius(float innerRadius);
+
+    float getOuterRadius() const;
+
+    void setOuterRadius(float outerRadius);
+
 protected:
     Vector3f direction;
     float innerRadius;
     float outerRadius;
+
+private:
+    LightType type() override;
 };
 
 

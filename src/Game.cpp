@@ -12,7 +12,7 @@
 #include "ParticleManager.h"
 #include "entities/SkyboxEntity.h"
 
-#define TARGET_COUNT 20
+#define TARGET_COUNT 1
 
 ObjectModel *garageModel;
 ObjectModel *gunModel;
@@ -32,9 +32,10 @@ ParticleManager *particleManager;
 
 unsigned int hitCount = 0;
 
-Game::Game(GLFWwindow &window, const Camera &camera) : window(window), camera(camera) {
+Game::Game(Camera *camera) : camera(camera) {
+
     // Modelle
-    garageModel = new ObjectModel(new PhongShader(), "../assets/Objects/Garage/MUW04SKJGJ052IRMJUCT9DJ5E.obj");
+    //garageModel = new ObjectModel(new PhongShader(), "../assets/Objects/Garage/MUW04SKJGJ052IRMJUCT9DJ5E.obj");
     gunModel = new ObjectModel(new PhongShader(), "../assets/Objects/Gun/ZE8FK2UU5PF8Y5F5777X34XII.obj");
     coinModel = new ObjectModel(new PhongShader(), "../assets/Objects/Coin/I89O58TBZ353I4X9ANHTRFF5K.obj");
     skyboxModel = new ObjectModel(new PhongShader(), "../assets/Objects/SkyBox/skybox.obj");
@@ -47,7 +48,7 @@ Game::Game(GLFWwindow &window, const Camera &camera) : window(window), camera(ca
     terrainEntity = new TerrainEntity(terrainModel);
     //terrainEntity->setPosition(0, -0.5, 0);
     // Waffe
-    gunEntity = new GunEntity(gunModel, window);
+    gunEntity = new GunEntity(gunModel);
 
     // Garagen
 //    garageEntity1 = new Entity(garageModel);
@@ -87,29 +88,44 @@ Game::Game(GLFWwindow &window, const Camera &camera) : window(window), camera(ca
 }
 
 Game::~Game() {
+    delete camera;
+};
 
+void Game::processKeyInput(int key, int action) {
+    if (key == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+        gunEntity->startShoot(*camera);
+    }
+    if (key == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
+        gunEntity->endShoot();
+    }
+    if (key == GLFW_KEY_R && action == GLFW_RELEASE) {
+        gunEntity->reload();
+    }
 }
+
+void Game::processMouseInput(float xpos, float ypos) { }
 
 void Game::update(float deltaTime) {
     // Kamera aktualisieren
-    camera.update(deltaTime);
+    camera->update(deltaTime);
     // Alle Ziele aktualisieren
     for (CoinEntity *entity: targets) {
         if (entity->hit) {
             particleManager->spawn(entity->getPosition());
-            entity->respawn(camera.getPosition());
+            entity->respawn(camera->getPosition());
             hitCount++;
             std::cout << "Treffer: " << hitCount << std::endl;
         }
-        entity->setTargetPosition(camera.getPosition());
+        entity->setTargetPosition(camera->getPosition());
         entity->update(deltaTime);
     }
-    particleManager->update(deltaTime);
 
     // Alle Einheiten aktualisieren
     for (Entity *entity: entities) {
         entity->update(deltaTime);
     }
+
+    particleManager->update(deltaTime);
 
     GUIManager::getInstance().updateScoreWindow(hitCount);
 }
@@ -117,11 +133,11 @@ void Game::update(float deltaTime) {
 void Game::render() {
     // Alle Ziele zeichnen
     for (CoinEntity *entity: targets) {
-        entity->render(camera);
+        entity->render(*camera);
     }
     // Alle Einheiten zeichnen
     for (Entity *entity: entities) {
-        entity->render(camera);
+        entity->render(*camera);
     }
-    particleManager->render(camera);
+    particleManager->render(*camera);
 }

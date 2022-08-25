@@ -55,13 +55,13 @@ void Loader::readImageFile(const char *filePath, RGBImage &outImage) {
     unsigned int width = FreeImage_GetWidth(pBitMap);
     unsigned int height = FreeImage_GetHeight(pBitMap);
     unsigned int bpp = FreeImage_GetBPP(pBitMap);
-    assert(bpp == 24 || bpp == 32);
-    GLenum format;
-    if (bpp == 24) {
-        format = GL_RGB;
-    } else {
-        format = GL_RGBA;
-    }
+    assert(bpp == 1 || bpp == 8 || bpp == 16 || bpp == 24 || bpp == 32);
+    GLenum format = GL_RGBA;
+//    if(bpp == 1) format = GL_RED;
+//    if(bpp == 8) format = GL_RED;
+//    if(bpp == 16) format = GL_RGB;
+//    if(bpp == 24) format = GL_RGB;
+//    if(bpp == 32) format = GL_RGBA;
     // Speicherplatz für alle Pixel erstellen
     RGBImage image(width, height, format);
     // Speicherplatz für einzelnen Pixel erstellen

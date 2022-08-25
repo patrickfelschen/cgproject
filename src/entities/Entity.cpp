@@ -3,6 +3,7 @@
 //
 
 #include "Entity.h"
+
 #define TO_RAD(deg) (deg * std::numbers::pi / 180.0)
 
 Entity::Entity() {
@@ -11,6 +12,7 @@ Entity::Entity() {
     this->rotation = Vector3f();
     this->rotationVelocity = Vector3f();
     this->scaleFactor = 1.0;
+    this->transformation.identity();
 }
 
 void Entity::setPosition(const Vector3f &pos) {

@@ -28,6 +28,8 @@ public:
 
     void setRotationVelocity(const Vector3f &rotationVelocity);
 
+    void setRotation(const Vector3f rot);
+
 protected:
     Matrix transformation;
 
@@ -38,8 +40,6 @@ protected:
     Vector3f rotationVelocity;
 
     float scaleFactor;
-
-    void setRotation(const Vector3f rot);
 };
 
 

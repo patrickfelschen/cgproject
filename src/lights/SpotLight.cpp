@@ -21,4 +21,32 @@ SpotLight::SpotLight(const Vector3f &position,
     this->outerRadius = outerRadius;
 }
 
+Light::LightType SpotLight::type() {
+    return SPOT;
+}
+
+const Vector3f &SpotLight::getDirection() const {
+    return direction;
+}
+
+void SpotLight::setDirection(const Vector3f &direction) {
+    SpotLight::direction = direction;
+}
+
+float SpotLight::getInnerRadius() const {
+    return innerRadius;
+}
+
+void SpotLight::setInnerRadius(float innerRadius) {
+    SpotLight::innerRadius = innerRadius;
+}
+
+float SpotLight::getOuterRadius() const {
+    return outerRadius;
+}
+
+void SpotLight::setOuterRadius(float outerRadius) {
+    SpotLight::outerRadius = outerRadius;
+}
+
 

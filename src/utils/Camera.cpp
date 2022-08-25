@@ -7,9 +7,8 @@
 #include "Camera.h"
 
 #define TO_RAD(deg) (deg * std::numbers::pi / 180.0)
-#define TO_DEG(rad) (rad * 180.0 / std::numbers::pi)
 
-Camera::Camera(GLFWwindow &window) : window(window) {
+Camera::Camera(GLFWwindow *window) : window(window) {
     position = Vector3f(0.0f, 0.0f, 0.0f);
     target = Vector3f(0.0f, 0.0f, -1.0f);
     up = Vector3f(0.0f, 1.0f, 0.0f);
@@ -17,8 +16,7 @@ Camera::Camera(GLFWwindow &window) : window(window) {
     yaw = 0;
     pitch = 0;
 
-    int windowWidth, windowHeight;
-    glfwGetWindowSize(&window, &windowWidth, &windowHeight);
+    glfwGetWindowSize(window, &windowWidth, &windowHeight);
 
     lastMouseX = (float) windowWidth / 2;
     lastMouseY = (float) windowHeight / 2;
@@ -82,31 +80,31 @@ void Camera::update(float deltaTime) {
 }
 
 void Camera::handleKeyboardInputs(float deltaTime) {
-    float speed = 5.0f * deltaTime;
+    float speed = 2.0f * deltaTime;
 
-    if (glfwGetKey(&window, GLFW_KEY_W) == GLFW_PRESS) {
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
         position += (target * speed);
     }
-    if (glfwGetKey(&window, GLFW_KEY_S) == GLFW_PRESS) {
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
         position -= (target * speed);
     }
-    if (glfwGetKey(&window, GLFW_KEY_A) == GLFW_PRESS) {
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
         position -= getRight() * speed;
     }
-    if (glfwGetKey(&window, GLFW_KEY_D) == GLFW_PRESS) {
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
         position += getRight() * speed;
     }
-    if (glfwGetKey(&window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
         position.y += speed;
     }
-    if (glfwGetKey(&window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
         position.y -= speed;
     }
 }
 
 void Camera::handleMouseInputs(float deltaTime) {
     double mouseX, mouseY;
-    glfwGetCursorPos(&window, &mouseX, &mouseY);
+    glfwGetCursorPos(window, &mouseX, &mouseY);
 
     float xOffset = mouseX - lastMouseX;
     float yOffset = lastMouseY - mouseY;  // reversed since y-coordinates range from bottom to top

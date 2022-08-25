@@ -12,7 +12,7 @@
 
 class Camera {
 public:
-    explicit Camera(GLFWwindow &window);
+    explicit Camera(GLFWwindow *window);
 
     virtual ~Camera();
 
@@ -47,7 +47,9 @@ public:
     void handleMouseInputs(float deltaTime);
 
 private:
-    GLFWwindow &window;
+    GLFWwindow *window;
+
+    int windowWidth, windowHeight;
 
     Matrix view;
     Matrix proj;

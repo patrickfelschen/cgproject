@@ -22,11 +22,19 @@ void CoinEntity::respawn(const Vector3f &pos) {
 
 void CoinEntity::update(float deltaTime) {
     Vector3f dirToTarget = (targetPosition - position).normalize();
-    setRotationVelocity(Vector3f(0.0f, 100.0f, 0.0f));
     setPositionVelocity(dirToTarget);
+    setRotationVelocity(Vector3f(0, 20, 0));
+
+//    Vector3f a = Vector3f(-1,0,0);
+//    float t = acos(a.dot(dirToTarget) / (a.length() * dirToTarget.length()));
+//    std::cout << t << std::endl;
+//    setRotation(Vector3f(0, TO_DEG(t), 0));
+
+    // setRotationVelocity(Vector3f(0.0f, 100.0f, 0.0f));
+    // setLookAt(targetPosition);
+    //setPositionVelocity(dirToTarget);
 
     setDistanceToPlayer(position.distanceTo(targetPosition));
-
     Entity::update(deltaTime);
 }
 
@@ -35,7 +43,6 @@ void CoinEntity::render(const Camera &camera) {
     this->model->shader->setProjection(camera.getProj());
     this->model->shader->setView(camera.getView());
     this->model->shader->setTransform(transformation);
-
     this->model->render();
 }
 

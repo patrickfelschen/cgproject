@@ -14,19 +14,24 @@
 
 class Game {
 public:
-    explicit Game(GLFWwindow &window, const Camera &camera);
+    explicit Game(Camera* camera);
 
     virtual ~Game();
+
+    void processKeyInput(int key, int action);
+
+    void processMouseInput(float xpos, float ypos);
 
     void update(float deltaTime);
 
     void render();
 
+
+
 private:
-    GLFWwindow &window;
-    Camera camera;
     std::vector<Entity *> entities;
     std::vector<CoinEntity *> targets;
+    Camera* camera;
 };
 
 

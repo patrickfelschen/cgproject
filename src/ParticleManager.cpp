@@ -29,11 +29,14 @@ void ParticleManager::update(float deltaTime) {
 }
 
 void ParticleManager::render(const Camera &camera) {
+    glEnable(GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     for (ParticleEntity *p: particleEntities) {
         if (p->getLife() > 0.0f) {
             p->render(camera);
         }
     }
+    glDisable(GL_BLEND);
 }
 
 void ParticleManager::spawn(const Vector3f &origin) {
