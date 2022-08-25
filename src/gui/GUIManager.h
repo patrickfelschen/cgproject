@@ -1,14 +1,19 @@
-
 #ifndef CG_GUIMANAGER_H
 #define CG_GUIMANAGER_H
 
 #include "../../libraries/win32/imgui/imgui.h"
 #include "../../libraries/win32/imgui/imgui_impl_glfw.h"
 #include "../../libraries/win32/imgui/imgui_impl_opengl3.h"
+#include "../utils/Color.h"
+#include <numbers>
+
+#define WINDOW_FLAGS ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoResize|ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoScrollbar|ImGuiWindowFlags_NoSavedSettings|ImGuiWindowFlags_NoInputs
 
 class GUIManager {
 private:
     GUIManager() {}
+
+    GLFWwindow* window;
 
     ImGuiIO io;
     unsigned int SCR_WIDTH;
@@ -31,6 +36,10 @@ public:
     void updateAmmoWindow(unsigned int ammoCount, unsigned int magazines);
 
     void updateScoreWindow(unsigned int score);
+
+    void updateSpinner(float radius, float speed, float thickness);
+
+    void drawCrosshair(float thickness, float size, Color color, bool isEmpty);
 
     void render();
 };

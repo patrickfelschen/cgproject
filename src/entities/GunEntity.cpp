@@ -20,6 +20,7 @@ GunEntity::~GunEntity() = default;
 
 void GunEntity::update(float deltaTime) {
     if (reloading) {
+        GUIManager::getInstance().updateSpinner(25.0f, 7.5f, 5.0f);
         reloadTimer += deltaTime;
         if (reloadTimer >= reloadTime) {
             reloadTimer = 0;
@@ -38,10 +39,15 @@ void GunEntity::render(const Camera &camera) {
     //this->model->shader->setView(camera.getView());
     this->model->shader->setTransform(transformation);
     this->model->render();
+
+    if(!reloading) {
+        GUIManager::getInstance().drawCrosshair(2.0f, 10.0f, Color(1.0f, 1.0f, 1.0f, 1.0f), ammo == 0);
+    }
+
 }
 
 void GunEntity::reload() {
-    if (ammo < maxAmmo && !reloading && (magazines > 0)) {
+    if (ammo < maxAmmo && !reloading && magazines > 0) {
         this->reloading = true;
         magazines--;
     }

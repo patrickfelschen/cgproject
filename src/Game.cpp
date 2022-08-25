@@ -12,7 +12,7 @@
 #include "ParticleManager.h"
 #include "entities/SkyboxEntity.h"
 
-#define TARGET_COUNT 1
+#define TARGET_COUNT 35
 
 ObjectModel *garageModel;
 ObjectModel *gunModel;
