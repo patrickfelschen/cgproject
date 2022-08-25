@@ -33,14 +33,14 @@ ParticleManager *particleManager;
 unsigned int hitCount = 0;
 
 Game::Game(GLFWwindow &window, const Camera &camera) : window(window), camera(camera) {
+    // Modelle
     garageModel = new ObjectModel(new PhongShader(), "../assets/Objects/Garage/MUW04SKJGJ052IRMJUCT9DJ5E.obj");
     gunModel = new ObjectModel(new PhongShader(), "../assets/Objects/Gun/ZE8FK2UU5PF8Y5F5777X34XII.obj");
     coinModel = new ObjectModel(new PhongShader(), "../assets/Objects/Coin/I89O58TBZ353I4X9ANHTRFF5K.obj");
     skyboxModel = new ObjectModel(new PhongShader(), "../assets/Objects/SkyBox/skybox.obj");
     terrainModel = new TerrainModel(new TerrainShader());
-
+    // Coin Partikel
     particleManager = new ParticleManager(100);
-
     // Himmel
     skyboxEntity = new SkyboxEntity(skyboxModel);
     // Umgebung

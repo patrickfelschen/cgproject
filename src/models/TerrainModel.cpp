@@ -9,7 +9,7 @@
 TerrainModel::TerrainModel(TerrainShader *shader) : Model() {
     this->shader = shader;
     this->width = 1000;
-    this->height = 0.5;
+    this->height = 2.0f;
     this->depth = 1000;
     generate();
 }
