@@ -22,6 +22,8 @@ public:
 
     const float getHeightOfTerrain(float worldX, float worldZ) const;
 
+    float getSize() const;
+
 private:
     unsigned int imgWidth;
     unsigned int imgHeight;

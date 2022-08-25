@@ -22,7 +22,7 @@ ParticleManager::~ParticleManager() {
 void ParticleManager::update(float deltaTime) {
     for (ParticleEntity *p: particleEntities) {
         if (p->getLife() > 0.0f) {
-            printf("Alpha: %f\n", p->getColor().a);
+            //printf("Alpha: %f\n", p->getColor().a);
             p->update(deltaTime);
         }
     }

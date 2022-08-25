@@ -30,6 +30,8 @@ public:
 
     void setRotation(const Vector3f rot);
 
+    void setPositionOffset(const Vector3f &p);
+
 protected:
     Matrix transformation;
 
@@ -38,6 +40,8 @@ protected:
 
     Vector3f rotation;
     Vector3f rotationVelocity;
+
+    Vector3f positionOffset;
 
     float scaleFactor;
 };

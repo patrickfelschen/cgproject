@@ -7,7 +7,7 @@
 #include "../utils/Vertex.h"
 
 TerrainModel::TerrainModel(TerrainShader *shader) : Model() {
-    this->size = 500;
+    this->size = 200;
     this->shader = shader;
     this->width = size;
     this->height = 6.5;
@@ -21,6 +21,8 @@ void TerrainModel::generate() {
 
     imgWidth = image.getWidth();
     imgHeight = image.getHeight();
+
+    assert(imgWidth == imgHeight);
 
     float widthScale = width / imgWidth;
     float heightScale = depth / imgHeight;
@@ -169,4 +171,8 @@ float TerrainModel::baryCentric(Vector3f p1, Vector3f p2, Vector3f p3, Vector2f 
     float l2 = ((p3.z - p1.z) * (pos.x - p3.x) + (p1.x - p3.x) * (pos.y - p3.z)) / det;
     float l3 = 1.0f - l1 - l2;
     return l1 * p1.y + l2 * p2.y + l3 * p3.y;
+}
+
+float TerrainModel::getSize() const {
+    return size;
 }

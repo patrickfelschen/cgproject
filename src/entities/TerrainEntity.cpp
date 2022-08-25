@@ -3,6 +3,7 @@
 //
 
 #include "TerrainEntity.h"
+#include "../maths/Random.h"
 
 TerrainEntity::TerrainEntity(const TerrainModel *model) : Entity() {
     this->model = model;
@@ -21,4 +22,11 @@ void TerrainEntity::render(const Camera &camera) {
     this->model->shader->setTransform(transformation);
 
     this->model->render();
+}
+
+Vector3f TerrainEntity::getRandomPosition() const {
+    float x = Random::randFloat(-100, 100);
+    float z = Random::randFloat(-100, 100);
+    float y = this->model->getHeightOfTerrain(x, z);
+    return {x, y, z};
 }
