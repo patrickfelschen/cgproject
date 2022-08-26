@@ -70,8 +70,6 @@ Vector3f Camera::getRight() const {
 
 void Camera::update(float deltaTime) {
     handleKeyboardInputs(deltaTime);
-    handleMouseInputs(deltaTime);
-
     target.x = cos(TO_RAD(yaw)) * cos(TO_RAD(pitch));
     target.y = sin(TO_RAD(pitch));
     target.z = sin(TO_RAD(yaw)) * cos(TO_RAD(pitch));
@@ -95,17 +93,14 @@ void Camera::handleKeyboardInputs(float deltaTime) {
         position += getRight() * speed;
     }
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-        position.y += speed;
+        //position.y += speed;
     }
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-        position.y -= speed;
+        //position.y -= speed;
     }
 }
 
-void Camera::handleMouseInputs(float deltaTime) {
-    double mouseX, mouseY;
-    glfwGetCursorPos(window, &mouseX, &mouseY);
-
+void Camera::handleMouseInputs(float mouseX, float mouseY) {
     float xOffset = mouseX - lastMouseX;
     float yOffset = lastMouseY - mouseY;  // reversed since y-coordinates range from bottom to top
 

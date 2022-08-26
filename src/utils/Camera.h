@@ -44,7 +44,7 @@ public:
 
     void handleKeyboardInputs(float deltaTime);
 
-    void handleMouseInputs(float deltaTime);
+    void handleMouseInputs(float mouseX, float mouseY);
 
 private:
     GLFWwindow *window;
