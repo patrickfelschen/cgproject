@@ -5,7 +5,7 @@
 #include "Game.h"
 #include "shaders/PhongShader.h"
 #include "entities/GunEntity.h"
-#include "entities/CoinEntity.h"
+#include "entities/EnemyEntity.h"
 #include "models/TerrainModel.h"
 #include "shaders/TerrainShader.h"
 #include "entities/TerrainEntity.h"
@@ -79,7 +79,7 @@ Game::Game(Camera *camera) : camera(camera) {
     entities.push_back(skyboxEntity);
     // Ziele
     for (unsigned int i = 0; i < TARGET_COUNT; i++) {
-        auto *entity = new CoinEntity(coinModel);
+        auto *entity = new EnemyEntity(coinModel);
         entity->setPosition(terrainEntity->getRandomPosition(Vector3f(0.0f, 0.5f, 0.0f)));
         entity->setTargetPosition(camera->getPosition());
         targets.push_back(entity);
@@ -109,7 +109,7 @@ void Game::update(float deltaTime) {
     // Kamera aktualisieren
     camera->update(deltaTime);
     // Alle Ziele aktualisieren
-    for (CoinEntity *entity: targets) {
+    for (EnemyEntity *entity: targets) {
         if (entity->hit) {
             particleManager->spawn(entity->getPosition());
             entity->respawn(terrainEntity->getRandomPosition(Vector3f(0.0f, 1.2f, 0.0f)));
@@ -137,7 +137,7 @@ void Game::update(float deltaTime) {
 
 void Game::render() {
     // Alle Ziele zeichnen
-    for (CoinEntity *entity: targets) {
+    for (EnemyEntity *entity: targets) {
         entity->render(*camera);
     }
     // Alle Einheiten zeichnen

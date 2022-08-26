@@ -10,7 +10,7 @@
 #include <vector>
 #include "utils/Camera.h"
 #include "entities/Entity.h"
-#include "entities/CoinEntity.h"
+#include "entities/EnemyEntity.h"
 
 class Game {
 public:
@@ -30,7 +30,7 @@ public:
 
 private:
     std::vector<Entity *> entities;
-    std::vector<CoinEntity *> targets;
+    std::vector<EnemyEntity *> targets;
     Camera* camera;
 
 };

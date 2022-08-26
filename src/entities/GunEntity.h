@@ -7,11 +7,11 @@
 
 
 #include "Entity.h"
-#include "CoinEntity.h"
+#include "EnemyEntity.h"
 #include "../gui/GUIManager.h"
 
 struct sortPosAsc {
-    bool operator()(CoinEntity *c1, CoinEntity *c2) const {
+    bool operator()(EnemyEntity *c1, EnemyEntity *c2) const {
         return c1->getDistanceToPlayer() < c2->getDistanceToPlayer();
     }
 };
@@ -26,7 +26,7 @@ public:
 
     void render(const Camera &camera) override;
 
-    void setTargets(const std::vector<CoinEntity *> &v);
+    void setTargets(const std::vector<EnemyEntity *> &v);
 
     void startShoot(const Camera &camera);
 
@@ -36,7 +36,7 @@ public:
 
 private:
     const ObjectModel *model;
-    std::vector<CoinEntity *> targets;
+    std::vector<EnemyEntity *> targets;
 
     float range = 10.0f;
 

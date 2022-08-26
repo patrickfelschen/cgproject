@@ -1,13 +1,13 @@
-#ifndef CG_COINENTITY_H
-#define CG_COINENTITY_H
+#ifndef CG_ENEMYENTITY_H
+#define CG_ENEMYENTITY_H
 
 #include "Entity.h"
 
-class CoinEntity : public Entity {
+class EnemyEntity : public Entity {
 public:
-    explicit CoinEntity(const ObjectModel *model);
+    explicit EnemyEntity(const ObjectModel *model);
 
-    ~CoinEntity() override;
+    ~EnemyEntity() override;
 
     void update(float deltaTime) override;
 
@@ -34,4 +34,4 @@ private:
 };
 
 
-#endif //CG_COINENTITY_H
+#endif //CG_ENEMYENTITY_H

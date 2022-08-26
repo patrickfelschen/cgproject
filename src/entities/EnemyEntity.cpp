@@ -1,19 +1,19 @@
-#include "CoinEntity.h"
+#include "EnemyEntity.h"
 #include "../maths/Random.h"
 
 #define TO_RAD(deg) (deg * std::numbers::pi / 180.0)
 #define TO_DEG(rad) (rad * 180.0 / std::numbers::pi)
 
-CoinEntity::CoinEntity(const ObjectModel* model) : Entity() {
+EnemyEntity::EnemyEntity(const ObjectModel* model) : Entity() {
     this->model = model;
     this->hit = false;
     this->speed = Random::randFloat(1, 2);
     setScaling(0.2f);
 }
 
-CoinEntity::~CoinEntity() = default;
+EnemyEntity::~EnemyEntity() = default;
 
-void CoinEntity::respawn(const Vector3f &pos) {
+void EnemyEntity::respawn(const Vector3f &pos) {
     this->hit = false;
     setPosition(pos);
     speed = Random::randFloat(1, 2);
@@ -21,7 +21,7 @@ void CoinEntity::respawn(const Vector3f &pos) {
 
 float yawOffset = 90;
 float pitchOffset = 20;
-void CoinEntity::update(float deltaTime) {
+void EnemyEntity::update(float deltaTime) {
     Vector3f dirToTarget = (targetPosition - position).normalize();
 
     float pitch = asin(-dirToTarget.y);
@@ -38,7 +38,7 @@ void CoinEntity::update(float deltaTime) {
     Entity::update(deltaTime);
 }
 
-void CoinEntity::render(const Camera &camera) {
+void EnemyEntity::render(const Camera &camera) {
     this->model->shader->setCameraPosition(camera.getPosition());
     this->model->shader->setProjection(camera.getProj());
     this->model->shader->setView(camera.getView());
@@ -47,18 +47,18 @@ void CoinEntity::render(const Camera &camera) {
     this->model->render();
 }
 
-float CoinEntity::getDistanceToPlayer() const {
+float EnemyEntity::getDistanceToPlayer() const {
     return distanceToPlayer;
 }
 
-void CoinEntity::setDistanceToPlayer(float distance) {
-    CoinEntity::distanceToPlayer = distance;
+void EnemyEntity::setDistanceToPlayer(float distance) {
+    EnemyEntity::distanceToPlayer = distance;
 }
 
-AABB CoinEntity::getTransformedBoundingBox() const {
+AABB EnemyEntity::getTransformedBoundingBox() const {
     return this->model->getBoundingBox().transform(transformation);
 }
 
-void CoinEntity::setTargetPosition(const Vector3f &targetPosition) {
+void EnemyEntity::setTargetPosition(const Vector3f &targetPosition) {
     this->targetPosition = targetPosition;
 }

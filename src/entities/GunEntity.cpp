@@ -77,7 +77,7 @@ void GunEntity::endShoot() {
     readyToFire = true;
 }
 
-void GunEntity::setTargets(const std::vector<CoinEntity *> &v) {
+void GunEntity::setTargets(const std::vector<EnemyEntity *> &v) {
     targets = v;
 }
 
