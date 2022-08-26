@@ -26,12 +26,14 @@ public:
 
     void render();
 
-    void checkTerrainCollision(Entity *entity, float groundOffset = 0.0f);
-
 private:
     std::vector<Entity *> entities;
     std::vector<EnemyEntity *> targets;
     Camera* camera;
+
+    void checkTerrainCollision(Entity *entity, float groundOffset = 0.0f);
+
+    bool checkPlayerCollision(Entity *entity, Camera *camera, float hitOffset) const;
 
 };
 

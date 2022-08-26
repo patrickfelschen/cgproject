@@ -25,7 +25,7 @@ ParticleModel::ParticleModel(ParticleShader *shader) : shader(shader) {
     };
     std::vector<Texture> textures = {
             //Texture("../assets/Objects/Ghost/texture.png", "texture_defuse")
-            Texture(Color(1.0f, 0.0f, 0.0f), "texture_diffuse")
+            Texture(Color(1.0f), "texture_diffuse")
     };
     Mesh particleMesh(vertices, indices, textures);
     this->meshes.push_back(particleMesh);

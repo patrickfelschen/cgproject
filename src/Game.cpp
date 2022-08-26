@@ -33,6 +33,7 @@ TerrainEntity *terrainEntity;
 ParticleManager *particleManager;
 
 unsigned int hitCount = 0;
+unsigned int life = 3;
 
 Game::Game(Camera *camera) : camera(camera) {
     // Modelle
@@ -111,10 +112,16 @@ void Game::update(float deltaTime) {
     // Alle Ziele aktualisieren
     for (EnemyEntity *entity: targets) {
         if (entity->hit) {
-            particleManager->spawn(entity->getPosition());
+            particleManager->spawn(entity->getPosition(), Color(1.0f));
             entity->respawn(terrainEntity->getRandomPosition(Vector3f(0.0f, 1.2f, 0.0f)));
             hitCount++;
            // std::cout << "Treffer: " << hitCount << std::endl;
+        }
+        if(checkPlayerCollision(entity, camera, 0.4f)) {
+            life--;
+            particleManager->spawn(entity->getPosition(), Color(1.0f, 0.0f, 0.0f, 1.0f));
+            entity->respawn(terrainEntity->getRandomPosition(Vector3f(0.0f, 1.2f, 0.0f)));
+            std::cout << "Contact, Life: " << life << std::endl;
         }
         checkTerrainCollision(entity, 0.2f);
         entity->setTargetPosition(camera->getPosition());
@@ -132,6 +139,7 @@ void Game::update(float deltaTime) {
     camera->setPosition(Vector3f(camera->getPosition().x, playerHeight + 1.0f, camera->getPosition().z));
 
     GUIManager::getInstance().updateScoreWindow(hitCount);
+    GUIManager::getInstance().updateLifeWindow(life);
     GUIManager::getInstance().drawFPSCounter();
 }
 
@@ -152,4 +160,10 @@ void Game::checkTerrainCollision(Entity *entity, float groundOffset) {
     if(entity->getPosition().y <= (height + groundOffset)) {
         entity->setPosition(Vector3f(entity->getPosition().x, height + groundOffset, entity->getPosition().z));
     }
+}
+
+bool Game::checkPlayerCollision(Entity *entity, Camera *camera, float hitOffset) const {
+    if(entity->getPosition().distanceTo(camera->getPosition()) <= hitOffset) return true;
+
+    return false;
 }

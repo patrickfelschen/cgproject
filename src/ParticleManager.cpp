@@ -40,14 +40,14 @@ void ParticleManager::render(const Camera &camera) {
     glDisable(GL_BLEND);
 }
 
-void ParticleManager::spawn(const Vector3f &origin) {
+void ParticleManager::spawn(const Vector3f &origin, Color color) {
     for (ParticleEntity *p: particleEntities) {
         p->setPosition(origin);
         float x = Random::randFloat(-1.0, 1.0f);
         float y = Random::randFloat(-1.0, 1.0f);
         float z = Random::randFloat(-1.0, 1.0f);
         p->setPositionVelocity(Vector3f(x, y, z));
-        p->setColor(1.0f);
+        p->setColor(color);
         p->setLife(Random::randFloat(0.2, 0.5));
         p->setScale(Random::randFloat(0.005, 0.01));
     }

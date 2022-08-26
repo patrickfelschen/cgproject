@@ -132,3 +132,14 @@ void GUIManager::drawFPSCounter() {
     ImGui::End();
     ImGui::PopStyleVar();
 }
+
+void GUIManager::updateLifeWindow(unsigned int life) {
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    ImGui::SetNextWindowBgAlpha(0.0f);
+    ImGui::SetNextWindowSize(ImVec2(SCR_WIDTH, 100.0f));
+    ImGui::SetNextWindowPos(ImVec2(0.0f, 100.0f));
+    ImGui::Begin("life", nullptr, WINDOW_FLAGS);
+    ImGui::Text("Life: %i", life);
+    ImGui::End();
+    ImGui::PopStyleVar();
+}

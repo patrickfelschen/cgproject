@@ -19,7 +19,7 @@ public:
 
     void render(const Camera &camera);
 
-    void spawn(const Vector3f &origin);
+    void spawn(const Vector3f &origin, Color color);
 
 private:
     std::vector<ParticleEntity *> particleEntities;

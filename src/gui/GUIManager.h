@@ -37,6 +37,8 @@ public:
 
     void updateScoreWindow(unsigned int score);
 
+    void updateLifeWindow(unsigned int life);
+
     void updateSpinner(float radius, float speed, float thickness);
 
     void drawCrosshair(float thickness, float size, Color color, bool isEmpty);
