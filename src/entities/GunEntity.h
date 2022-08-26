@@ -8,7 +8,7 @@
 
 #include "Entity.h"
 #include "EnemyEntity.h"
-#include "../gui/GUIManager.h"
+#include "../managers/GUIManager.h"
 
 struct sortPosAsc {
     bool operator()(EnemyEntity *c1, EnemyEntity *c2) const {

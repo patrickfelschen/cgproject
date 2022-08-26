@@ -7,7 +7,7 @@
 
 
 #include <vector>
-#include "entities/ParticleEntity.h"
+#include "../entities/ParticleEntity.h"
 
 class ParticleManager {
 public:

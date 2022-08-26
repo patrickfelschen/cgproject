@@ -8,7 +8,7 @@
 #include <cstdlib>
 #include <iostream>
 #include "Game.h"
-#include "gui/GUIManager.h"
+#include "managers/GUIManager.h"
 
 void glfwFramebufferSizeCallback(GLFWwindow *window, int width, int height);
 

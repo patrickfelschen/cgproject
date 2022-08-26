@@ -9,7 +9,7 @@
 #include "models/TerrainModel.h"
 #include "shaders/TerrainShader.h"
 #include "entities/TerrainEntity.h"
-#include "ParticleManager.h"
+#include "managers/ParticleManager.h"
 #include "entities/SkyboxEntity.h"
 #include "entities/StaticEntity.h"
 

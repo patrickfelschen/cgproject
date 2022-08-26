@@ -3,7 +3,7 @@
 //
 
 #include "ParticleManager.h"
-#include "maths/Random.h"
+#include "../maths/Random.h"
 
 ParticleManager::ParticleManager(unsigned int numParticles) {
     auto *model = new ParticleModel(new ParticleShader());

@@ -151,7 +151,7 @@ std::vector<Texture> ObjectModel::loadMaterialTextures(
         // Cache abfragen ob Textur zuvor geladen
         if (textureCache.find(filePath) != textureCache.end()) {
             textures.push_back(textureCache[filePath]);
-            //std::cout << "TextureCache HIT" << filePath << std::endl;
+            std::cout << "OBJECTMODEL::LOADMATERIALTEXTURE: TextureCache HIT " << filePath << std::endl;
             continue;
         }
         // Cache füllen
