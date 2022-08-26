@@ -24,9 +24,9 @@ void TerrainEntity::render(const Camera &camera) {
     this->model->render();
 }
 
-Vector3f TerrainEntity::getRandomPosition() const {
+Vector3f TerrainEntity::getRandomPosition(Vector3f offset) const {
     float x = Random::randFloat(-100, 100);
     float z = Random::randFloat(-100, 100);
     float y = this->model->getHeightOfTerrain(x, z);
-    return {x, y, z};
+    return Vector3f(x,y,z) + offset;
 }

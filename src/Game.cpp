@@ -13,7 +13,7 @@
 #include "entities/SkyboxEntity.h"
 #include "entities/StaticEntity.h"
 
-#define TARGET_COUNT 20
+#define TARGET_COUNT 35
 #define PARTICLE_COUNT 200
 #define STATIC_OBJECTS_COUNT 200
 #define CASE_COUNT 20
@@ -58,9 +58,8 @@ Game::Game(Camera *camera) : camera(camera) {
     // Bäume
     for (unsigned int i = 0; i < STATIC_OBJECTS_COUNT; i++) {
         auto *entity = new StaticEntity(treeModel);
-        entity->setPosition(terrainEntity->getRandomPosition());
+        entity->setPosition(terrainEntity->getRandomPosition(Vector3f(0.0f, 2.0f, 0.0f)));
         entity->setScaling(3.0f);
-        entity->setPositionOffset(Vector3f(0, 2, 0));
         entities.push_back(entity);
     }
     // Holz
@@ -68,7 +67,6 @@ Game::Game(Camera *camera) : camera(camera) {
         auto *entity = new StaticEntity(woodModel);
         entity->setPosition(terrainEntity->getRandomPosition());
         entity->setScaling(0.5f);
-        entity->setPositionOffset(Vector3f(0, 0, 0));
         entities.push_back(entity);
     }
     // Case
@@ -76,14 +74,14 @@ Game::Game(Camera *camera) : camera(camera) {
         auto *entity = new StaticEntity(caseModel);
         entity->setPosition(terrainEntity->getRandomPosition());
         entity->setScaling(0.5f);
-        entity->setPositionOffset(Vector3f(0, 0, 0));
         entities.push_back(entity);
     }
     entities.push_back(skyboxEntity);
     // Ziele
     for (unsigned int i = 0; i < TARGET_COUNT; i++) {
         auto *entity = new CoinEntity(coinModel);
-        entity->setPosition(terrainEntity->getRandomPosition());
+        entity->setPosition(terrainEntity->getRandomPosition(Vector3f(0.0f, 0.5f, 0.0f)));
+        entity->setTargetPosition(camera->getPosition());
         targets.push_back(entity);
     }
     gunEntity->setTargets(targets);
@@ -114,10 +112,11 @@ void Game::update(float deltaTime) {
     for (CoinEntity *entity: targets) {
         if (entity->hit) {
             particleManager->spawn(entity->getPosition());
-            entity->respawn(terrainEntity->getRandomPosition());
+            entity->respawn(terrainEntity->getRandomPosition(Vector3f(0.0f, 1.2f, 0.0f)));
             hitCount++;
             std::cout << "Treffer: " << hitCount << std::endl;
         }
+        checkTerrainCollision(entity, 0.2f);
         entity->setTargetPosition(camera->getPosition());
         entity->update(deltaTime);
     }
@@ -146,4 +145,11 @@ void Game::render() {
         entity->render(*camera);
     }
     particleManager->render(*camera);
+}
+
+void Game::checkTerrainCollision(Entity *entity, float groundOffset) {
+    float height = terrainModel->getHeightOfTerrain(entity->getPosition().x, entity->getPosition().z);
+    if(entity->getPosition().y <= (height + groundOffset)) {
+        entity->setPosition(Vector3f(entity->getPosition().x, height + groundOffset, entity->getPosition().z));
+    }
 }

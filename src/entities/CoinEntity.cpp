@@ -1,12 +1,14 @@
 #include "CoinEntity.h"
 #include "../maths/Random.h"
 
+#define TO_RAD(deg) (deg * std::numbers::pi / 180.0)
+#define TO_DEG(rad) (rad * 180.0 / std::numbers::pi)
+
 CoinEntity::CoinEntity(const ObjectModel *model) : Entity() {
     this->model = model;
     this->hit = false;
-    this->speed = Random::randFloat(1, 3);
+    this->speed = Random::randFloat(2, 8);
     setScaling(0.10f);
-    setPositionOffset(Vector3f(0, 1.2f, 0));
 }
 
 CoinEntity::~CoinEntity() = default;
@@ -14,14 +16,23 @@ CoinEntity::~CoinEntity() = default;
 void CoinEntity::respawn(const Vector3f &pos) {
     this->hit = false;
     setPosition(pos);
-    speed = Random::randFloat(1, 3);
+    speed = Random::randFloat(2, 8);
 }
 
+float yawOffset = 90;
+float pitchOffset = 20;
 void CoinEntity::update(float deltaTime) {
     Vector3f dirToTarget = (targetPosition - position).normalize();
-    setPositionVelocity(dirToTarget * speed);
+    setPositionVelocity(dirToTarget);
     setRotationVelocity(Vector3f(0, 20, 0));
 
+    yaw = TO_DEG(yaw) + yawOffset;
+    pitch = TO_DEG(pitch) + pitchOffset;
+
+//    Vector3f nextPos = dirToTarget * speed + Vector3f(0.0f, (gravity * deltaTime) * 3, 0.0f);
+
+    setRotation(Vector3f(0.0f, yaw, pitch));
+    setPositionVelocity(dirToTarget * speed);
     setDistanceToPlayer(position.distanceTo(targetPosition));
     Entity::update(deltaTime);
 }

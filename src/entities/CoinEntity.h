@@ -25,6 +25,7 @@ public:
 
     bool hit = false;
 private:
+    float gravity = -9.81;
     float speed = 0;
     float distanceToPlayer = 0;
     Vector3f targetPosition;

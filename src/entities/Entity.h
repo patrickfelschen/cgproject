@@ -30,8 +30,6 @@ public:
 
     void setRotation(const Vector3f rot);
 
-    void setPositionOffset(const Vector3f &p);
-
 protected:
     Matrix transformation;
 

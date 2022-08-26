@@ -55,8 +55,4 @@ Vector3f Entity::getPosition() const {
     return position + positionOffset;
 }
 
-void Entity::setPositionOffset(const Vector3f &p) {
-    this->positionOffset = p;
-}
-
 Entity::~Entity() = default;
