@@ -79,16 +79,13 @@ Game::Game(Camera *camera) : camera(camera) {
         entity->setPositionOffset(Vector3f(0, 0, 0));
         entities.push_back(entity);
     }
-
     entities.push_back(skyboxEntity);
-
     // Ziele
     for (unsigned int i = 0; i < TARGET_COUNT; i++) {
         auto *entity = new CoinEntity(coinModel);
         entity->setPosition(terrainEntity->getRandomPosition());
         targets.push_back(entity);
     }
-
     gunEntity->setTargets(targets);
 }
 
@@ -106,7 +103,9 @@ void Game::processKeyInput(int key, int action) {
     }
 }
 
-void Game::processMouseInput(float xpos, float ypos) { }
+void Game::processMouseInput(float xpos, float ypos) {
+    camera->handleMouseInputs(xpos, ypos);
+}
 
 void Game::update(float deltaTime) {
     // Kamera aktualisieren
