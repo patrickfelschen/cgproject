@@ -13,6 +13,8 @@ class Texture {
 public:
     Texture();
 
+    Texture(const std::string& type);
+
     Texture(const std::string &filePath, const std::string &type);
 
     virtual ~Texture();
@@ -22,8 +24,8 @@ public:
     void deactivate(unsigned int unit) const;
 
     GLuint id;
-private:
     std::string type;
+private:
     std::string filePath;
 
     void create(RGBImage &image);

@@ -32,7 +32,7 @@ private:
 
     Mesh processMesh(aiMesh *mesh, const aiScene *scene);
 
-    std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, const std::string &typeName);
+    std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, const std::string &typeName, unsigned int& textureCount);
 
 };
 

@@ -90,16 +90,17 @@ void TerrainModel::generate() {
     }
 
     // Texturen
-    Texture grassTexture = Texture("../assets/Terrain/grass.bmp", "");
-    Texture rockTexture = Texture("../assets/Terrain/rock.bmp", "");
-    Texture mixTexture = Texture("../assets/Terrain/mixmap.bmp", "");
+    Texture grassTexture = Texture("../assets/Terrain/grass.bmp", "texture_diffuse");
+    Texture rockTexture = Texture("../assets/Terrain/rock.bmp", "texture_diffuse");
+    Texture mixTexture = Texture("../assets/Terrain/mixmap.bmp", "texture_mixmap");
+    Texture specTexture = Texture("texture_specular");
 
     textures.push_back(grassTexture);
     textures.push_back(rockTexture);
     textures.push_back(mixTexture);
+    textures.push_back(specTexture);
 
-    Material material;
-    Mesh terrainMash = Mesh(vertices, indices, textures, material);
+    Mesh terrainMash = Mesh(vertices, indices, textures, Material());
 
     this->meshes.push_back(terrainMash);
 }

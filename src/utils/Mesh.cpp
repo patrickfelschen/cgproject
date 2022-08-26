@@ -70,9 +70,21 @@ void Mesh::setupMesh() {
 
 void Mesh::render(Shader *shader) const {
     // Texturen aktivieren
-    for (int i = 0; i < textures.size(); i++) {
-        textures[i].activate(i);
-        shader->setUniform("uTexture" + std::to_string(i), i);
+    unsigned int diffCount = 0;
+    unsigned int specCount = 0;
+    unsigned int mixCount = 0;
+    int unit = 0;
+    for(auto& texture: textures){
+        texture.activate(unit);
+        if(texture.type == "texture_diffuse"){
+            shader->setUniform(texture.type + std::to_string(diffCount++), unit++);
+        }
+        if(texture.type == "texture_specular"){
+            shader->setUniform(texture.type + std::to_string(specCount++), unit++);
+        }
+        if(texture.type == "texture_mixmap"){
+            shader->setUniform(texture.type + std::to_string(mixCount++), unit++);
+        }
     }
     // Material Eigenschaften setzen
     if (hasMaterial) {
@@ -81,7 +93,6 @@ void Mesh::render(Shader *shader) const {
         shader->setUniform("uMaterial.specular", material.specular);
         shader->setUniform("uMaterial.shininess", material.shininess);
     }
-
     // Mesh zeichnen
     glBindVertexArray(VAO);
     glDrawElements(
@@ -92,8 +103,8 @@ void Mesh::render(Shader *shader) const {
     );
     glBindVertexArray(0);
     // Texturen deaktivieren
-    for (int i = 0; i < textures.size(); i++) {
-        textures[i].deactivate(i);
+    for(auto& texture: textures){
+        texture.deactivate(unit--);
     }
     glActiveTexture(GL_TEXTURE0);
 }

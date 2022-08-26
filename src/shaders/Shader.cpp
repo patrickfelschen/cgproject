@@ -123,9 +123,10 @@ GLint Shader::getUniformLocation(const std::string &name) {
     }
     GLint locationId = glGetUniformLocation(id, name.c_str());
     if (locationId == -1) {
-        std::cerr << "ERROR::SHADER::GETUNIFORMLOCATION: " << fsFilePath << ": can not find uniform location: " << name
-                  << std::endl;
-        exit(EXIT_FAILURE);
+        std::cerr << "WARNING::SHADER::GETUNIFORMLOCATION: "
+                  << fsFilePath << ": can not find uniform location: "
+                  << name << std::endl;
+        //exit(EXIT_FAILURE);
     }
     uniformLocationCache[name] = locationId;
     return locationId;

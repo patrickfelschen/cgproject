@@ -22,7 +22,7 @@ public:
 
     void setScaling(float newScaling);
 
-    const Vector3f &getPosition() const;
+    Vector3f getPosition() const;
 
     void setPositionVelocity(const Vector3f &positionVelocity);
 

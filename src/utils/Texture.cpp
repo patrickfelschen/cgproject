@@ -2,11 +2,11 @@
 // Created by Patrick on 17.08.2022.
 //
 
-
-
 #include "Texture.h"
 
-Texture::Texture() : id(0) {
+Texture::Texture() {}
+
+Texture::Texture(const std::string& type) : id(0), type(type) {
     // Weiße Textur für texturlose Objekte
     RGBImage image(1, 1, GL_RGBA);
     image.setPixelColor(0, 0, Color(1.0f));

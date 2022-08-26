@@ -95,12 +95,14 @@ Mesh ObjectModel::processMesh(aiMesh *mesh, const aiScene *scene) {
         }
     }
     // Materials
+    unsigned int diffCount = 0;
+    unsigned int specCount = 0;
     aiMaterial *uiMaterial = scene->mMaterials[mesh->mMaterialIndex];
     // 1. diffuse maps
-    std::vector<Texture> diffuseMaps = loadMaterialTextures(uiMaterial, aiTextureType_DIFFUSE, "texture_diffuse");
+    std::vector<Texture> diffuseMaps = loadMaterialTextures(uiMaterial, aiTextureType_DIFFUSE, "texture_diffuse", diffCount);
     textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
     // 2. specular maps
-    std::vector<Texture> specularMaps = loadMaterialTextures(uiMaterial, aiTextureType_SPECULAR, "texture_specular");
+    std::vector<Texture> specularMaps = loadMaterialTextures(uiMaterial, aiTextureType_SPECULAR, "texture_specular", specCount);
     textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
     // 3. normal maps
     // std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
@@ -120,9 +122,14 @@ Mesh ObjectModel::processMesh(aiMesh *mesh, const aiScene *scene) {
     uiMaterial->Get(AI_MATKEY_SHININESS, shininess);
     material.shininess = shininess;
 
-    if (textures.empty()) {
-        Texture whiteTex;
-        textures.push_back(whiteTex);
+    if (diffCount == 0) {
+        Texture diffTex("texture_diffuse");
+        textures.push_back(diffTex);
+    }
+
+    if (specCount == 0) {
+        Texture specTex("texture_specular");
+        textures.push_back(specTex);
     }
 
     // return a mesh object created from the extracted mesh data
@@ -132,10 +139,12 @@ Mesh ObjectModel::processMesh(aiMesh *mesh, const aiScene *scene) {
 std::vector<Texture> ObjectModel::loadMaterialTextures(
         aiMaterial *mat,
         aiTextureType type,
-        const std::string &typeName
+        const std::string &typeName,
+        unsigned int &textureCount
 ) {
     std::vector<Texture> textures;
-    for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
+    textureCount = mat->GetTextureCount(type);
+    for (unsigned int i = 0; i < textureCount; i++) {
         aiString aiTexturePath;
         mat->GetTexture(type, i, &aiTexturePath);
         std::string filePath = this->directory + '/' + aiTexturePath.C_Str();

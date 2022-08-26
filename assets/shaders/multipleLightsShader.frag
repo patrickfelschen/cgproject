@@ -3,12 +3,12 @@
 #version 460 core
 
 struct Light {
-    int Type;// Typ der Lichtquelle (0=POINT, 1=DIRECTIONAL, 2=SPOT)
-    vec3 Color;// Farbe der Lichtquelle in RGB
-    vec3 Position;// Position der Lichtquelle (für DIRECTIONAL uninteressant)
-    vec3 Direction;// Ausrichtung der Lichtquelle (für POINT uninteressant)
-    vec3 Attenuation;// Koeffizienten für Intensitätsabfall über die Entfernung
-    vec3 SpotRadius;// SpotRadius.x enthält den inneren und SpotRadius.y den äußeren Radius der Spot-Lichtquelle
+    int Type;           // Typ der Lichtquelle (0=POINT, 1=DIRECTIONAL, 2=SPOT)
+    vec3 Color;         // Farbe der Lichtquelle in RGB
+    vec3 Position;      // Position der Lichtquelle (für DIRECTIONAL uninteressant)
+    vec3 Direction;     // Ausrichtung der Lichtquelle (für POINT uninteressant)
+    vec3 Attenuation;   // Koeffizienten für Intensitätsabfall über die Entfernung
+    vec3 SpotRadius;    // SpotRadius.x enthält den inneren und SpotRadius.y den äußeren Radius der Spot-Lichtquelle
     int ShadowIndex;
 };
 

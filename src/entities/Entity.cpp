@@ -51,8 +51,8 @@ void Entity::update(float deltaTime) {
     this->transformation = translation * rotationX * rotationY * rotationZ * scaling;
 }
 
-const Vector3f &Entity::getPosition() const {
-    return position;
+Vector3f Entity::getPosition() const {
+    return position + positionOffset;
 }
 
 void Entity::setPositionOffset(const Vector3f &p) {

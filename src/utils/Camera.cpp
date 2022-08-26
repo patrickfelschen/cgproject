@@ -93,10 +93,10 @@ void Camera::handleKeyboardInputs(float deltaTime) {
         position += getRight() * speed;
     }
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-        //position.y += speed;
+        position.y += speed;
     }
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-        //position.y -= speed;
+        position.y -= speed;
     }
 }
 
