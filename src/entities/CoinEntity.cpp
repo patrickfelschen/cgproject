@@ -30,6 +30,8 @@ void CoinEntity::update(float deltaTime) {
     yaw = TO_DEG(yaw) + yawOffset;
     pitch = TO_DEG(pitch) + pitchOffset;
 
+//    Vector3f nextPos = dirToTarget * speed + Vector3f(0.0f, (gravity * deltaTime) * 3, 0.0f);
+
     setRotation(Vector3f(0.0f, yaw, pitch));
     setPositionVelocity(dirToTarget * speed);
     setDistanceToPlayer(position.distanceTo(targetPosition));

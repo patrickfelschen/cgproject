@@ -116,6 +116,7 @@ void Game::update(float deltaTime) {
             hitCount++;
             std::cout << "Treffer: " << hitCount << std::endl;
         }
+        checkTerrainCollision(entity, 0.2f);
         entity->setTargetPosition(camera->getPosition());
         entity->update(deltaTime);
     }
@@ -144,4 +145,11 @@ void Game::render() {
         entity->render(*camera);
     }
     particleManager->render(*camera);
+}
+
+void Game::checkTerrainCollision(Entity *entity, float groundOffset) {
+    float height = terrainModel->getHeightOfTerrain(entity->getPosition().x, entity->getPosition().z);
+    if(entity->getPosition().y <= (height + groundOffset)) {
+        entity->setPosition(Vector3f(entity->getPosition().x, height + groundOffset, entity->getPosition().z));
+    }
 }
