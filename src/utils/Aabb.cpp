@@ -114,11 +114,11 @@ bool AABB::intersection(const Ray &ray) const {
     if(ray.origin.x < Min.x) {
         // Distanz zwischen Ray-Origin und Box auf X-Achse
         xt = Min.x - ray.origin.x;
-//        printf("INTERSECTION:: Spieler vor Objekt, Distanz: %f\n", xt);
+        //printf("INTERSECTION:: Spieler vor Objekt, Distanz: %f\n", xt);
 
         // Wenn xt > Ende des Rays -> Ray endet, bevor Box erreicht wurde
         if(xt > ray.direction.x) {
-            printf("INTERSECTION:: Objekt ausser Reichweite (X-Achse)\n");
+            //printf("INTERSECTION:: Objekt ausser Reichweite (X-Achse)\n");
             return false;
         }
 
@@ -129,11 +129,11 @@ bool AABB::intersection(const Ray &ray) const {
     else if(ray.origin.x > Max.x) {
         // Distanz zwischen Ray-Origin und Box auf X-Achse
         xt = Max.x - ray.origin.x;
-//        printf("INTERSECTION:: Spieler hinter Objekt, Distanz: %f\n", xt);
+        //printf("INTERSECTION:: Spieler hinter Objekt, Distanz: %f\n", xt);
 
         // Wenn xt < Ende des Rays -> Ray endet, bevor Box erreicht wurde
         if(xt < ray.direction.x) {
-            printf("INTERSECTION:: Objekt ausser Reichweite (X-Achse)\n");
+            //printf("INTERSECTION:: Objekt ausser Reichweite (X-Achse)\n");
             return false;
         }
 
@@ -150,7 +150,7 @@ bool AABB::intersection(const Ray &ray) const {
         yt = Min.y - ray.origin.y;
 
         if(yt > ray.direction.y) {
-            printf("INTERSECTION:: Objekt ausser Reichweite (Y-Achse)\n");
+            //printf("INTERSECTION:: Objekt ausser Reichweite (Y-Achse)\n");
             return false;
         }
 
@@ -161,7 +161,7 @@ bool AABB::intersection(const Ray &ray) const {
         yt = Max.y - ray.origin.y;
 
         if(yt < ray.direction.y) {
-            printf("INTERSECTION:: Objekt ausser Reichweite (Y-Achse)\n");
+            //printf("INTERSECTION:: Objekt ausser Reichweite (Y-Achse)\n");
             return false;
         }
 
@@ -177,7 +177,7 @@ bool AABB::intersection(const Ray &ray) const {
         zt = Min.z - ray.origin.z;
 
         if(zt > ray.direction.z) {
-            printf("INTERSECTION:: Objekt ausser Reichweite (Z-Achse)\n");
+            //printf("INTERSECTION:: Objekt ausser Reichweite (Z-Achse)\n");
             return false;
         }
 
@@ -188,7 +188,7 @@ bool AABB::intersection(const Ray &ray) const {
         zt = Max.z - ray.origin.z;
 
         if(zt < ray.direction.z) {
-            printf("INTERSECTION:: Objekt ausser Reichweite (Z-Achse)\n");
+            //printf("INTERSECTION:: Objekt ausser Reichweite (Z-Achse)\n");
             return false;
         }
 
@@ -237,7 +237,7 @@ bool AABB::intersection(const Ray &ray) const {
         break;
     }
 
-    printf("INTERSECTION:: TREFFER\n");
+    //printf("INTERSECTION:: TREFFER\n");
     return true;
 }
 

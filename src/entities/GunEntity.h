@@ -38,7 +38,7 @@ private:
     const ObjectModel *model;
     std::vector<EnemyEntity *> targets;
 
-    float range = 10.0f;
+    float range = 20.0f;
 
     bool readyToFire = true;
 

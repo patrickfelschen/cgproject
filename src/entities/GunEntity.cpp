@@ -43,7 +43,6 @@ void GunEntity::render(const Camera &camera) {
     if(!reloading) {
         GUIManager::getInstance().drawCrosshair(2.0f, 10.0f, Color(1.0f, 1.0f, 1.0f, 1.0f), ammo == 0);
     }
-
 }
 
 void GunEntity::reload() {
@@ -61,10 +60,10 @@ void GunEntity::startShoot(const Camera &camera) {
     ray.origin = camera.getPosition();
     ray.direction = camera.getDirection() * range;
     std::sort(targets.begin(), targets.end(), sortPosAsc());
-    for (unsigned int i = 0; i < targets.size(); i++) {
-        bool intersection = targets.at(i)->getTransformedBoundingBox().intersection(ray);
+    for (auto & target : targets) {
+        bool intersection = target->getTransformedBoundingBox().intersection(ray);
         if (intersection) {
-            targets.at(i)->hit = true;
+            target->hit = true;
             break;
         }
         //printf("Element: %i - Distance: %f\n", i, targets.at(i)->getDistanceToPlayer());

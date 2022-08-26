@@ -19,6 +19,5 @@ out VS_OUT {
 void main() {
     vs_out.color = uColor;
     vs_out.TexCoord0 = aTexCoord0;
-    //gl_Position = uProjection * vec4((aPos * scale) + uOffset, 1.0f);
     gl_Position = uProjection * uView * uTransform  * vec4(aPos * uScale, 1.0);
 }

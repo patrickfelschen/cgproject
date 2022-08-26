@@ -1,15 +1,17 @@
 #version 460
 
+out vec4 fragColor;
+
 in VS_OUT {
     vec4 color;
     vec2 TexCoord0;
 } fs_in;
 
-uniform sampler2D uTexture0;
+uniform sampler2D texture_diffuse0;
 
-out vec4 fragColor;
+vec4 diffuseTexture;
 
 void main() {
-    vec4 tex = texture(uTexture0, fs_in.TexCoord0);
-    fragColor = fs_in.color * tex;
+    diffuseTexture = texture(texture_diffuse0, fs_in.TexCoord0);
+    fragColor = fs_in.color * diffuseTexture;
 }

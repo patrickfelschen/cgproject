@@ -14,7 +14,7 @@
 #include "entities/StaticEntity.h"
 
 #define TARGET_COUNT 35
-#define PARTICLE_COUNT 200
+#define PARTICLE_COUNT 400
 #define STATIC_OBJECTS_COUNT 200
 #define CASE_COUNT 20
 
@@ -114,7 +114,7 @@ void Game::update(float deltaTime) {
             particleManager->spawn(entity->getPosition());
             entity->respawn(terrainEntity->getRandomPosition(Vector3f(0.0f, 1.2f, 0.0f)));
             hitCount++;
-            std::cout << "Treffer: " << hitCount << std::endl;
+           // std::cout << "Treffer: " << hitCount << std::endl;
         }
         checkTerrainCollision(entity, 0.2f);
         entity->setTargetPosition(camera->getPosition());

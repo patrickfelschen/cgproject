@@ -13,9 +13,15 @@ Texture::Texture(const std::string& type) : id(0), type(type) {
     create(image);
 }
 
+Texture::Texture(const Color &pixel, const std::string& type) {
+    RGBImage image(1, 1, GL_RGBA);
+    image.setPixelColor(0, 0, pixel);
+    create(image);
+}
+
 Texture::Texture(const std::string &filePath, const std::string &type) : id(0), filePath(filePath), type(type) {
     RGBImage image;
-    Loader::readImageFile(filePath.c_str(), image);
+    Loader::getInstance().readImageFile(filePath.c_str(), image);
     create(image);
 }
 
@@ -62,7 +68,3 @@ void Texture::deactivate(unsigned int unit) const {
     glActiveTexture(GL_TEXTURE0 + unit);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
-
-
-
-

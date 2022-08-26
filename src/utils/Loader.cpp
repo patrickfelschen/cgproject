@@ -6,13 +6,7 @@
 #include "Loader.h"
 
 
-/**
- *
- * @param filePath
- * @param outFile
- * @return
- */
-void Loader::readShaderFile(const char *filePath, std::string &outFile) {
+void Loader::readShaderFile(const std::string &filePath, std::string &outFile) {
     std::ifstream f(filePath);
     if (f.is_open()) {
         std::string line;
@@ -45,7 +39,6 @@ void Loader::readImageFile(const char *filePath, RGBImage &outImage) {
         exit(EXIT_FAILURE);
     }
 
-    //
     FreeImage_FlipVertical(pBitMap);
 
     FREE_IMAGE_TYPE type = FreeImage_GetImageType(pBitMap);
@@ -85,4 +78,81 @@ void Loader::readImageFile(const char *filePath, RGBImage &outImage) {
 
     std::cout << "LOADER::READIMAGEFILE: " << filePath << std::endl;
     outImage = image;
+}
+
+void Loader::addShader(const std::string &shaderText, GLuint id, GLenum shaderType) {
+    GLuint shaderObject = glCreateShader(shaderType);
+    if (shaderObject == 0) {
+        std::cerr << "ERROR::SHADER::ADDSHADER: Can not create shader type " << shaderType << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    const GLchar *p[1];
+    p[0] = shaderText.c_str();
+
+    GLint lengths[1];
+    lengths[0] = (GLint) strlen(shaderText.c_str());
+
+    glShaderSource(shaderObject, 1, p, lengths);
+    glCompileShader(shaderObject);
+
+    GLint success;
+    glGetShaderiv(shaderObject, GL_COMPILE_STATUS, &success);
+
+    if (!success) {
+        GLchar infoLog[1024];
+        glGetShaderInfoLog(shaderObject, 1024, nullptr, infoLog);
+        std::cerr << "ERROR::SHADER::ADDSHADER: " << infoLog << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    glAttachShader(id, shaderObject);
+    glDeleteShader(shaderObject);
+}
+
+GLuint Loader::compileShaders(const std::string& vsFilePath, const std::string& fsFilePath) {
+    std::string shaderName = vsFilePath + fsFilePath;
+
+    if (shaderCache.find(shaderName) != shaderCache.end()) {
+        std::cout << "LOADER::COMPILESHADERS: ShaderCache HIT" << std::endl;
+        return shaderCache[shaderName];
+    }
+
+    GLuint id = glCreateProgram();
+    if (id == 0) {
+        std::cerr << "ERROR::SHADER::COMPILESHADERS: Can not create shader program" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    std::string vs, fs;
+
+    Loader::readShaderFile(vsFilePath, vs);
+    addShader(vs, id, GL_VERTEX_SHADER);
+
+    Loader::readShaderFile(fsFilePath, fs);
+    addShader(fs, id, GL_FRAGMENT_SHADER);
+
+    std::cout << "SHADER::COMPILED: " << vsFilePath << " " << fsFilePath << std::endl;
+
+    GLint success = 0;
+    GLchar errorLog[1024] = {0};
+
+    glLinkProgram(id);
+
+    glGetProgramiv(id, GL_LINK_STATUS, &success);
+    if (success == 0) {
+        glGetProgramInfoLog(id, sizeof(errorLog), nullptr, errorLog);
+        std::cerr << "ERROR::SHADER::COMPILESHADERS: Can not link shader program: " << errorLog << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    glValidateProgram(id);
+    glGetProgramiv(id, GL_VALIDATE_STATUS, &success);
+    if (!success) {
+        glGetProgramInfoLog(id, sizeof(errorLog), nullptr, errorLog);
+        std::cerr << "ERROR::SHADER::COMPILESHADERS: Invalid shader program: " << errorLog << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    shaderCache[shaderName] = id;
+    glUseProgram(id);
+    return id;
 }

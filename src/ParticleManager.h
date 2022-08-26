@@ -23,8 +23,6 @@ public:
 
 private:
     std::vector<ParticleEntity *> particleEntities;
-
-    float rndFloat(float min, float max);
 };
 
 

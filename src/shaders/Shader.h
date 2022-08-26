@@ -46,10 +46,6 @@ private:
 
     std::unordered_map<std::string, GLint> uniformLocationCache;
 
-    void compileShaders();
-
-    void addShader(const char *shaderText, GLenum shaderType) const;
-
     GLint getUniformLocation(const std::string &name);
 };
 

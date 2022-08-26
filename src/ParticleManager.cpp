@@ -3,6 +3,7 @@
 //
 
 #include "ParticleManager.h"
+#include "maths/Random.h"
 
 ParticleManager::ParticleManager(unsigned int numParticles) {
     auto *model = new ParticleModel(new ParticleShader());
@@ -22,7 +23,7 @@ ParticleManager::~ParticleManager() {
 void ParticleManager::update(float deltaTime) {
     for (ParticleEntity *p: particleEntities) {
         if (p->getLife() > 0.0f) {
-//            printf("Alpha: %f\n", p->getColor().a);
+            //printf("Alpha: %f\n", p->getColor().a);
             p->update(deltaTime);
         }
     }
@@ -42,16 +43,12 @@ void ParticleManager::render(const Camera &camera) {
 void ParticleManager::spawn(const Vector3f &origin) {
     for (ParticleEntity *p: particleEntities) {
         p->setPosition(origin);
-        float x = rndFloat(-1.0, 1.0f);
-        float y = rndFloat(-1.0, 1.0f);
-        float z = rndFloat(-1.0, 1.0f);
+        float x = Random::randFloat(-1.0, 1.0f);
+        float y = Random::randFloat(-1.0, 1.0f);
+        float z = Random::randFloat(-1.0, 1.0f);
         p->setPositionVelocity(Vector3f(x, y, z));
         p->setColor(1.0f);
-        p->setLife(0.5f);
-        p->setScale(rndFloat(0.001, 0.01));
+        p->setLife(Random::randFloat(0.2, 0.5));
+        p->setScale(Random::randFloat(0.005, 0.01));
     }
-}
-
-float ParticleManager::rndFloat(float min, float max) {
-    return ((float(rand()) / float(RAND_MAX)) * (max - min)) + min;
 }

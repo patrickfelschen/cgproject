@@ -17,7 +17,7 @@ TerrainModel::TerrainModel(TerrainShader *shader) : Model() {
 
 void TerrainModel::generate() {
     RGBImage image;
-    Loader::readImageFile("../assets/Terrain/heightmap.bmp", image);
+    Loader::getInstance().readImageFile("../assets/Terrain/heightmap.bmp", image);
 
     imgWidth = image.getWidth();
     imgHeight = image.getHeight();

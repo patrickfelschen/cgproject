@@ -14,7 +14,7 @@ void glfwFramebufferSizeCallback(GLFWwindow *window, int width, int height);
 
 void processInput(GLFWwindow *window);
 
-void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int modes);
+void glfwKeyCallback(GLFWwindow *window, int key, int scancode, int action, int modes);
 
 void glfwCursorPosCallback(GLFWwindow *window, double xpos, double ypos);
 
@@ -26,11 +26,13 @@ void glfwErrorCallback(int, const char *errorMsg);
 void GLAPIENTRY glErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
                                 const GLchar *message, const void *userParam);
 
-const unsigned int SCR_WIDTH = 1280;
-const unsigned int SCR_HEIGHT = 720;
+const bool fullScreen = false;
 
-Camera* camera;
-Game* game;
+const unsigned int SCR_WIDTH = 1920 / 2;
+const unsigned int SCR_HEIGHT = 1080 / 2;
+
+Camera *camera;
+Game *game;
 
 int main(int argc, char **argv) {
     if (glfwInit() == GLFW_FALSE) {
@@ -47,7 +49,12 @@ int main(int argc, char **argv) {
 
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
-    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "CG Projekt", nullptr, nullptr);
+    GLFWwindow *window = glfwCreateWindow(
+            SCR_WIDTH,
+            SCR_HEIGHT,
+            "CG Projekt",
+            fullScreen ? glfwGetPrimaryMonitor() : nullptr, nullptr
+    );
     if (window == nullptr) {
         std::cerr << "ERROR::GLFW: Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -117,19 +124,19 @@ int main(int argc, char **argv) {
     exit(EXIT_SUCCESS);
 }
 
-void glfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int modes){
-    if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
+void glfwKeyCallback(GLFWwindow *window, int key, int scancode, int action, int modes) {
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
     }
     game->processKeyInput(key, action);
 }
 
-void glfwMouseButtonCallback(GLFWwindow *window, int button, int action, int mods){
+void glfwMouseButtonCallback(GLFWwindow *window, int button, int action, int mods) {
     game->processKeyInput(button, action);
 }
 
-void glfwCursorPosCallback(GLFWwindow *window, double xpos, double ypos){
-    game->processMouseInput((float)xpos, (float)ypos);
+void glfwCursorPosCallback(GLFWwindow *window, double xpos, double ypos) {
+    game->processMouseInput((float) xpos, (float) ypos);
 }
 
 void glfwFramebufferSizeCallback(GLFWwindow *window, int width, int height) {
