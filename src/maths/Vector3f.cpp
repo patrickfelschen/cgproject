@@ -73,7 +73,10 @@ Vector3f &Vector3f::operator*=(float c) {
 }
 
 Vector3f &Vector3f::normalize() {
-    float tmp = 1 / this->length();
+    float tmp = 0;
+    if(this->length() != 0) {
+        tmp = 1 / this->length();
+    }
 
     this->x = x * tmp;
     this->y = y * tmp;
