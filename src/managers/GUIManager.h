@@ -19,6 +19,9 @@ private:
     unsigned int SCR_WIDTH;
     unsigned int SCR_HEIGHT;
 
+
+    float infoTextDuration = 2.0f;
+    float infoTextTimer = 0.0f;
 public:
     static GUIManager &getInstance();
 
@@ -44,6 +47,8 @@ public:
     void drawCrosshair(float thickness, float size, Color color, bool isEmpty);
 
     void drawFPSCounter();
+
+    void drawInfo(std::string s);
 
     void render();
 };

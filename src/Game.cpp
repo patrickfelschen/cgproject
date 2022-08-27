@@ -113,7 +113,7 @@ void Game::update(float deltaTime) {
             particleManager->spawn(entity->getPosition(), Color(0.0f, 0.0f, 1.0f, 1.0f));
             entity->setPosition(terrainEntity->getRandomPosition(Vector3f(0.0f, 0.33f, 0.0f)));
             gunEntity->addMagazines(2);
-            std::cout << "Added Magazine" << std::endl;
+//            std::cout << "Added Magazine" << std::endl;
         }
         entity->update(deltaTime);
     }

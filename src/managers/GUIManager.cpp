@@ -40,6 +40,8 @@ void GUIManager::destroy() {
 }
 
 void GUIManager::render() {
+    // Show info text for x-seconds
+
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
@@ -140,6 +142,20 @@ void GUIManager::updateLifeWindow(unsigned int life) {
     ImGui::SetNextWindowPos(ImVec2(0.0f, 100.0f));
     ImGui::Begin("life", nullptr, WINDOW_FLAGS);
     ImGui::Text("Life: %i", life);
+    ImGui::End();
+    ImGui::PopStyleVar();
+}
+
+void GUIManager::drawInfo(std::string s) {
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    ImGui::SetNextWindowBgAlpha(0.0f);
+    ImGui::SetNextWindowSize(ImVec2(SCR_WIDTH, SCR_HEIGHT));
+    ImGui::SetNextWindowPos(ImVec2(0.0f, SCR_HEIGHT * 0.5f));
+    ImGui::Begin("info", nullptr, WINDOW_FLAGS);
+    auto windowWith = ImGui::GetWindowSize().x;
+    auto textWidth = ImGui::CalcTextSize(s.c_str()).x;
+    ImGui::SetCursorPosX((windowWith - textWidth) * 0.5f);
+    ImGui::Text("%s", s.c_str());
     ImGui::End();
     ImGui::PopStyleVar();
 }
