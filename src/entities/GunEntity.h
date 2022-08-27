@@ -34,6 +34,8 @@ public:
 
     void reload();
 
+    void addMagazines(unsigned int count);
+
 private:
     const ObjectModel *model;
     std::vector<EnemyEntity *> targets;

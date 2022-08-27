@@ -20,7 +20,7 @@ void Entity::setPosition(const Vector3f &pos) {
     this->position = pos;
 }
 
-void Entity::setRotation(const Vector3f rot) {
+void Entity::setRotation(const Vector3f &rot) {
     this->rotation = rot;
 }
 

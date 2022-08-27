@@ -3,17 +3,6 @@
 //
 
 #include "Game.h"
-#include "shaders/PhongShader.h"
-#include "entities/GunEntity.h"
-#include "entities/EnemyEntity.h"
-#include "models/TerrainModel.h"
-#include "shaders/TerrainShader.h"
-#include "entities/TerrainEntity.h"
-#include "managers/ParticleManager.h"
-#include "entities/SkyboxEntity.h"
-#include "entities/StaticEntity.h"
-#include "maths/Random.h"
-#include "managers/TerrainManager.h"
 
 #define TARGET_COUNT 35
 #define PARTICLE_COUNT 400
@@ -57,11 +46,12 @@ Game::Game(Camera *camera) : camera(camera) {
     // Case
     for (unsigned int i = 0; i < CASE_COUNT; i++) {
         auto *entity = new StaticEntity(caseModel);
-        entity->setPosition(terrainEntity->getRandomPosition());
+        entity->setPosition(Vector3f(terrainEntity->getRandomPosition(Vector3f(0.0f, 0.33f, 0.0f))));
         entity->setScaling(0.5f);
         entity->setRotation(Vector3f(0, Random::randFloat(0, 360), 0));
-        entities.push_back(entity);
+        cases.push_back(entity);
     }
+    // Skybox
     entities.push_back(skyboxEntity);
     // Ziele
     for (unsigned int i = 0; i < TARGET_COUNT; i++) {
@@ -109,10 +99,22 @@ void Game::update(float deltaTime) {
             life--;
             particleManager->spawn(entity->getPosition(), Color(1.0f, 0.0f, 0.0f, 1.0f));
             entity->respawn(terrainEntity->getRandomPosition(Vector3f(0.0f, 1.2f, 0.0f)));
-            std::cout << "Contact, Life: " << life << std::endl;
+            // std::cout << "Contact, Life: " << life << std::endl;
         }
         checkTerrainCollision(entity, 0.2f);
         entity->setTargetPosition(camera->getPosition());
+        entity->update(deltaTime);
+    }
+    // Alle Cases aktualisieren
+    for (StaticEntity *entity: cases) {
+        printf("Distance to Case: %f\n", entity->getPosition().distanceTo(camera->getPosition()));
+
+        if(checkPlayerCollision(entity, camera, 1.0f)) {
+            particleManager->spawn(entity->getPosition(), Color(0.0f, 0.0f, 1.0f, 1.0f));
+            entity->setPosition(terrainEntity->getRandomPosition(Vector3f(0.0f, 0.33f, 0.0f)));
+            gunEntity->addMagazines(2);
+            std::cout << "Added Magazine" << std::endl;
+        }
         entity->update(deltaTime);
     }
 
@@ -135,6 +137,10 @@ void Game::update(float deltaTime) {
 void Game::render() {
     // Alle Ziele zeichnen
     for (EnemyEntity *entity: targets) {
+        entity->render(*camera);
+    }
+    // Alle Cases zeichnen
+    for (StaticEntity *entity: cases) {
         entity->render(*camera);
     }
     // Alle Einheiten zeichnen

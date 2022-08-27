@@ -28,7 +28,7 @@ public:
 
     void setRotationVelocity(const Vector3f &rotationVelocity);
 
-    void setRotation(const Vector3f rot);
+    void setRotation(const Vector3f &rot);
 
 protected:
     Matrix transformation;

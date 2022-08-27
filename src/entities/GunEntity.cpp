@@ -80,4 +80,8 @@ void GunEntity::setTargets(const std::vector<EnemyEntity *> &v) {
     targets = v;
 }
 
+void GunEntity::addMagazines(unsigned int count) {
+    this->magazines += count;
+}
+
 
