@@ -43,6 +43,10 @@ private:
     std::vector<StaticEntity *> cases;
     Camera* camera;
 
+    bool isAlive = true;
+
+    void initNewGame();
+
     void checkTerrainCollision(Entity *entity, float groundOffset = 0.0f);
 
     bool checkPlayerCollision(Entity *entity, Camera *camera, float hitOffset) const;

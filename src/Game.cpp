@@ -78,6 +78,9 @@ void Game::processKeyInput(int key, int action) {
     if (key == GLFW_KEY_R && action == GLFW_PRESS) {
         gunEntity->reload();
     }
+    if(!isAlive && (key == GLFW_KEY_SPACE && action == GLFW_PRESS)) {
+        initNewGame();
+    }
 }
 
 void Game::processMouseInput(float xpos, float ypos) {
@@ -85,53 +88,58 @@ void Game::processMouseInput(float xpos, float ypos) {
 }
 
 void Game::update(float deltaTime) {
-    // Kamera aktualisieren
-    camera->update(deltaTime);
-    // Alle Ziele aktualisieren
-    for (EnemyEntity *entity: targets) {
-        if (entity->hit) {
-            particleManager->spawn(entity->getPosition(), Color(1.0f));
-            entity->respawn(terrainEntity->getRandomPosition(Vector3f(0.0f, 1.2f, 0.0f)));
-            hitCount++;
-            // std::cout << "Treffer: " << hitCount << std::endl;
-        }
-        if (checkPlayerCollision(entity, camera, 0.4f)) {
-            life--;
-            particleManager->spawn(entity->getPosition(), Color(1.0f, 0.0f, 0.0f, 1.0f));
-            entity->respawn(terrainEntity->getRandomPosition(Vector3f(0.0f, 1.2f, 0.0f)));
-            // std::cout << "Contact, Life: " << life << std::endl;
-        }
-        checkTerrainCollision(entity, 0.2f);
-        entity->setTargetPosition(camera->getPosition());
-        entity->update(deltaTime);
-    }
-    // Alle Cases aktualisieren
-    for (StaticEntity *entity: cases) {
-        printf("Distance to Case: %f\n", entity->getPosition().distanceTo(camera->getPosition()));
+    if(isAlive) {
+        // Kamera aktualisieren
+        camera->update(deltaTime);
+        // Alle Ziele aktualisieren
+        for (EnemyEntity *entity: targets) {
+            if (entity->hit) {
+                particleManager->spawn(entity->getPosition(), Color(1.0f));
+                entity->respawn(terrainEntity->getRandomPosition(Vector3f(0.0f, 1.2f, 0.0f)));
+                hitCount++;
+                // std::cout << "Treffer: " << hitCount << std::endl;
+            }
+            if (checkPlayerCollision(entity, camera, 0.4f)) {
+                life--;
+                isAlive = life > 0;
 
-        if(checkPlayerCollision(entity, camera, 1.0f)) {
-            particleManager->spawn(entity->getPosition(), Color(0.0f, 0.0f, 1.0f, 1.0f));
-            entity->setPosition(terrainEntity->getRandomPosition(Vector3f(0.0f, 0.33f, 0.0f)));
-            gunEntity->addMagazines(2);
+                particleManager->spawn(entity->getPosition(), Color(1.0f, 0.0f, 0.0f, 1.0f));
+                entity->respawn(terrainEntity->getRandomPosition(Vector3f(0.0f, 1.2f, 0.0f)));
+                // std::cout << "Contact, Life: " << life << std::endl;
+            }
+            checkTerrainCollision(entity, 0.2f);
+            entity->setTargetPosition(camera->getPosition());
+            entity->update(deltaTime);
+        }
+        // Alle Cases aktualisieren
+        for (StaticEntity *entity: cases) {
+            if(checkPlayerCollision(entity, camera, 1.0f)) {
+                particleManager->spawn(entity->getPosition(), Color(0.0f, 0.0f, 1.0f, 1.0f));
+                entity->setPosition(terrainEntity->getRandomPosition(Vector3f(0.0f, 0.33f, 0.0f)));
+                gunEntity->addMagazines(2);
 //            std::cout << "Added Magazine" << std::endl;
+            }
+            entity->update(deltaTime);
         }
-        entity->update(deltaTime);
+
+        // Alle Einheiten aktualisieren
+        for (Entity *entity: entities) {
+            entity->update(deltaTime);
+        }
+
+        particleManager->update(deltaTime);
+        terrainManager->update(deltaTime);
+
+        float playerHeight = terrainModel->getHeightOfTerrain(camera->getPosition().x, camera->getPosition().z);
+        camera->setPosition(Vector3f(camera->getPosition().x, playerHeight + 1.0f, camera->getPosition().z));
+
+        GUIManager::getInstance().updateScoreWindow(hitCount);
+        GUIManager::getInstance().updateLifeWindow(life);
+        GUIManager::getInstance().drawFPSCounter();
     }
-
-    // Alle Einheiten aktualisieren
-    for (Entity *entity: entities) {
-        entity->update(deltaTime);
+    else {
+        GUIManager::getInstance().drawInfo("Game over! Press Space to restart.");
     }
-
-    particleManager->update(deltaTime);
-    terrainManager->update(deltaTime);
-
-    float playerHeight = terrainModel->getHeightOfTerrain(camera->getPosition().x, camera->getPosition().z);
-    camera->setPosition(Vector3f(camera->getPosition().x, playerHeight + 1.0f, camera->getPosition().z));
-
-    GUIManager::getInstance().updateScoreWindow(hitCount);
-    GUIManager::getInstance().updateLifeWindow(life);
-    GUIManager::getInstance().drawFPSCounter();
 }
 
 void Game::render() {
@@ -162,4 +170,21 @@ bool Game::checkPlayerCollision(Entity *entity, Camera *camera, float hitOffset)
     if (entity->getPosition().distanceTo(camera->getPosition()) <= hitOffset) return true;
 
     return false;
+}
+
+void Game::initNewGame() {
+    this->isAlive = true;
+    life = 3;
+    hitCount = 0;
+
+    // Gegner neu setzen
+    for (EnemyEntity *entity: targets) {
+        entity->respawn(terrainEntity->getRandomPosition(Vector3f(0.0f, 1.2f, 0.0f)));
+    }
+    // Cases neu setzen
+    for (StaticEntity *entity: cases) {
+        entity->setPosition(terrainEntity->getRandomPosition(Vector3f(0.0f, 0.33f, 0.0f)));
+    }
+
+    camera->setPosition(Vector3f(0.0f, 0.0f, 0.0f));
 }
