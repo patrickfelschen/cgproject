@@ -174,7 +174,7 @@ bool Game::checkPlayerCollision(Entity *entity, Camera *camera, float hitOffset)
 
 void Game::initNewGame() {
     this->isAlive = true;
-    life = 3;
+    life = maxLife;
     hitCount = 0;
 
     // Gegner neu setzen
