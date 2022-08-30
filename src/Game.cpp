@@ -33,7 +33,6 @@ Game::Game(Camera *camera) : camera(camera) {
     coinModel = new ObjectModel(new PhongShader(), "../assets/Objects/Ghost/D4LM6XEKRW9PXSVHUEDQHY7OM.obj");
     skyboxModel = new ObjectModel(new PhongShader(), "../assets/Objects/SkyBox/skybox.obj");
     terrainModel = new TerrainModel(new TerrainShader());
-
     // Himmel
     skyboxEntity = new SkyboxEntity(skyboxModel);
     // Umgebung
