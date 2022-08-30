@@ -27,8 +27,7 @@ private:
     ObjectModel *woodModel;
     ObjectModel *flowerRedModel;
     ObjectModel *flowerYellowModel;
-
-
+    ObjectModel *lightPoleModel;
 };
 
 
