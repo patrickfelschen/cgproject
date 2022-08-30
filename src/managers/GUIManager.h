@@ -40,7 +40,7 @@ public:
 
     void updateScoreWindow(unsigned int score);
 
-    void updateLifeWindow(unsigned int life);
+    void updateLifeWindow(unsigned int currentLife, unsigned int maxLife);
 
     void updateSpinner(float radius, float speed, float thickness);
 

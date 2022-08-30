@@ -23,7 +23,8 @@ ParticleManager *particleManager;
 TerrainManager *terrainManager;
 
 unsigned int hitCount = 0;
-unsigned int life = 3;
+unsigned int maxLife = 5;
+unsigned int life = 5;
 
 Game::Game(Camera *camera) : camera(camera) {
     // Modelle
@@ -134,7 +135,7 @@ void Game::update(float deltaTime) {
         camera->setPosition(Vector3f(camera->getPosition().x, playerHeight + 1.0f, camera->getPosition().z));
 
         GUIManager::getInstance().updateScoreWindow(hitCount);
-        GUIManager::getInstance().updateLifeWindow(life);
+        GUIManager::getInstance().updateLifeWindow(life, maxLife);
         GUIManager::getInstance().drawFPSCounter();
     }
     else {

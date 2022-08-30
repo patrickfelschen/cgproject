@@ -135,13 +135,16 @@ void GUIManager::drawFPSCounter() {
     ImGui::PopStyleVar();
 }
 
-void GUIManager::updateLifeWindow(unsigned int life) {
+void GUIManager::updateLifeWindow(unsigned int currentLife, unsigned int maxLife) {
+    float maxLength = 300;
+    float yPos = SCR_HEIGHT - 50.0f;
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     ImGui::SetNextWindowBgAlpha(0.0f);
-    ImGui::SetNextWindowSize(ImVec2(SCR_WIDTH, 100.0f));
-    ImGui::SetNextWindowPos(ImVec2(0.0f, 100.0f));
+    ImGui::SetNextWindowSize(ImVec2(maxLength, 300.0f));
+    ImGui::SetNextWindowPos(ImVec2(0.0f, yPos));
     ImGui::Begin("life", nullptr, WINDOW_FLAGS);
-    ImGui::Text("Life: %i", life);
+    ImGui::GetWindowDrawList()->AddLine(ImVec2(0.0f, yPos), ImVec2(maxLength, yPos), ImGui::ColorConvertFloat4ToU32(ImVec4(255.0f, 0.0f, 0.0f, 255.0f)), 25.0f);
+    ImGui::GetWindowDrawList()->AddLine(ImVec2(0.0f, yPos), ImVec2(((float)currentLife * (maxLength/maxLife)), yPos), ImGui::ColorConvertFloat4ToU32(ImVec4(0.0f, 255.0f, 0.0f, 255.0f)), 25.0f);
     ImGui::End();
     ImGui::PopStyleVar();
 }
