@@ -7,11 +7,13 @@
 #define TARGET_COUNT 35
 #define PARTICLE_COUNT 400
 #define CASE_COUNT 20
+#define HEART_COUNT 50
 
 ObjectModel *gunModel;
 ObjectModel *coinModel;
 ObjectModel *skyboxModel;
-ObjectModel *caseModel;
+ObjectModel *magazineCaseModel;
+ObjectModel *medicCaseModel;
 
 TerrainModel *terrainModel;
 
@@ -28,10 +30,11 @@ unsigned int life = 5;
 
 Game::Game(Camera *camera) : camera(camera) {
     // Modelle
-    caseModel = new ObjectModel(new PhongShader(), "../assets/Objects/Case/4VIOFB4XH3KJI43V6ILU5L0S5.obj");
+    magazineCaseModel = new ObjectModel(new PhongShader(), "../assets/Objects/MagazineCase/4VIOFB4XH3KJI43V6ILU5L0S5.obj");
     gunModel = new ObjectModel(new PhongShader(), "../assets/Objects/Gun/ZE8FK2UU5PF8Y5F5777X34XII.obj");
     coinModel = new ObjectModel(new PhongShader(), "../assets/Objects/Ghost/D4LM6XEKRW9PXSVHUEDQHY7OM.obj");
     skyboxModel = new ObjectModel(new PhongShader(), "../assets/Objects/SkyBox/skybox.obj");
+    medicCaseModel = new ObjectModel(new PhongShader(), "../assets/Objects/MedicCase/8XK1NA3IKVGQHS9JM2IM2D2W4.obj");
     terrainModel = new TerrainModel(new TerrainShader());
     // Himmel
     skyboxEntity = new SkyboxEntity(skyboxModel);
@@ -43,13 +46,21 @@ Game::Game(Camera *camera) : camera(camera) {
     entities.push_back(gunEntity);
     entities.push_back(terrainEntity);
 
-    // Case
+    // MagazineCase
     for (unsigned int i = 0; i < CASE_COUNT; i++) {
-        auto *entity = new StaticEntity(caseModel);
+        auto *entity = new StaticEntity(magazineCaseModel);
         entity->setPosition(Vector3f(terrainEntity->getRandomPosition(Vector3f(0.0f, 0.33f, 0.0f))));
         entity->setScaling(0.5f);
         entity->setRotation(Vector3f(0, Random::randFloat(0, 360), 0));
-        cases.push_back(entity);
+        magazineCases.push_back(entity);
+    }
+    // MedicCase
+    for(unsigned int i = 0; i < HEART_COUNT; i++) {
+        auto *entity = new StaticEntity(medicCaseModel);
+        entity->setPosition(Vector3f(terrainEntity->getRandomPosition(Vector3f(0.0f, 0.275f, 0.0f))));
+        entity->setScaling(0.5f);
+        entity->setRotation(Vector3f(0, Random::randFloat(0, 360), 0));
+        medicCases.push_back(entity);
     }
     // Skybox
     entities.push_back(skyboxEntity);
@@ -111,8 +122,8 @@ void Game::update(float deltaTime) {
             entity->setTargetPosition(camera->getPosition());
             entity->update(deltaTime);
         }
-        // Alle Cases aktualisieren
-        for (StaticEntity *entity: cases) {
+        // Alle MagazineCases aktualisieren
+        for (StaticEntity *entity: magazineCases) {
             if(checkPlayerCollision(entity, camera, 1.0f)) {
                 particleManager->spawn(entity->getPosition(), Color(0.0f, 0.0f, 1.0f, 1.0f));
                 entity->setPosition(terrainEntity->getRandomPosition(Vector3f(0.0f, 0.33f, 0.0f)));
@@ -121,7 +132,15 @@ void Game::update(float deltaTime) {
             }
             entity->update(deltaTime);
         }
-
+        // Alle MedicCases aktualisieren
+        for (StaticEntity *entity: medicCases) {
+            if(checkPlayerCollision(entity, camera, 1.0f)) {
+                particleManager->spawn(entity->getPosition(), Color(0.0f, 1.0f, 0.0f, 1.0f));
+                entity->setPosition(terrainEntity->getRandomPosition(Vector3f(0.0f, 0.275f, 0.0f)));
+                if(life < maxLife) life++;
+            }
+            entity->update(deltaTime);
+        }
         // Alle Einheiten aktualisieren
         for (Entity *entity: entities) {
             entity->update(deltaTime);
@@ -147,8 +166,12 @@ void Game::render() {
     for (EnemyEntity *entity: targets) {
         entity->render(*camera);
     }
-    // Alle Cases zeichnen
-    for (StaticEntity *entity: cases) {
+    // Alle MagazineCases zeichnen
+    for (StaticEntity *entity: magazineCases) {
+        entity->render(*camera);
+    }
+    // Alle MedicCases zeichnen
+    for(StaticEntity *entity: medicCases) {
         entity->render(*camera);
     }
     // Alle Einheiten zeichnen
@@ -181,8 +204,12 @@ void Game::initNewGame() {
     for (EnemyEntity *entity: targets) {
         entity->respawn(terrainEntity->getRandomPosition(Vector3f(0.0f, 1.2f, 0.0f)));
     }
-    // Cases neu setzen
-    for (StaticEntity *entity: cases) {
+    // MagazineCases neu setzen
+    for (StaticEntity *entity: magazineCases) {
+        entity->setPosition(terrainEntity->getRandomPosition(Vector3f(0.0f, 0.33f, 0.0f)));
+    }
+    // MedicCases neu setzen
+    for (StaticEntity *entity: medicCases) {
         entity->setPosition(terrainEntity->getRandomPosition(Vector3f(0.0f, 0.33f, 0.0f)));
     }
 
