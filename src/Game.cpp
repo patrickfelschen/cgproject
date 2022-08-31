@@ -94,7 +94,7 @@ Game::Game(Camera *camera) : camera(camera) {
     gunEntity->setTargets(targets);
 
     particleManager = new ParticleManager(PARTICLE_COUNT);
-    terrainManager = new TerrainManager(terrainEntity);
+    terrainManager = new TerrainManager(terrainEntity, lightManager);
 }
 
 Game::~Game() {};

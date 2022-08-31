@@ -13,7 +13,7 @@
 
 class TerrainManager {
 public:
-    explicit TerrainManager(const TerrainEntity* terrainEntity);
+    explicit TerrainManager(const TerrainEntity* terrainEntity, LightManager *lightManager);
 
     virtual ~TerrainManager();
 
@@ -23,6 +23,7 @@ public:
 
 private:
     const TerrainEntity* terrainEntity;
+    LightManager *lightManager;
     std::vector<Entity *> entities;
     ObjectModel *treeModel;
     ObjectModel *woodModel;

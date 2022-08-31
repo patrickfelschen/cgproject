@@ -9,16 +9,16 @@
 
 LightManager::LightManager(const Camera *camera) : camera(camera) {
     // SPOTS
-    //addSpot(Vector3f(0, 2, 0), down);
+    // addSpot(Vector3f(0, 2, 0), down);
 
     // DIRS
     //addDir(down);
 
     // POINTS
-    addPoint(Vector3f(0, 10, 0));
+    // addPoint(Vector3f(0, 3, 0));
 
     this->uboSpotLights = new UniformBuffer(sizeof(Lights), 1);
-    this->uboSpotLights->setSubData(0, sizeof(Lights), &lights);
+    //this->uboSpotLights->setSubData(0, sizeof(Lights), &lights);
 }
 
 LightManager::~LightManager() {
@@ -46,7 +46,7 @@ void LightManager::setDynamicLight(Vector3f position, Vector3f direction) {
     l.quadratic = 0.032f;
 
     l.cutOff = static_cast<float>(cos(TO_RAD(12.5f)));
-    l.outerCutOff = static_cast<float>(cos(TO_RAD(15.0f)));
+    l.outerCutOff = static_cast<float>(cos(TO_RAD(20.0f)));
 
     this->lights.dynamicLight = l;
 }
@@ -58,14 +58,15 @@ void LightManager::addPoint(Vector3f position) {
     l.position = position;
 
     l.ambient = Color(0.05f, 0.05f, 0.05f);
-    l.diffuse = Color(0.8f, 0.8f, 0.8f);
-    l.specular = Color(0.6f, 0.6f, 0.6f);
+    l.diffuse = Color(0.8f, 0.8f, 0.1f);
+    l.specular = Color(0.7f, 0.7f, 0.1f);
 
     l.constant = 1.0f;
-    l.linear = 0.09f;
-    l.quadratic = 0.032f;
+    l.linear = 0.35f;
+    l.quadratic = 0.44f;
 
     this->lights.staticLights[lights.staticLightsCount++] = l;
+    this->uboSpotLights->setSubData(0, sizeof(Lights), &lights);
 }
 
 void LightManager::addSpot(Vector3f position, Vector3f direction) {
@@ -84,9 +85,10 @@ void LightManager::addSpot(Vector3f position, Vector3f direction) {
     l.quadratic = 0.032f;
 
     l.cutOff = static_cast<float>(cos(TO_RAD(12.5f)));
-    l.outerCutOff = static_cast<float>(cos(TO_RAD(15.0f)));
+    l.outerCutOff = static_cast<float>(cos(TO_RAD(20.0f)));
 
     this->lights.staticLights[lights.staticLightsCount++] = l;
+    this->uboSpotLights->setSubData(0, sizeof(Lights), &lights);
 }
 
 void LightManager::addDir(Vector3f dir) {
@@ -100,6 +102,7 @@ void LightManager::addDir(Vector3f dir) {
     l.specular = Color(0.5f, 0.5f, 0.5f);
 
     this->lights.staticLights[lights.staticLightsCount++] = l;
+    this->uboSpotLights->setSubData(0, sizeof(Lights), &lights);
 }
 
 

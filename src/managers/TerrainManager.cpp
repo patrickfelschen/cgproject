@@ -9,8 +9,10 @@
 #define STATIC_OBJECTS_COUNT 50
 #define LIGHT_POLE_COUNT 20
 
-TerrainManager::TerrainManager(const TerrainEntity *terrainEntity) : terrainEntity(terrainEntity) {
-    flowerYellowModel = new ObjectModel(new PhongShader(),"../assets/Objects/FlowerYellow/DR293GUXZXKK16RTKE4Y8HOCH.obj");
+TerrainManager::TerrainManager(const TerrainEntity *terrainEntity, LightManager *lightManager) : terrainEntity(
+        terrainEntity), lightManager(lightManager) {
+    flowerYellowModel = new ObjectModel(new PhongShader(),
+                                        "../assets/Objects/FlowerYellow/DR293GUXZXKK16RTKE4Y8HOCH.obj");
     flowerRedModel = new ObjectModel(new PhongShader(), "../assets/Objects/FlowerRed/XBV47D0X9MNPQYA15BSYICAXS.obj");
     woodModel = new ObjectModel(new PhongShader(), "../assets/Objects/Wood/BJWDXMOHII5I7VAGI8Q12YATN.obj");
     treeModel = new ObjectModel(new PhongShader(), "../assets/Objects/Tree01/N6TIYZO5D41STEOW4SQBKWRRG.obj");
@@ -51,7 +53,10 @@ TerrainManager::TerrainManager(const TerrainEntity *terrainEntity) : terrainEnti
     // Laternen
     for (unsigned int i = 0; i < LIGHT_POLE_COUNT; i++) {
         auto *entity = new StaticEntity(lightPoleModel);
-        entity->setPosition(terrainEntity->getRandomPosition(Vector3f(0.0f, 1.2f, 0.0f)));
+        Vector3f pos = terrainEntity->getRandomPosition(Vector3f(0.0f, 1.2f, 0.0f));
+        entity->setPosition(pos);
+        pos += Vector3f(0, 0.6f, 0);
+        lightManager->addPoint(pos);
         entity->setScaling(1.0f);
         entity->setRotation(Vector3f(0, Random::randFloat(0, 360), 0));
         entities.push_back(entity);

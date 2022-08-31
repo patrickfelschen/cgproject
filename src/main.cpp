@@ -26,7 +26,7 @@ void glfwErrorCallback(int, const char *errorMsg);
 void GLAPIENTRY glErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
                                 const GLchar *message, const void *userParam);
 
-const bool fullScreen = false;
+const bool fullScreen = true;
 
 const unsigned int SCR_WIDTH = fullScreen ? 1920 : 1920 / 2;
 const unsigned int SCR_HEIGHT = fullScreen ?  1080 : 1080 / 2;
