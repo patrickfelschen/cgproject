@@ -84,4 +84,12 @@ void GunEntity::addMagazines(unsigned int count) {
     this->magazines += count;
 }
 
+void GunEntity::setAmmo(unsigned int ammo) {
+    GunEntity::ammo = ammo;
+}
+
+void GunEntity::setMagazines(unsigned int magazines) {
+    GunEntity::magazines = magazines;
+}
+
 

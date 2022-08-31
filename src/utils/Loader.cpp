@@ -156,3 +156,19 @@ GLuint Loader::compileShaders(const std::string& vsFilePath, const std::string& 
     glUseProgram(id);
     return id;
 }
+
+void Loader::writeScoreToFile(unsigned int score) {
+    std::ofstream scoreFile;
+    scoreFile.open("../assets/score.txt");
+    scoreFile << score;
+    scoreFile.close();
+}
+
+unsigned int Loader::readScoreFromFile() {
+    unsigned int score;
+    std::ifstream  scoreFile;
+    scoreFile.open("../assets/score.txt");
+    scoreFile >> score;
+    scoreFile.close();
+    return score;
+}

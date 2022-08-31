@@ -24,6 +24,7 @@ TerrainEntity *terrainEntity;
 ParticleManager *particleManager;
 TerrainManager *terrainManager;
 
+bool gameRestart = false;
 unsigned int hitCount = 0;
 unsigned int maxLife = 5;
 unsigned int life = 5;
@@ -157,7 +158,16 @@ void Game::update(float deltaTime) {
         GUIManager::getInstance().drawFPSCounter();
     }
     else {
-        GUIManager::getInstance().drawInfo("Game over! Press Space to restart.");
+        char score[12];
+        sprintf(score, "Score: %i", hitCount);
+        GUIManager::getInstance().drawMainMenu(gameRestart, "Restart", "Game Over!", Color(1.0f, 0.0f, 0.0f, 1.0f), score);
+        if (hitCount > Loader::getInstance().readScoreFromFile()) {
+            Loader::getInstance().writeScoreToFile(hitCount);
+        }
+        if(gameRestart) {
+            gameRestart = false;
+            initNewGame();
+        }
     }
 }
 
@@ -199,6 +209,8 @@ void Game::initNewGame() {
     this->isAlive = true;
     life = maxLife;
     hitCount = 0;
+    gunEntity->setAmmo(30);
+    gunEntity->setMagazines(5);
 
     // Gegner neu setzen
     for (EnemyEntity *entity: targets) {

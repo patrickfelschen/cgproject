@@ -26,13 +26,14 @@ void glfwErrorCallback(int, const char *errorMsg);
 void GLAPIENTRY glErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
                                 const GLchar *message, const void *userParam);
 
-const bool fullScreen = true;
+const bool fullScreen = false;
 
 const unsigned int SCR_WIDTH = fullScreen ? 1920 : 1920 / 2;
 const unsigned int SCR_HEIGHT = fullScreen ?  1080 : 1080 / 2;
 
 Camera *camera;
 Game *game;
+bool gameStarted = false;
 
 int main(int argc, char **argv) {
     if (glfwInit() == GLFW_FALSE) {
@@ -63,7 +64,6 @@ int main(int argc, char **argv) {
 
     glfwMakeContextCurrent(window);
 
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, glfwCursorPosCallback);
     glfwSetMouseButtonCallback(window, glfwMouseButtonCallback);
     glfwSetKeyCallback(window, glfwKeyCallback);
@@ -108,9 +108,16 @@ int main(int argc, char **argv) {
             // Render start
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glClearColor(0.2, 0.2, 0.2, 1.0);
+//            printf("gameStarted: %i\n", gameStarted);
 
-            game->update((float) deltaTime);
-            game->render();
+            if(gameStarted) {
+                game->update((float) deltaTime);
+                game->render();
+            }
+            else {
+                GUIManager::getInstance().drawMainMenu(gameStarted, "Start Game", "Kleister", Color(1.0f));
+            }
+
             GUIManager::getInstance().render();
             // Render end
             glfwSwapBuffers(window);
