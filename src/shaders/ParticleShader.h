@@ -14,8 +14,6 @@ public:
 
     ~ParticleShader() override;
 
-    void setTransform(const Matrix &t);
-
     void setColor(const Color &c);
 
     void setScale(float scale);
@@ -24,9 +22,6 @@ protected:
     void setUniforms() override;
 
 private:
-    Matrix transform;
-    Matrix view;
-    Matrix projection;
     Color color;
     float scale;
 };

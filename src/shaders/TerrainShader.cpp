@@ -9,17 +9,11 @@
 #define VERT "../assets/shaders/terrainShader.vert"
 #define FRAG "../assets/shaders/terrainShader.frag"
 
-TerrainShader::TerrainShader() : Shader(VERT, FRAG) {
-    this->transform.identity();
-}
+TerrainShader::TerrainShader() : Shader(VERT, FRAG) { }
 
 TerrainShader::~TerrainShader() = default;
 
 void TerrainShader::setUniforms() {
     // Transformation
     setUniform("uTransform", transform);
-}
-
-void TerrainShader::setTransform(const Matrix &t) {
-    this->transform = t;
 }

@@ -9,6 +9,7 @@
 Shader::Shader(const char *vsFilePath, const char *fsFilePath) {
     this->vsFilePath = vsFilePath;
     this->fsFilePath = fsFilePath;
+    this->transform.identity();
     this->id = Loader::getInstance().compileShaders(vsFilePath, fsFilePath);
 }
 
@@ -25,6 +26,10 @@ void Shader::activate() {
 
 void Shader::deactivate() const {
     glUseProgram(0);
+}
+
+void Shader::setTransform(const Matrix &t) {
+    this->transform = t;
 }
 
 void Shader::setUniform(const std::string &name, int value) {

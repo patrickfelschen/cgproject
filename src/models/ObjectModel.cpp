@@ -7,7 +7,7 @@
 #include "../shaders/PhongShader.h"
 
 
-ObjectModel::ObjectModel(PhongShader *shader, const std::string &filePath) : Model() {
+ObjectModel::ObjectModel(Shader *shader, const std::string &filePath) : Model() {
     this->shader = shader;
     // read file via ASSIMP
     Assimp::Importer importer;

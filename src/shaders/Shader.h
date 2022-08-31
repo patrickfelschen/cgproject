@@ -24,6 +24,8 @@ public:
 
     void deactivate() const;
 
+    virtual void setTransform(const Matrix &t);
+
     void setUniform(const std::string &name, float value);
 
     void setUniform(const std::string &name, const Vector3f &value);
@@ -36,7 +38,7 @@ public:
 
 protected:
     virtual void setUniforms() = 0;
-
+    Matrix transform;
 private:
     // ID des shaders
     GLuint id = 0;

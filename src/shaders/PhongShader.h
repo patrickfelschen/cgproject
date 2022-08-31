@@ -14,13 +14,9 @@ public:
 
     ~PhongShader() override;
 
-    void setTransform(const Matrix &t);
-
 protected:
     void setUniforms() override;
 
-private:
-    Matrix transform;
 };
 
 

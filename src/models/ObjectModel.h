@@ -13,17 +13,18 @@
 #include "assimp/postprocess.h"
 #include "assimp/scene.h"
 #include "../shaders/PhongShader.h"
+#include "../shaders/GunShader.h"
 #include <unordered_map>
 
 class ObjectModel : public Model {
 public:
-    explicit ObjectModel(PhongShader *shader, const std::string &filePath);
+    explicit ObjectModel(Shader *shader, const std::string &filePath);
 
     ~ObjectModel() override;
 
     void render() const override;
 
-    PhongShader *shader;
+    Shader *shader;
 private:
     std::unordered_map<std::string, Texture> textureCache;
     std::string directory;

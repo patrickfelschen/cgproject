@@ -5,6 +5,7 @@
 #include "Game.h"
 #include "buffers/UniformBuffer.h"
 #include "managers/LightManager.h"
+#include "shaders/GunShader.h"
 
 #define TARGET_COUNT 35
 #define PARTICLE_COUNT 400
@@ -50,7 +51,7 @@ Game::Game(Camera *camera) : camera(camera) {
 
     // Modelle
     magazineCaseModel = new ObjectModel(new PhongShader(), "../assets/Objects/MagazineCase/4VIOFB4XH3KJI43V6ILU5L0S5.obj");
-    gunModel = new ObjectModel(new PhongShader(), "../assets/Objects/Gun/ZE8FK2UU5PF8Y5F5777X34XII.obj");
+    gunModel = new ObjectModel(new GunShader(), "../assets/Objects/Gun/ZE8FK2UU5PF8Y5F5777X34XII.obj");
     ghostModel = new ObjectModel(new PhongShader(), "../assets/Objects/Ghost/D4LM6XEKRW9PXSVHUEDQHY7OM.obj");
     skyboxModel = new ObjectModel(new PhongShader(), "../assets/Objects/SkyBox/skybox.obj");
     medicCaseModel = new ObjectModel(new PhongShader(), "../assets/Objects/MedicCase/8XK1NA3IKVGQHS9JM2IM2D2W4.obj");
@@ -197,7 +198,9 @@ void Game::update(float deltaTime) {
 
 void Game::render() {
     matrices.view = camera->getView();
+    matrices.camPos = camera->getPosition();
     uboMatrices->setSubData(offsetof(Matrices, view), sizeof(Matrix), &matrices.view.m);
+    uboMatrices->setSubData(offsetof(Matrices, camPos), sizeof(Vector3f), &matrices.camPos);
 
     lightManager->render();
 
