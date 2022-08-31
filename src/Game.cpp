@@ -25,6 +25,7 @@ ParticleManager *particleManager;
 TerrainManager *terrainManager;
 
 bool gameRestart = false;
+float targetSpeed = 1.0f;
 unsigned int hitCount = 0;
 unsigned int maxLife = 5;
 unsigned int life = 5;
@@ -109,6 +110,9 @@ void Game::update(float deltaTime) {
                 particleManager->spawn(entity->getPosition(), Color(1.0f));
                 entity->respawn(terrainEntity->getRandomPosition(Vector3f(0.0f, 1.2f, 0.0f)));
                 hitCount++;
+                if((hitCount % 5) == 0) {
+                    targetSpeed += 0.05f;
+                }
                 // std::cout << "Treffer: " << hitCount << std::endl;
             }
             if (checkPlayerCollision(entity, camera, 0.4f)) {
@@ -117,10 +121,13 @@ void Game::update(float deltaTime) {
 
                 particleManager->spawn(entity->getPosition(), Color(1.0f, 0.0f, 0.0f, 1.0f));
                 entity->respawn(terrainEntity->getRandomPosition(Vector3f(0.0f, 1.2f, 0.0f)));
+
                 // std::cout << "Contact, Life: " << life << std::endl;
             }
+
             checkTerrainCollision(entity, 0.2f);
             entity->setTargetPosition(camera->getPosition());
+            entity->setSpeed(targetSpeed);
             entity->update(deltaTime);
         }
         // Alle MagazineCases aktualisieren
