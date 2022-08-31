@@ -5,7 +5,12 @@
 #include "../../libraries/win32/imgui/imgui_impl_glfw.h"
 #include "../../libraries/win32/imgui/imgui_impl_opengl3.h"
 #include "../utils/Color.h"
+#include "../maths/Vector2f.h"
+#include "../utils/Loader.h"
+#include "GLFW/glfw3.h"
+#include "SoundManager.h"
 #include <numbers>
+#include <string>
 
 #define WINDOW_FLAGS ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoResize|ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoScrollbar|ImGuiWindowFlags_NoSavedSettings|ImGuiWindowFlags_NoInputs
 

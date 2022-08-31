@@ -1,9 +1,5 @@
-#include <string>
-#include <complex>
+
 #include "GUIManager.h"
-#include "../maths/Vector2f.h"
-#include "../utils/Loader.h"
-#include "GLFW/glfw3.h"
 
 GUIManager &GUIManager::getInstance() {
     static GUIManager instance;
@@ -174,6 +170,8 @@ void GUIManager::drawMainMenu(bool &buttonClicked, const char *mainButtonText, c
     if(ImGui::Button(mainButtonText, ImVec2(buttonSize.x, buttonSize.y))) {
         buttonClicked = true;
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        SoundManager::getInstance().stopPlaying();
+        SoundManager::getInstance().play2DSound("../assets/Sounds/night-ambience-17064.mp3", true);
     }
     ImGui::SetCursorPos(ImVec2(SCR_WIDTH/2 - buttonSize.x / 2, SCR_HEIGHT/2 + buttonSize.y / 2 + 20.0f));
     if(ImGui::Button("Exit", ImVec2(buttonSize.x, buttonSize.y))) {

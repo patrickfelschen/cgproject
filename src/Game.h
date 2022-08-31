@@ -22,6 +22,7 @@
 #include "entities/StaticEntity.h"
 #include "maths/Random.h"
 #include "managers/TerrainManager.h"
+#include "managers/SoundManager.h"
 
 class Game {
 public:

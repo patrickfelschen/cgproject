@@ -125,6 +125,7 @@ void Game::update(float deltaTime) {
         // Alle Ziele aktualisieren
         for (EnemyEntity *entity: targets) {
             if (entity->hit) {
+                SoundManager::getInstance().play2DSound("../assets/Sounds/pop.mp3");
                 particleManager->spawn(entity->getPosition(), Color(1.0f));
                 entity->respawn(terrainEntity->getRandomPosition(Vector3f(0.0f, 1.2f, 0.0f)));
                 hitCount++;

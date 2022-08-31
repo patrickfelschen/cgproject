@@ -5,6 +5,7 @@
 
 
 #include "Camera.h"
+#include "../managers/SoundManager.h"
 
 #define TO_RAD(deg) (deg * std::numbers::pi / 180.0)
 
@@ -79,25 +80,38 @@ void Camera::update(float deltaTime) {
 
 void Camera::handleKeyboardInputs(float deltaTime) {
     float speed = 3.0f * deltaTime;
+    bool soundPlaying = false;
 
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
         speed *= 1.5;
     }
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+        soundPlaying = true;
         position += (target * speed);
     }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+        soundPlaying = true;
         position -= (target * speed);
     }
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+        soundPlaying = true;
         position -= getRight() * speed;
     }
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+        soundPlaying = true;
         position += getRight() * speed;
     }
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
         position.y += speed;
     }
+
+    if(soundPlaying) {
+        SoundManager::getInstance().playSingle2DSound("../assets/Sounds/step.mp3");
+    }
+    else {
+        SoundManager::getInstance().stopSound("../assets/Sounds/step.mp3");
+    }
+
 }
 
 void Camera::handleMouseInputs(float mouseX, float mouseY) {

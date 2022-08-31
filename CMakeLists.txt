@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.16)
 project(CG)
 set(CMAKE_CXX_STANDARD 23)
 
-file(GLOB_RECURSE SOURCE_FILES_REC CONFIGURE_DEPENDS "src/*.h" "src/*.hpp" "src/*.cpp" "libraries/win32/imgui/*.h" "libraries/win32/imgui/*.cpp")
+file(GLOB_RECURSE SOURCE_FILES_REC CONFIGURE_DEPENDS "src/*.h" "src/*.hpp" "src/*.cpp" "libraries/win32/imgui/*.h" "libraries/win32/imgui/*.cpp" "libraries/win32/irrklang*.h")
 
-add_executable(CG ${SOURCE_FILES_REC})
+add_executable(CG ${SOURCE_FILES_REC} src/managers/SoundManager.cpp src/managers/SoundManager.h)
 
 IF (WIN32)
     # OpenGL Extension Wrangler Library
@@ -27,14 +27,22 @@ IF (WIN32)
     set(ASSIMP_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libraries/win32/assimp/lib/)
     find_library(ASSIMP_LIBRARY NAMES assimp-vc140-mt PATHS ${ASSIMP_LIB_DIR})
 
-    include_directories(${GLEW_INCLUDE_DIR} ${GLFW_INCLUDE_DIR} ${FREEIMAGE_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIR})
-    set(CG_LIBRARIES ${GLEW_LIBRARY} ${GLFW_LIBRARY} ${FREEIMAGE_LIBRARY} ${ASSIMP_LIBRARY} opengl32)
+    # IrrKlang
+    set(IRRKLANG_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libraries/win32/irrklang/include)
+    set(IRRKLANG_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libraries/win32/irrklang/lib/)
+    find_library(IRRKLANG_LIBRARY NAMES irrKlang PATHS ${IRRKLANG_LIB_DIR})
+
+    include_directories(${GLEW_INCLUDE_DIR} ${GLFW_INCLUDE_DIR} ${FREEIMAGE_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIR} ${IRRKLANG_INCLUDE_DIR})
+    set(CG_LIBRARIES ${GLEW_LIBRARY} ${GLFW_LIBRARY} ${FREEIMAGE_LIBRARY} ${ASSIMP_LIBRARY} ${IRRKLANG_LIBRARY} opengl32)
 
     # Copy *.dll files to build folder
     add_custom_command(TARGET CG POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${GLEW_LIB_DIR}glew32.dll $<TARGET_FILE_DIR:CG>)
     add_custom_command(TARGET CG POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${GLFW_LIB_DIR}glfw3.dll $<TARGET_FILE_DIR:CG>)
     add_custom_command(TARGET CG POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${FREEIMAGE_LIB_DIR}FreeImage.dll $<TARGET_FILE_DIR:CG>)
     add_custom_command(TARGET CG POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ASSIMP_LIB_DIR}assimp-vc140-mt.dll $<TARGET_FILE_DIR:CG>)
+    add_custom_command(TARGET CG POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${IRRKLANG_LIB_DIR}irrKlang.dll $<TARGET_FILE_DIR:CG>)
+    add_custom_command(TARGET CG POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${IRRKLANG_LIB_DIR}ikpFlac.dll $<TARGET_FILE_DIR:CG>)
+    add_custom_command(TARGET CG POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${IRRKLANG_LIB_DIR}ikpMP3.dll $<TARGET_FILE_DIR:CG>)
 ELSE()
     # APPLE / UNIX
 ENDIF()
