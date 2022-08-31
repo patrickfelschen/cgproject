@@ -35,6 +35,10 @@ public:
 
     GLuint compileShaders(const std::string &vsFilePath, const std::string &fsFilePath);
 
+    void writeScoreToFile(unsigned int score);
+
+    unsigned int readScoreFromFile();
+
 private:
     Loader() = default;
 

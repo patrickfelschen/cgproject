@@ -16,7 +16,6 @@ EnemyEntity::~EnemyEntity() = default;
 void EnemyEntity::respawn(const Vector3f &pos) {
     this->hit = false;
     setPosition(pos);
-    speed = Random::randFloat(1, 2);
 }
 
 float yawOffset = 90;
@@ -57,4 +56,8 @@ AABB EnemyEntity::getTransformedBoundingBox() const {
 
 void EnemyEntity::setTargetPosition(const Vector3f &targetPosition) {
     this->targetPosition = targetPosition;
+}
+
+void EnemyEntity::setSpeed(float speed) {
+    EnemyEntity::speed = speed;
 }

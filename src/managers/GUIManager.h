@@ -40,7 +40,7 @@ public:
 
     void updateScoreWindow(unsigned int score);
 
-    void updateLifeWindow(unsigned int life);
+    void updateLifeWindow(unsigned int currentLife, unsigned int maxLife);
 
     void updateSpinner(float radius, float speed, float thickness);
 
@@ -48,7 +48,7 @@ public:
 
     void drawFPSCounter();
 
-    void drawInfo(std::string s);
+    void drawMainMenu(bool &buttonClicked, const char *mainButtonText, const char *mainText, const Color &mainTextColor, const char* secondaryText = "", const Color &secondaryTextColor = Color(1.0f)) const;
 
     void render();
 };

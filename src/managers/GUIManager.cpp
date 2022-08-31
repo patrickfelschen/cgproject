@@ -1,6 +1,9 @@
 #include <string>
 #include <complex>
 #include "GUIManager.h"
+#include "../maths/Vector2f.h"
+#include "../utils/Loader.h"
+#include "GLFW/glfw3.h"
 
 GUIManager &GUIManager::getInstance() {
     static GUIManager instance;
@@ -135,27 +138,47 @@ void GUIManager::drawFPSCounter() {
     ImGui::PopStyleVar();
 }
 
-void GUIManager::updateLifeWindow(unsigned int life) {
+void GUIManager::updateLifeWindow(unsigned int currentLife, unsigned int maxLife) {
+    float maxLength = 300;
+    float yPos = SCR_HEIGHT - 50.0f;
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     ImGui::SetNextWindowBgAlpha(0.0f);
-    ImGui::SetNextWindowSize(ImVec2(SCR_WIDTH, 100.0f));
-    ImGui::SetNextWindowPos(ImVec2(0.0f, 100.0f));
+    ImGui::SetNextWindowSize(ImVec2(maxLength, 300.0f));
+    ImGui::SetNextWindowPos(ImVec2(0.0f, yPos));
     ImGui::Begin("life", nullptr, WINDOW_FLAGS);
-    ImGui::Text("Life: %i", life);
+    ImGui::GetWindowDrawList()->AddLine(ImVec2(0.0f, yPos), ImVec2(maxLength, yPos), ImGui::ColorConvertFloat4ToU32(ImVec4(255.0f, 0.0f, 0.0f, 255.0f)), 25.0f);
+    ImGui::GetWindowDrawList()->AddLine(ImVec2(0.0f, yPos), ImVec2(((float)currentLife * (maxLength/maxLife)), yPos), ImGui::ColorConvertFloat4ToU32(ImVec4(0.0f, 255.0f, 0.0f, 255.0f)), 25.0f);
     ImGui::End();
     ImGui::PopStyleVar();
 }
 
-void GUIManager::drawInfo(std::string s) {
+void GUIManager::drawMainMenu(bool &buttonClicked, const char *mainButtonText, const char *mainText, const Color &mainTextColor, const char* secondaryText, const Color &secondaryTextColor) const {
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    Vector2f buttonSize(200.0f, 75.0f);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-    ImGui::SetNextWindowBgAlpha(0.0f);
     ImGui::SetNextWindowSize(ImVec2(SCR_WIDTH, SCR_HEIGHT));
-    ImGui::SetNextWindowPos(ImVec2(0.0f, SCR_HEIGHT * 0.5f));
-    ImGui::Begin("info", nullptr, WINDOW_FLAGS);
-    auto windowWith = ImGui::GetWindowSize().x;
-    auto textWidth = ImGui::CalcTextSize(s.c_str()).x;
-    ImGui::SetCursorPosX((windowWith - textWidth) * 0.5f);
-    ImGui::Text("%s", s.c_str());
+    ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
+    ImGui::Begin("mainmenu", nullptr, ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoResize|ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoScrollbar|ImGuiWindowFlags_NoSavedSettings);
+    char score[32];
+    sprintf(score, "Highscore: %i", Loader::getInstance().readScoreFromFile());
+    auto mainTextWidth = ImGui::CalcTextSize(mainText).x;
+    auto secondaryTextWidth = ImGui::CalcTextSize(secondaryText).x;
+    auto highscoreTextWidth = ImGui::CalcTextSize(score).x;
+    ImGui::SetCursorPos(ImVec2((SCR_WIDTH - mainTextWidth) * 0.5f, SCR_HEIGHT/2 - buttonSize.y / 2 - 180.0f));
+    ImGui::TextColored(ImVec4(mainTextColor.r, mainTextColor.g, mainTextColor.b, mainTextColor.a), "%s", mainText);
+    ImGui::SetCursorPos(ImVec2((SCR_WIDTH - secondaryTextWidth) * 0.5f, SCR_HEIGHT/2 - buttonSize.y / 2 - 120.0f));
+    ImGui::TextColored(ImVec4(secondaryTextColor.r, secondaryTextColor.g, secondaryTextColor.b, secondaryTextColor.a), "%s", secondaryText);
+    ImGui::SetCursorPos(ImVec2((SCR_WIDTH - highscoreTextWidth) * 0.5f, SCR_HEIGHT/2 - buttonSize.y / 2 - 60.0f));
+    ImGui::Text("%s", score);
+    ImGui::SetCursorPos(ImVec2(SCR_WIDTH/2 - buttonSize.x / 2, SCR_HEIGHT/2 - buttonSize.y / 2));
+    if(ImGui::Button(mainButtonText, ImVec2(buttonSize.x, buttonSize.y))) {
+        buttonClicked = true;
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
+    ImGui::SetCursorPos(ImVec2(SCR_WIDTH/2 - buttonSize.x / 2, SCR_HEIGHT/2 + buttonSize.y / 2 + 20.0f));
+    if(ImGui::Button("Exit", ImVec2(buttonSize.x, buttonSize.y))) {
+        exit(EXIT_SUCCESS);
+    }
     ImGui::End();
     ImGui::PopStyleVar();
 }

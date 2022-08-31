@@ -23,10 +23,11 @@ public:
 
     void setTargetPosition(const Vector3f &targetPosition);
 
+    void setSpeed(float speed);
+
     bool hit = false;
 private:
-    float gravity = -9.81;
-    float speed = 0;
+    float speed = 1.0f;
     float distanceToPlayer = 0;
     Vector3f targetPosition;
 

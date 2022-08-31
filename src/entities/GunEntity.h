@@ -36,6 +36,10 @@ public:
 
     void addMagazines(unsigned int count);
 
+    void setAmmo(unsigned int ammo);
+
+    void setMagazines(unsigned int magazines);
+
 private:
     const ObjectModel *model;
     std::vector<EnemyEntity *> targets;

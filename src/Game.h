@@ -40,7 +40,8 @@ public:
 private:
     std::vector<Entity *> entities;
     std::vector<EnemyEntity *> targets;
-    std::vector<StaticEntity *> cases;
+    std::vector<StaticEntity *> magazineCases;
+    std::vector<StaticEntity *> medicCases;
     Camera* camera;
 
     bool isAlive = true;
