@@ -16,10 +16,6 @@ public:
 
     void setTransform(const Matrix &t);
 
-    void setView(const Matrix &v);
-
-    void setProjection(const Matrix &p);
-
     void setColor(const Color &c);
 
     void setScale(float scale);

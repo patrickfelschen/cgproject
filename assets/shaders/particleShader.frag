@@ -3,7 +3,7 @@
 out vec4 fragColor;
 
 in VS_OUT {
-    vec4 color;
+    vec4 Color;
     vec2 TexCoord0;
 } fs_in;
 
@@ -13,5 +13,5 @@ vec4 diffuseTexture;
 
 void main() {
     diffuseTexture = texture(texture_diffuse0, fs_in.TexCoord0);
-    fragColor = fs_in.color * diffuseTexture;
+    fragColor = fs_in.Color * diffuseTexture;
 }

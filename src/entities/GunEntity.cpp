@@ -34,9 +34,6 @@ void GunEntity::update(float deltaTime) {
 }
 
 void GunEntity::render(const Camera &camera) {
-    this->model->shader->setCameraPosition(camera.getPosition());
-    this->model->shader->setProjection(camera.getProj());
-    //this->model->shader->setView(camera.getView());
     this->model->shader->setTransform(transformation);
     this->model->render();
 

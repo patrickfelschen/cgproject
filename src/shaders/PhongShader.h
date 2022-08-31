@@ -16,23 +16,11 @@ public:
 
     void setTransform(const Matrix &t);
 
-    void setView(const Matrix &v);
-
-    void setProjection(const Matrix &p);
-
-    void setCameraPosition(const Vector3f &c);
-
-    void setCameraDirection(const Vector3f &cameraDirection);
-
 protected:
     void setUniforms() override;
 
 private:
     Matrix transform;
-    Matrix view;
-    Matrix projection;
-    Vector3f cameraPosition;
-    Vector3f cameraDirection;
 };
 
 

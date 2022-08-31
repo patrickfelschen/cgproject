@@ -1,40 +1,25 @@
 #version 460 core
 
+const int MAX_LIGHT_COUNT = 30;
+
 out vec4 FragColor;
 
-struct DirLight {
-    vec3 direction;
+struct Light {
+    int type;
+
+    vec4 position;
+    vec4 direction;
 
     vec4 ambient;
     vec4 diffuse;
     vec4 specular;
-};
-
-struct PointLight {
-    vec3 position;
 
     float constant;
     float linear;
     float quadratic;
 
-    vec4 ambient;
-    vec4 diffuse;
-    vec4 specular;
-};
-
-struct SpotLight {
-    vec3 position;
-    vec3 direction;
     float cutOff;
     float outerCutOff;
-
-    float constant;
-    float linear;
-    float quadratic;
-
-    vec4 ambient;
-    vec4 diffuse;
-    vec4 specular;
 };
 
 struct Material {
@@ -51,13 +36,19 @@ in VS_OUT {
     vec2 TexCoord1;
 } fs_in;
 
-uniform vec3 uCamPos;
+layout (std140, binding = 0) uniform Matrices {
+    mat4 uProjection;
+    mat4 uView;
+    vec4 uCamPos;
+};
+
+layout (std140, binding = 1) uniform Lights {
+    int uStaticLightCount;
+    Light uDynamicLight;
+    Light uStaticLights[MAX_LIGHT_COUNT];
+};
 
 uniform Material uMaterial;
-
-uniform DirLight uDirLight;
-uniform PointLight uPointLight;
-uniform SpotLight uSpotLight;
 
 uniform sampler2D texture_diffuse0;
 uniform sampler2D texture_diffuse1;
@@ -67,8 +58,39 @@ uniform sampler2D texture_mixmap0;
 vec4 diffuseTexture;
 vec4 specularTexture;
 
-vec4 calcDirLight(DirLight light, vec3 normal, vec3 viewDir) {
-    vec3 lightDir = normalize(-light.direction);
+vec4 calcDirLight(Light light, vec3 normal, vec3 viewDir);
+vec4 calcPointLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir);
+vec4 calcSpotLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir);
+
+void main() {
+    vec3 normal = normalize(fs_in.Normal);
+    vec3 camDir = normalize(uCamPos.xyz - fs_in.Pos);
+    // texture color
+    vec4 grassTexture = texture(texture_diffuse0, fs_in.TexCoord1);
+    vec4 rockTexture = texture(texture_diffuse1, fs_in.TexCoord1);
+    vec4 mixTexture = texture(texture_mixmap0, fs_in.TexCoord0);
+
+    diffuseTexture = mix(grassTexture, rockTexture, mixTexture);
+    specularTexture = texture(texture_specular0, fs_in.TexCoord1);
+    // result
+    vec4 resultColor = calcSpotLight(uDynamicLight, normal, fs_in.Pos, camDir);
+    for (int i = 0; i < uStaticLightCount; i++){
+        if (uStaticLights[i].type == 0){
+            resultColor += calcPointLight(uStaticLights[i], normal, fs_in.Pos, camDir);
+        }
+        if (uStaticLights[i].type == 1){
+            resultColor += calcDirLight(uStaticLights[i], normal, camDir);
+        }
+        if (uStaticLights[i].type == 2){
+            resultColor += calcSpotLight(uStaticLights[i], normal, fs_in.Pos, camDir);
+        }
+    }
+    // out
+    FragColor = resultColor;
+}
+
+vec4 calcDirLight(Light light, vec3 normal, vec3 viewDir) {
+    vec3 lightDir = normalize(-light.direction.xyz);
     // diffuse shading
     float diff = max(dot(normal, lightDir), 0.0);
     // specular shading
@@ -81,15 +103,15 @@ vec4 calcDirLight(DirLight light, vec3 normal, vec3 viewDir) {
     return (ambient + diffuse + specular);
 }
 
-vec4 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir) {
-    vec3 lightDir = normalize(light.position - fragPos);
+vec4 calcPointLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir) {
+    vec3 lightDir = normalize(light.position.xyz - fragPos);
     // diffuse shading
     float diff = max(dot(normal, lightDir), 0.0);
     // specular shading
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), uMaterial.shininess);
     // attenuation
-    float distance = length(light.position - fragPos);
+    float distance = length(light.position.xyz - fragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
     // combine results
     vec4 ambient = light.ambient * diffuseTexture;
@@ -101,18 +123,18 @@ vec4 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir) {
     return (ambient + diffuse + specular);
 }
 
-vec4 calcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir) {
-    vec3 lightDir = normalize(light.position - fragPos);
+vec4 calcSpotLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir) {
+    vec3 lightDir = normalize(light.position.xyz - fragPos);
     // diffuse shading
     float diff = max(dot(normal, lightDir), 0.0);
     // specular shading
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), uMaterial.shininess);
     // attenuation
-    float distance = length(light.position - fragPos);
+    float distance = length(light.position.xyz - fragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
     // spotlight intensity
-    float theta = dot(lightDir, normalize(-light.direction));
+    float theta = dot(lightDir, normalize(-light.direction.xyz));
     float epsilon = light.cutOff - light.outerCutOff;
     float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
     // combine results
@@ -123,24 +145,6 @@ vec4 calcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir) {
     diffuse *= attenuation * intensity;
     specular *= attenuation * intensity;
     return (ambient + diffuse + specular);
-}
-
-void main() {
-    vec3 normal = normalize(fs_in.Normal);
-    vec3 camDir = normalize(uCamPos - fs_in.Pos);
-    // texture color
-    vec4 grassTexture = texture(texture_diffuse0, fs_in.TexCoord1);
-    vec4 rockTexture = texture(texture_diffuse1, fs_in.TexCoord1);
-    vec4 mixTexture = texture(texture_mixmap0, fs_in.TexCoord0);
-
-    diffuseTexture = mix(grassTexture, rockTexture, mixTexture);
-    specularTexture = texture(texture_specular0, fs_in.TexCoord1);
-    // result
-    vec4 resultColor = calcDirLight(uDirLight, normal, camDir);
-    resultColor += calcPointLight(uPointLight, normal, fs_in.Pos, camDir);
-    resultColor += calcSpotLight(uSpotLight, normal, fs_in.Pos, camDir);
-    // out
-    FragColor = resultColor;
 }
 
 // https://learnopengl.com/Lighting/Multiple-lights

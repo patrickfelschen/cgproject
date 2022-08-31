@@ -18,23 +18,13 @@ ParticleShader::ParticleShader() : Shader(VERT, FRAG) {
 ParticleShader::~ParticleShader() = default;
 
 void ParticleShader::setUniforms() {
-    setUniform("uProjection", projection);
     setUniform("uTransform", transform);
-    setUniform("uView", view);
     setUniform("uColor", color);
     setUniform("uScale", scale);
 }
 
 void ParticleShader::setTransform(const Matrix &t) {
     this->transform = t;
-}
-
-void ParticleShader::setView(const Matrix &v) {
-    this->view = v;
-}
-
-void ParticleShader::setProjection(const Matrix &p) {
-    this->projection = p;
 }
 
 void ParticleShader::setColor(const Color &c) {

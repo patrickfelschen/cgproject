@@ -3,6 +3,8 @@
 //
 
 #include "Game.h"
+#include "buffers/UniformBuffer.h"
+#include "managers/LightManager.h"
 
 #define TARGET_COUNT 35
 #define PARTICLE_COUNT 400
@@ -21,11 +23,26 @@ TerrainEntity *terrainEntity;
 
 ParticleManager *particleManager;
 TerrainManager *terrainManager;
+LightManager *lightManager;
 
 unsigned int hitCount = 0;
 unsigned int life = 3;
 
+struct Matrices {
+    Matrix projection;
+    Matrix view;
+    Vector3f camPos; float padding0;
+} matrices;
+
+UniformBuffer *uboMatrices;
+
 Game::Game(Camera *camera) : camera(camera) {
+    uboMatrices = new UniformBuffer(sizeof(Matrices), 0);
+    matrices.projection = camera->getProj();
+    uboMatrices->setSubData(offsetof(Matrices, projection), sizeof(Matrix), &matrices.projection.m);
+
+    lightManager = new LightManager(camera);
+
     // Modelle
     caseModel = new ObjectModel(new PhongShader(), "../assets/Objects/Case/4VIOFB4XH3KJI43V6ILU5L0S5.obj");
     gunModel = new ObjectModel(new PhongShader(), "../assets/Objects/Gun/ZE8FK2UU5PF8Y5F5777X34XII.obj");
@@ -77,7 +94,7 @@ void Game::processKeyInput(int key, int action) {
     if (key == GLFW_KEY_R && action == GLFW_PRESS) {
         gunEntity->reload();
     }
-    if(!isAlive && (key == GLFW_KEY_SPACE && action == GLFW_PRESS)) {
+    if (!isAlive && (key == GLFW_KEY_SPACE && action == GLFW_PRESS)) {
         initNewGame();
     }
 }
@@ -87,7 +104,7 @@ void Game::processMouseInput(float xpos, float ypos) {
 }
 
 void Game::update(float deltaTime) {
-    if(isAlive) {
+    if (isAlive) {
         // Kamera aktualisieren
         camera->update(deltaTime);
         // Alle Ziele aktualisieren
@@ -112,7 +129,7 @@ void Game::update(float deltaTime) {
         }
         // Alle Cases aktualisieren
         for (StaticEntity *entity: cases) {
-            if(checkPlayerCollision(entity, camera, 1.0f)) {
+            if (checkPlayerCollision(entity, camera, 1.0f)) {
                 particleManager->spawn(entity->getPosition(), Color(0.0f, 0.0f, 1.0f, 1.0f));
                 entity->setPosition(terrainEntity->getRandomPosition(Vector3f(0.0f, 0.33f, 0.0f)));
                 gunEntity->addMagazines(2);
@@ -135,13 +152,17 @@ void Game::update(float deltaTime) {
         GUIManager::getInstance().updateScoreWindow(hitCount);
         GUIManager::getInstance().updateLifeWindow(life);
         GUIManager::getInstance().drawFPSCounter();
-    }
-    else {
+    } else {
         GUIManager::getInstance().drawInfo("Game over! Press Space to restart.");
     }
 }
 
 void Game::render() {
+    matrices.view = camera->getView();
+    uboMatrices->setSubData(offsetof(Matrices, view), sizeof(Matrix), &matrices.view.m);
+
+    lightManager->render();
+
     // Alle Ziele zeichnen
     for (EnemyEntity *entity: targets) {
         entity->render(*camera);

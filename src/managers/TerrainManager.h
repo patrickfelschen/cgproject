@@ -9,6 +9,7 @@
 #include <vector>
 #include "../entities/Entity.h"
 #include "../entities/TerrainEntity.h"
+#include "LightManager.h"
 
 class TerrainManager {
 public:
