@@ -52,6 +52,7 @@ void GunEntity::reload() {
 void GunEntity::startShoot(const Camera &camera) {
     if (!readyToFire || ammo == 0 || reloading) return;
 
+    SoundManager::getInstance().play2DSound("../assets/Sounds/gunshot.mp3");
     ammo--;
     Ray ray;
     ray.origin = camera.getPosition();

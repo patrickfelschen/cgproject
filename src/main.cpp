@@ -9,6 +9,8 @@
 #include <iostream>
 #include "Game.h"
 #include "managers/GUIManager.h"
+#include "managers/SoundManager.h"
+#include <irrKlang.h>
 
 void glfwFramebufferSizeCallback(GLFWwindow *window, int width, int height);
 
@@ -89,11 +91,22 @@ int main(int argc, char **argv) {
 
     glDebugMessageCallback(glErrorCallback, nullptr);
 
+    SoundManager::getInstance().init(
+            {
+                "../assets/Sounds/getout.ogg",
+                "../assets/Sounds/pop.mp3",
+                "../assets/Sounds/gunshot.mp3",
+                "../assets/Sounds/night-ambience-17064.mp3",
+                "../assets/Sounds/step.mp3"
+            }
+    );
     GUIManager::getInstance().init(window, SCR_WIDTH, SCR_HEIGHT);
     GUIManager::getInstance().setFont("../assets/Fonts/font.ttf");
 
     camera = new Camera(window);
     game = new Game(camera);
+
+    SoundManager::getInstance().play2DSound("../assets/Sounds/getout.ogg", true);
 
     {
         double lastTime = 0;
@@ -125,6 +138,7 @@ int main(int argc, char **argv) {
     }
 
     GUIManager::getInstance().destroy();
+    SoundManager::getInstance().destroy();
     glfwTerminate();
     delete game;
     delete camera;
