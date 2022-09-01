@@ -39,6 +39,8 @@ public:
     void render();
 
 private:
+    UniformBuffer *uboMatrices;
+
     std::vector<Entity *> entities;
     std::vector<EnemyEntity *> targets;
     std::vector<StaticEntity *> magazineCases;
@@ -53,6 +55,32 @@ private:
 
     bool checkPlayerCollision(Entity *entity, Camera *camera, float hitOffset) const;
 
+    ObjectModel *gunModel;
+    ObjectModel *ghostModel;
+    ObjectModel *skyboxModel;
+    ObjectModel *magazineCaseModel;
+    ObjectModel *medicCaseModel;
+    TerrainModel *terrainModel;
+
+    GunEntity *gunEntity;
+    SkyboxEntity *skyboxEntity;
+    TerrainEntity *terrainEntity;
+
+    ParticleManager *particleManager;
+    TerrainManager *terrainManager;
+    LightManager *lightManager;
+
+    bool gameRestart = false;
+    float targetSpeed = 1.0f;
+    unsigned int hitCount = 0;
+    unsigned int maxLife = 5;
+    unsigned int life = 5;
+
+    struct Matrices {
+        Matrix projection;
+        Matrix view;
+        Vector3f camPos; float padding0;
+    } matrices;
 };
 
 

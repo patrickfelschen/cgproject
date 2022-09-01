@@ -12,36 +12,6 @@
 #define MEDIC_CASE_COUNT 50
 #define MAGAZINE_CASE_COUNT 20
 
-ObjectModel *gunModel;
-ObjectModel *ghostModel;
-ObjectModel *skyboxModel;
-ObjectModel *magazineCaseModel;
-ObjectModel *medicCaseModel;
-
-TerrainModel *terrainModel;
-
-GunEntity *gunEntity;
-SkyboxEntity *skyboxEntity;
-TerrainEntity *terrainEntity;
-
-ParticleManager *particleManager;
-TerrainManager *terrainManager;
-LightManager *lightManager;
-
-bool gameRestart = false;
-float targetSpeed = 1.0f;
-unsigned int hitCount = 0;
-unsigned int maxLife = 5;
-unsigned int life = 5;
-
-struct Matrices {
-    Matrix projection;
-    Matrix view;
-    Vector3f camPos; float padding0;
-} matrices;
-
-UniformBuffer *uboMatrices;
-
 Game::Game(Camera *camera) : camera(camera) {
     uboMatrices = new UniformBuffer(sizeof(Matrices), 0);
     matrices.projection = camera->getProj();
@@ -97,7 +67,34 @@ Game::Game(Camera *camera) : camera(camera) {
     terrainManager = new TerrainManager(terrainEntity, lightManager);
 }
 
-Game::~Game() {};
+Game::~Game() {
+    delete particleManager;
+    delete terrainManager;
+    delete lightManager;
+
+    delete gunEntity;
+    delete skyboxEntity;
+    delete terrainEntity;
+
+    delete terrainModel;
+    delete gunModel;
+    delete ghostModel;
+    delete skyboxModel;
+    delete magazineCaseModel;
+    delete medicCaseModel;
+
+    for (EnemyEntity *entity: targets) {
+        delete entity;
+    }
+    for (StaticEntity *entity: magazineCases) {
+        delete entity;
+    }
+    for (StaticEntity *entity: medicCases) {
+        delete entity;
+    }
+
+    delete uboMatrices;
+};
 
 void Game::processKeyInput(int key, int action) {
     if (key == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {

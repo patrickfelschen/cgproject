@@ -8,17 +8,16 @@
 #define TO_RAD(deg) (deg * std::numbers::pi / 180.0)
 
 LightManager::LightManager(const Camera *camera) : camera(camera) {
+    this->uboSpotLights = new UniformBuffer(sizeof(Lights), 1);
+
     // SPOTS
     // addSpot(Vector3f(0, 2, 0), down);
 
     // DIRS
-    //addDir(down);
+    addDir(Vector3f(0, -1, 0));
 
     // POINTS
     // addPoint(Vector3f(0, 3, 0));
-
-    this->uboSpotLights = new UniformBuffer(sizeof(Lights), 1);
-    //this->uboSpotLights->setSubData(0, sizeof(Lights), &lights);
 }
 
 LightManager::~LightManager() {
@@ -97,9 +96,9 @@ void LightManager::addDir(Vector3f dir) {
 
     l.direction = dir;
 
-    l.ambient = Color(0.05f, 0.05f, 0.05f);
-    l.diffuse = Color(0.4f, 0.4f, 0.4f);
-    l.specular = Color(0.5f, 0.5f, 0.5f);
+    l.ambient = Color(0.010f, 0.010f, 0.010f);
+    l.diffuse = Color(0.010f, 0.010f, 0.010f);
+    l.specular = Color(0.005f, 0.005f, 0.005f);
 
     this->lights.staticLights[lights.staticLightsCount++] = l;
     this->uboSpotLights->setSubData(0, sizeof(Lights), &lights);
