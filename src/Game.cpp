@@ -7,7 +7,7 @@
 #include "managers/LightManager.h"
 #include "shaders/GunShader.h"
 
-#define TARGET_COUNT 1
+#define TARGET_COUNT 50
 #define MEDIC_CASE_COUNT 50
 #define MAGAZINE_CASE_COUNT 20
 
