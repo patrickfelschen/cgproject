@@ -16,7 +16,9 @@ public:
 
     virtual void update(float deltaTime);
 
-    virtual void render(const Camera &camera) = 0;
+    virtual void render() = 0;
+
+    virtual AABB getTransformedBoundingBox() const = 0;
 
     void setPosition(const Vector3f &pos);
 

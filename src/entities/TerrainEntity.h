@@ -17,9 +17,13 @@ public:
 
     void update(float deltaTime) override;
 
-    void render(const Camera &camera) override;
+    void render() override;
+
+    AABB getTransformedBoundingBox() const override;
 
     Vector3f getRandomPosition(Vector3f offset = Vector3f()) const;
+
+    float getHeightOfPosition(Vector3f position) const;
 private:
     const TerrainModel *model;
 };

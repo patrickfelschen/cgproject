@@ -17,7 +17,9 @@ public:
 
     void update(float deltaTime) override;
 
-    void render(const Camera &camera) override;
+    AABB getTransformedBoundingBox() const override;
+
+    void render() override;
 
     const Color &getColor() const;
 

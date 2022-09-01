@@ -19,7 +19,7 @@ public:
 
     void update(float deltaTime);
 
-    void render(const Camera& camera);
+    void render();
 
 private:
     const TerrainEntity* terrainEntity;

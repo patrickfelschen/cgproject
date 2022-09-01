@@ -18,45 +18,50 @@ TerrainManager::TerrainManager(const TerrainEntity *terrainEntity, LightManager 
 
     // Bäume
     for (unsigned int i = 0; i < STATIC_OBJECTS_COUNT; i++) {
-        auto *entity = new StaticEntity(treeModel);
-        entity->setPosition(terrainEntity->getRandomPosition(Vector3f(0.0f, 2.0f, 0.0f)));
+        auto *entity = new StaticEntity(treeModel, terrainEntity);
         entity->setScaling(3.0f);
         entity->setRotation(Vector3f(0, Random::randFloat(0, 360), 0));
+        entity->setSpawnOffset(Vector3f(0.0f, 2.0f, 0.0f));
+        entity->respawn();
         entities.push_back(entity);
     }
     // Holz
     for (unsigned int i = 0; i < STATIC_OBJECTS_COUNT; i++) {
-        auto *entity = new StaticEntity(woodModel);
-        entity->setPosition(terrainEntity->getRandomPosition());
+        auto *entity = new StaticEntity(woodModel, terrainEntity);
         entity->setScaling(0.5f);
         entity->setRotation(Vector3f(0, Random::randFloat(0, 360), 0));
+        entity->setSpawnOffset(Vector3f(0.0f, 0.1f, 0.0f));
+        entity->respawn();
         entities.push_back(entity);
     }
     // Blumen rot
     for (unsigned int i = 0; i < STATIC_OBJECTS_COUNT; i++) {
-        auto *entity = new StaticEntity(flowerRedModel);
-        entity->setPosition(terrainEntity->getRandomPosition(Vector3f(0.0f, 0.3f, 0.0f)));
+        auto *entity = new StaticEntity(flowerRedModel, terrainEntity);
         entity->setScaling(0.2f);
         entity->setRotation(Vector3f(0, Random::randFloat(0, 360), 0));
+        entity->setSpawnOffset(Vector3f(0.0f, 0.3f, 0.0f));
+        entity->respawn();
         entities.push_back(entity);
     }
     // Blumen gelb
     for (unsigned int i = 0; i < STATIC_OBJECTS_COUNT; i++) {
-        auto *entity = new StaticEntity(flowerYellowModel);
-        entity->setPosition(terrainEntity->getRandomPosition(Vector3f(0.0f, 0.3f, 0.0f)));
+        auto *entity = new StaticEntity(flowerYellowModel, terrainEntity);
         entity->setScaling(0.2f);
         entity->setRotation(Vector3f(0, Random::randFloat(0, 360), 0));
+        entity->setSpawnOffset(Vector3f(0.0f, 0.3f, 0.0f));
+        entity->respawn();
         entities.push_back(entity);
     }
     // Laternen
     for (unsigned int i = 0; i < LIGHT_POLE_COUNT; i++) {
-        auto *entity = new StaticEntity(lightPoleModel);
-        Vector3f pos = terrainEntity->getRandomPosition(Vector3f(0.0f, 1.2f, 0.0f));
-        entity->setPosition(pos);
-        pos += Vector3f(0, 0.6f, 0);
-        lightManager->addPoint(pos);
+        auto *entity = new StaticEntity(lightPoleModel, terrainEntity);
         entity->setScaling(1.0f);
         entity->setRotation(Vector3f(0, Random::randFloat(0, 360), 0));
+        entity->setSpawnOffset(Vector3f(0.0f, 1.2f, 0.0f));
+        entity->respawn();
+        // Licht positionieren
+        Vector3f lightPosOffset = Vector3f(0, 0.6f, 0);
+        lightManager->addPoint(entity->getPosition() + lightPosOffset);
         entities.push_back(entity);
     }
 }
@@ -66,6 +71,10 @@ TerrainManager::~TerrainManager() {
     delete flowerRedModel;
     delete woodModel;
     delete treeModel;
+
+    for (Entity *entity: entities) {
+        delete entity;
+    }
 }
 
 void TerrainManager::update(float deltaTime) {
@@ -74,8 +83,8 @@ void TerrainManager::update(float deltaTime) {
     }
 }
 
-void TerrainManager::render(const Camera &camera) {
+void TerrainManager::render() {
     for (Entity *entity: entities) {
-        entity->render(camera);
+        entity->render();
     }
 }

@@ -15,7 +15,7 @@ void TerrainEntity::update(float deltaTime) {
     Entity::update(deltaTime);
 }
 
-void TerrainEntity::render(const Camera &camera) {
+void TerrainEntity::render() {
     this->model->shader->setTransform(transformation);
     this->model->render();
 }
@@ -25,4 +25,12 @@ Vector3f TerrainEntity::getRandomPosition(Vector3f offset) const {
     float z = Random::randFloat(-100, 100);
     float y = this->model->getHeightOfTerrain(x, z);
     return Vector3f(x,y,z) + offset;
+}
+
+AABB TerrainEntity::getTransformedBoundingBox() const {
+    return this->model->getBoundingBox().transform(transformation);
+}
+
+float TerrainEntity::getHeightOfPosition(Vector3f position) const {
+    return this->model->getHeightOfTerrain(position.x, position.z);
 }

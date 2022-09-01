@@ -10,12 +10,6 @@
 #include "EnemyEntity.h"
 #include "../managers/GUIManager.h"
 
-struct sortPosAsc {
-    bool operator()(EnemyEntity *c1, EnemyEntity *c2) const {
-        return c1->getDistanceToPlayer() < c2->getDistanceToPlayer();
-    }
-};
-
 class GunEntity : public Entity {
 public:
     explicit GunEntity(ObjectModel *model);
@@ -24,11 +18,11 @@ public:
 
     void update(float deltaTime) override;
 
-    void render(const Camera &camera) override;
+    AABB getTransformedBoundingBox() const override;
 
-    void setTargets(const std::vector<EnemyEntity *> &v);
+    void render() override;
 
-    void startShoot(const Camera &camera);
+    bool startShoot();
 
     void endShoot();
 
@@ -36,25 +30,22 @@ public:
 
     void addMagazines(unsigned int count);
 
-    void setAmmo(unsigned int ammo);
+    void setAmmo(unsigned int count);
 
-    void setMagazines(unsigned int magazines);
+    void setMagazines(unsigned int count);
 
 private:
     const ObjectModel *model;
-    std::vector<EnemyEntity *> targets;
 
-    float range = 100.0f;
+    bool readyToFire;
 
-    bool readyToFire = true;
+    bool reloading;
+    float reloadTime;
+    float reloadTimer;
 
-    bool reloading = false;
-    float reloadTime = 1.25f;
-    float reloadTimer = 0;
-
-    unsigned int ammo = 30;
-    unsigned int maxAmmo = 30;
-    unsigned int magazines = 5;
+    unsigned int ammo;
+    unsigned int maxAmmo;
+    unsigned int magazines;
 };
 
 

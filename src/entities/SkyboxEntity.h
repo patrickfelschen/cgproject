@@ -14,7 +14,9 @@ public:
 
     ~SkyboxEntity() override;
 
-    void render(const Camera &camera) override;
+    void render() override;
+
+    AABB getTransformedBoundingBox() const override;
 
 private:
     const ObjectModel *model;
