@@ -62,6 +62,7 @@ void PlayerEntity::update(float deltaTime) {
             particleManager->spawn(medicCase->getPosition(), Color(0.0f, 1.0f, 0.0f, 1.0f));
             medicCase->respawn();
             increaseLife(1);
+
         }
         medicCase->update(deltaTime);
     }
@@ -89,7 +90,7 @@ void PlayerEntity::update(float deltaTime) {
             decreaseLife(1);
             SoundManager::getInstance().play2DSound("../assets/Sounds/hit.mp3");
             SoundManager::getInstance().play2DSound("../assets/Sounds/damage.mp3");
-            //particleManager->spawn(entity->getPosition(), Color(1.0f, 0.0f, 0.0f, 1.0f));
+            particleManager->spawn(enemy->getPosition(), Color(1.0f, 0.0f, 0.0f, 1.0f));
             enemy->respawn();
         }
 
