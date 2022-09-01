@@ -41,8 +41,6 @@ private:
     float groundOffset = 0.2f;
     Vector3f targetPosition;
 
-    const ObjectModel *model;
-
     irrklang::ISound *sound;
 };
 

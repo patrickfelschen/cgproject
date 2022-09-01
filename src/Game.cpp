@@ -75,7 +75,6 @@ void Game::initEntities() {
     // Gegner
     for (unsigned int i = 0; i < TARGET_COUNT; i++) {
         auto *entity = new EnemyEntity(ghostModel, terrainEntity);
-        entity->setPosition(terrainEntity->getRandomPosition(Vector3f(0.0f, 0.5f, 0.0f)));
         entity->setTargetPosition(camera->getPosition());
         entity->respawn();
         enemies.push_back(entity);

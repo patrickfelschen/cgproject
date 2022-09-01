@@ -62,7 +62,7 @@ void GunEntity::reload() {
 
 bool GunEntity::startShoot() {
     if (!readyToFire || ammo == 0 || reloading) {
-        //SoundManager::getInstance().play2DSound("../assets/Sounds/gun-dry-firing-7-39792.mp3");
+        SoundManager::getInstance().play2DSound("../assets/Sounds/gun-dry-firing-7-39792.mp3");
         return false;
     }
 
