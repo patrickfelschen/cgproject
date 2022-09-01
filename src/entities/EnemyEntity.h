@@ -9,7 +9,7 @@ class EnemyEntity : public Entity {
 public:
     explicit EnemyEntity(const ObjectModel *model, const TerrainEntity* terrainEntity);
 
-    ~EnemyEntity();
+    ~EnemyEntity() override;
 
     void update(float deltaTime) override;
 
