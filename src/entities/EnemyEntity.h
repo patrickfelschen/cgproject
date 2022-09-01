@@ -27,6 +27,8 @@ public:
 
     void decreaseLife(unsigned int value);
 
+    irrklang::ISound *getSound() const;
+
 private:
     const ObjectModel *model;
     const TerrainEntity *terrainEntity;

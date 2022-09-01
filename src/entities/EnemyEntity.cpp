@@ -71,3 +71,7 @@ void EnemyEntity::decreaseLife(unsigned int value) {
     if(life <= 0) return;
     life -= value;
 }
+
+irrklang::ISound *EnemyEntity::getSound() const {
+    return sound;
+}

@@ -93,6 +93,9 @@ void PlayerEntity::update(float deltaTime) {
             enemy->respawn();
         }
 
+        float distance = enemy->getSound()->getPosition().getDistanceFrom(irrklang::vec3df(this->position.x, this->position.y, this->position.z));
+        (distance < 7.0f) ? enemy->getSound()->setVolume(std::clamp(distance, 0.0f, 1.0f)) : enemy->getSound()->setVolume(0.0f);
+
         enemy->setTargetPosition(camera->getPosition());
         //entity->setSpeed(targetSpeed);
         enemy->update(deltaTime);
