@@ -111,7 +111,6 @@ void Camera::handleKeyboardInputs(float deltaTime) {
     else {
         SoundManager::getInstance().stopSound("../assets/Sounds/step.mp3");
     }
-
 }
 
 void Camera::handleMouseInputs(float mouseX, float mouseY) {
@@ -130,8 +129,4 @@ void Camera::handleMouseInputs(float mouseX, float mouseY) {
 
     if (pitch > 89.0f) pitch = 89.0f;
     if (pitch < -89.0f) pitch = -89.0f;
-}
-
-const Vector3f & Camera::getDirection() const {
-    return target;
 }

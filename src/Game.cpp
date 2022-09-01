@@ -7,7 +7,7 @@
 #include "managers/LightManager.h"
 #include "shaders/GunShader.h"
 
-#define TARGET_COUNT 35
+#define TARGET_COUNT 1
 #define MEDIC_CASE_COUNT 50
 #define MAGAZINE_CASE_COUNT 20
 
@@ -75,6 +75,7 @@ void Game::initEntities() {
     // Gegner
     for (unsigned int i = 0; i < TARGET_COUNT; i++) {
         auto *entity = new EnemyEntity(ghostModel, terrainEntity);
+        entity->setScaling(0.2f);
         entity->setTargetPosition(camera->getPosition());
         entity->respawn();
         enemies.push_back(entity);
@@ -138,12 +139,12 @@ void Game::processMouseInput(float xpos, float ypos) {
 }
 
 void Game::update(float deltaTime) {
-    SoundManager::getInstance().setListenerPos(camera->getPosition(), camera->getDirection() - camera->getPosition());
     if (playerEntity->isAlive()) {
         float playerY = terrainModel->getHeightOfTerrain(camera->getPosition().x, camera->getPosition().z);
         camera->setPosition(Vector3f(camera->getPosition().x, playerY + 1.0f, camera->getPosition().z));
         // Kamera aktualisieren
         camera->update(deltaTime);
+        SoundManager::getInstance().setListenerPos(camera);
         // Spieler aktualisieren
         playerEntity->update(deltaTime);
         // Alle Einheiten aktualisieren

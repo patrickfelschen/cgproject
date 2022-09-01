@@ -25,7 +25,7 @@ LightManager::~LightManager() {
 }
 
 void LightManager::render() {
-    setDynamicLight(camera->getPosition(), camera->getDirection());
+    setDynamicLight(camera->getPosition(), camera->getTarget());
     this->uboSpotLights->setSubData(offsetof(Lights, dynamicLight), sizeof(Light), &lights.dynamicLight);
 }
 

@@ -54,7 +54,7 @@ void PlayerEntity::update(float deltaTime) {
     this->setPosition(camera->getPosition());
     this->gunEntity->update(deltaTime);
 
-    Ray camRay = Ray(camera->getPosition(), camera->getDirection());
+    Ray camRay = Ray(camera->getPosition(), camera->getTarget());
 
     for (StaticEntity *medicCase: this->medicCases) {
         if (checkEntityRayCollision(medicCase, camRay, 2.0f)) {

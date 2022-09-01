@@ -6,6 +6,7 @@
 #include <cstdarg>
 #include <iostream>
 #include "../maths/Vector3f.h"
+#include "../utils/Camera.h"
 
 class SoundManager {
 private:
@@ -27,7 +28,7 @@ public:
 
     irrklang::ISound* play3DSound(const char *file, const Vector3f &pos, bool loop = false, bool startPaused = false);
 
-    void setListenerPos(const Vector3f &pos, const Vector3f &dir);
+    void setListenerPos(const Camera* camera);
 
     void stopPlaying();
 

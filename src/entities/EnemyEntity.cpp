@@ -12,14 +12,13 @@ EnemyEntity::EnemyEntity(const ObjectModel *model, const TerrainEntity *terrainE
     this->maxLife = 1;
     this->life = maxLife;
     this->speed = Random::randFloat(1, 2);
-    setScaling(0.2f);
-    this->sound = SoundManager::getInstance().play3DSound("../assets/Sounds/ghost.mp3", this->position, true,true);
+    this->sound = SoundManager::getInstance().play3DSound("../assets/Sounds/ghost.mp3", this->position, true, true);
     this->sound->setIsPaused(false);
     this->sound->setVolume(0.0f);
 }
 
 EnemyEntity::~EnemyEntity() {
-    this->sound ->drop();
+    this->sound->drop();
 }
 
 void EnemyEntity::respawn() {
@@ -68,7 +67,7 @@ bool EnemyEntity::isDead() const {
 }
 
 void EnemyEntity::decreaseLife(unsigned int value) {
-    if(life <= 0) return;
+    if (life <= 0) return;
     life -= value;
 }
 
