@@ -14,6 +14,16 @@ GunEntity::GunEntity(ObjectModel *model) : Entity() {
     setScaling(0.025);
     setPosition(Vector3f(0.026, -0.015, -0.045));
     setRotation(Vector3f(0, -95, 0));
+
+    readyToFire = true;
+
+    reloading = false;
+    reloadTime = 1.25f;
+    reloadTimer = 0;
+
+    maxAmmo = 30;
+    ammo = maxAmmo;
+    magazines = 5;
 }
 
 GunEntity::~GunEntity() = default;
@@ -34,7 +44,7 @@ void GunEntity::update(float deltaTime) {
     Entity::update(deltaTime);
 }
 
-void GunEntity::render(const Camera &camera) {
+void GunEntity::render() {
     this->model->shader->setTransform(transformation);
     this->model->render();
 
@@ -50,45 +60,36 @@ void GunEntity::reload() {
     }
 }
 
-void GunEntity::startShoot(const Camera &camera) {
-    if (!readyToFire || ammo == 0 || reloading) return;
+bool GunEntity::startShoot() {
+    if (!readyToFire || ammo == 0 || reloading) {
+        //SoundManager::getInstance().play2DSound("../assets/Sounds/gun-dry-firing-7-39792.mp3");
+        return false;
+    }
 
     SoundManager::getInstance().play2DSound("../assets/Sounds/gunshot.mp3");
     ammo--;
-    Ray ray;
-    ray.origin = camera.getPosition();
-    ray.direction = camera.getDirection() * range;
-    std::sort(targets.begin(), targets.end(), sortPosAsc());
-    for (auto & target : targets) {
-        bool intersection = target->getTransformedBoundingBox().intersection(ray);
-        if (intersection) {
-            target->hit = true;
-            break;
-        }
-        //printf("Element: %i - Distance: %f\n", i, targets.at(i)->getDistanceToPlayer());
-    }
     readyToFire = false;
-
+    return true;
 }
 
 void GunEntity::endShoot() {
     readyToFire = true;
 }
 
-void GunEntity::setTargets(const std::vector<EnemyEntity *> &v) {
-    targets = v;
-}
-
 void GunEntity::addMagazines(unsigned int count) {
     this->magazines += count;
 }
 
-void GunEntity::setAmmo(unsigned int ammo) {
-    GunEntity::ammo = ammo;
+void GunEntity::setAmmo(unsigned int count) {
+    this->ammo = count;
 }
 
-void GunEntity::setMagazines(unsigned int magazines) {
-    GunEntity::magazines = magazines;
+void GunEntity::setMagazines(unsigned int count) {
+    this->magazines = count;
+}
+
+AABB GunEntity::getTransformedBoundingBox() const {
+    return this->model->getBoundingBox().transform(transformation);
 }
 
 

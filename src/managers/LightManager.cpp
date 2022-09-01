@@ -10,13 +10,13 @@
 LightManager::LightManager(const Camera *camera) : camera(camera) {
     this->uboSpotLights = new UniformBuffer(sizeof(Lights), 1);
 
-    // SPOTS
+    // STATIC SPOTS
     // addSpot(Vector3f(0, 2, 0), down);
 
-    // DIRS
+    // STATIC DIRS
     addDir(Vector3f(0, -1, 0));
 
-    // POINTS
+    // STATIC POINTS
     // addPoint(Vector3f(0, 3, 0));
 }
 

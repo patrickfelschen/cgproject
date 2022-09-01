@@ -1,18 +1,16 @@
 #ifndef CG_AABB_H
 #define CG_AABB_H
 
-
 #include "../maths/Vector3f.h"
 #include "../maths/Matrix.h"
-struct Ray {
-    Ray() {
-        origin = Vector3f();
-        direction = Vector3f();
-    }
 
+struct Ray {
+    Ray(Vector3f origin, Vector3f direction) {
+        this->origin = origin;
+        this->direction = direction;
+    }
     Vector3f origin;
     Vector3f direction;
-
 };
 
 class AABB {

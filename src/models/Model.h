@@ -24,6 +24,7 @@ public:
 
 protected:
     std::vector<Mesh> meshes;
+
     AABB boundingBox;
 
     void setBoundingBox();

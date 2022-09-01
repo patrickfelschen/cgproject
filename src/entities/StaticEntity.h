@@ -8,19 +8,29 @@
 
 #include "../models/ObjectModel.h"
 #include "Entity.h"
+#include "TerrainEntity.h"
 
 class StaticEntity : public Entity {
 public:
-    explicit StaticEntity(const ObjectModel *model);
+    explicit StaticEntity(const ObjectModel *model, const TerrainEntity *terrainEntity);
 
     ~StaticEntity() override;
 
     void update(float deltaTime) override;
 
-    void render(const Camera &camera) override;
+    AABB getTransformedBoundingBox() const override;
+
+    void render() override;
+
+    void respawn();
+
+    void setSpawnOffset(const Vector3f &spawnOffset);
 
 private:
     const ObjectModel *model;
+    const TerrainEntity *terrainEntity;
+
+    Vector3f spawnOffset;
 };
 
 

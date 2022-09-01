@@ -17,7 +17,7 @@ public:
 
     void update(float deltaTime);
 
-    void render(const Camera &camera);
+    void render();
 
     void spawn(const Vector3f &origin, Color color);
 

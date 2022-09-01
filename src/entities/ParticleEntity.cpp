@@ -18,7 +18,7 @@ void ParticleEntity::update(float deltaTime) {
     Entity::update(deltaTime);
 }
 
-void ParticleEntity::render(const Camera &camera) {
+void ParticleEntity::render() {
     this->model->shader->setTransform(transformation);
     this->model->shader->setColor(color);
     this->model->shader->setScale(scale);
@@ -45,4 +45,8 @@ void ParticleEntity::setLife(float l) {
 
 void ParticleEntity::setScale(float s) {
     this->scale = s;
+}
+
+AABB ParticleEntity::getTransformedBoundingBox() const {
+    return this->model->getBoundingBox().transform(transformation);
 }

@@ -1,13 +1,16 @@
 #include "EnemyEntity.h"
 #include "../maths/Random.h"
+#include "TerrainEntity.h"
 #include <algorithm>
 
 #define TO_RAD(deg) (deg * std::numbers::pi / 180.0)
 #define TO_DEG(rad) (rad * 180.0 / std::numbers::pi)
 
-EnemyEntity::EnemyEntity(const ObjectModel* model) : Entity() {
+EnemyEntity::EnemyEntity(const ObjectModel *model, const TerrainEntity *terrainEntity) : Entity() {
     this->model = model;
-    this->hit = false;
+    this->terrainEntity = terrainEntity;
+    this->maxLife = 1;
+    this->life = maxLife;
     this->speed = Random::randFloat(1, 2);
     setScaling(0.2f);
     this->sound = SoundManager::getInstance().play3DSound("../assets/Sounds/ghost.mp3", this->position, true,true);
@@ -19,49 +22,33 @@ EnemyEntity::~EnemyEntity() {
     this->sound ->drop();
 }
 
-void EnemyEntity::respawn(const Vector3f &pos) {
-    this->hit = false;
-    setPosition(pos);
+void EnemyEntity::respawn() {
+    this->life = maxLife;
+    Vector3f newPos = terrainEntity->getRandomPosition(Vector3f(0, 1.2f, 0));
+    setPosition(newPos);
 }
 
-float yawOffset = 90;
-float pitchOffset = 20;
 void EnemyEntity::update(float deltaTime) {
+    // Objekt zum Spieler drehen
     Vector3f dirToTarget = (targetPosition - position).normalize();
-
     float pitch = asin(-dirToTarget.y);
     float yaw = atan2(dirToTarget.x, dirToTarget.z);
-
     yaw = TO_DEG(yaw) + yawOffset;
     pitch = TO_DEG(pitch) + pitchOffset;
-
-//  Vector3f nextPos = dirToTarget speed + Vector3f(0.0f, (gravity * deltaTime) * 3, 0.0f);
-
-    sound->setPosition(irrklang::vec3df(this->position.x, this->position.y, this->position.z));
     setRotation(Vector3f(0.0f, yaw, pitch));
+    // Objekt bewegen und auf Terrainoberfläche halten
     setPositionVelocity(dirToTarget * speed);
-    setDistanceToPlayer(position.distanceTo(targetPosition));
+    float height = terrainEntity->getHeightOfPosition(this->getPosition());
+    if (this->getPosition().y <= (height + groundOffset)) {
+        this->setPosition(Vector3f(this->getPosition().x, height + groundOffset, this->getPosition().z));
+    }
+    sound->setPosition(irrklang::vec3df(this->position.x, this->position.y, this->position.z));
     Entity::update(deltaTime);
 }
 
-void EnemyEntity::render(const Camera &camera) {
-    float distance = sound->getPosition().getDistanceFrom(irrklang::vec3df(camera.getPosition().x, camera.getPosition().y, camera.getPosition().z));
-    if(distance < 7.0f) {
-        this->sound->setVolume(std::clamp(distance, 0.0f, 1.0f));
-    }
-    else {
-        this->sound->setVolume(0.0f);
-    }
+void EnemyEntity::render() {
     this->model->shader->setTransform(transformation);
     this->model->render();
-}
-
-float EnemyEntity::getDistanceToPlayer() const {
-    return distanceToPlayer;
-}
-
-void EnemyEntity::setDistanceToPlayer(float distance) {
-    EnemyEntity::distanceToPlayer = distance;
 }
 
 AABB EnemyEntity::getTransformedBoundingBox() const {
@@ -73,5 +60,14 @@ void EnemyEntity::setTargetPosition(const Vector3f &targetPosition) {
 }
 
 void EnemyEntity::setSpeed(float speed) {
-    EnemyEntity::speed = speed;
+    this->speed = speed;
+}
+
+bool EnemyEntity::isDead() const {
+    return life <= 0;
+}
+
+void EnemyEntity::decreaseLife(unsigned int value) {
+    if(life <= 0) return;
+    life -= value;
 }
