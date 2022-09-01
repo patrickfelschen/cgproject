@@ -7,13 +7,16 @@ SoundManager &SoundManager::getInstance() {
 
 void SoundManager::init(std::initializer_list<const char*> sounds) {
     this->soundEngine = irrklang::createIrrKlangDevice();
-    this->soundEngine->setSoundVolume(0.02);
+    if(!this->soundEngine) {
+        std::cerr << "ERROR::SOUNDMANAGER::INIT: Error starting sound engine " << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    this->soundEngine->setSoundVolume(0.1);
 
     for(auto sound: sounds) {
         this->soundEngine->addSoundSourceFromFile(sound);
     }
-
-    printf("IRRKLANG::SOUNDSOURCES: %i\n", this->soundEngine->getSoundSourceCount());
 }
 
 void SoundManager::destroy() {
@@ -36,4 +39,12 @@ void SoundManager::stopPlaying() {
 
 void SoundManager::stopSound(const char *file) {
     this->soundEngine->stopAllSoundsOfSoundSource(this->soundEngine->getSoundSource(file));
+}
+
+irrklang::ISound* SoundManager::play3DSound(const char *file, const Vector3f &pos, bool loop, bool startPaused) {
+    return this->soundEngine->play3D(file, irrklang::vec3df(pos.x, pos.y, pos.z), loop, startPaused);
+}
+
+void SoundManager::setListenerPos(const Vector3f &pos, const Vector3f &dir) {
+    this->soundEngine->setListenerPosition(irrklang::vec3df(pos.x, pos.y, pos.z), irrklang::vec3df(dir.x, dir.y, dir.z));
 }

@@ -119,6 +119,7 @@ void Game::processMouseInput(float xpos, float ypos) {
 }
 
 void Game::update(float deltaTime) {
+    SoundManager::getInstance().setListenerPos(camera->getPosition(), camera->getDirection() - camera->getPosition());
     if (isAlive) {
         // Kamera aktualisieren
         camera->update(deltaTime);

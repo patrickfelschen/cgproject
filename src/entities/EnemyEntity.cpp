@@ -1,5 +1,6 @@
 #include "EnemyEntity.h"
 #include "../maths/Random.h"
+#include <algorithm>
 
 #define TO_RAD(deg) (deg * std::numbers::pi / 180.0)
 #define TO_DEG(rad) (rad * 180.0 / std::numbers::pi)
@@ -9,9 +10,14 @@ EnemyEntity::EnemyEntity(const ObjectModel* model) : Entity() {
     this->hit = false;
     this->speed = Random::randFloat(1, 2);
     setScaling(0.2f);
+    this->sound = SoundManager::getInstance().play3DSound("../assets/Sounds/ghost.mp3", this->position, true,true);
+    this->sound->setIsPaused(false);
+    this->sound->setVolume(0.0f);
 }
 
-EnemyEntity::~EnemyEntity() = default;
+EnemyEntity::~EnemyEntity() {
+    this->sound ->drop();
+}
 
 void EnemyEntity::respawn(const Vector3f &pos) {
     this->hit = false;
@@ -31,6 +37,7 @@ void EnemyEntity::update(float deltaTime) {
 
 //  Vector3f nextPos = dirToTarget speed + Vector3f(0.0f, (gravity * deltaTime) * 3, 0.0f);
 
+    sound->setPosition(irrklang::vec3df(this->position.x, this->position.y, this->position.z));
     setRotation(Vector3f(0.0f, yaw, pitch));
     setPositionVelocity(dirToTarget * speed);
     setDistanceToPlayer(position.distanceTo(targetPosition));
@@ -38,6 +45,13 @@ void EnemyEntity::update(float deltaTime) {
 }
 
 void EnemyEntity::render(const Camera &camera) {
+    float distance = sound->getPosition().getDistanceFrom(irrklang::vec3df(camera.getPosition().x, camera.getPosition().y, camera.getPosition().z));
+    if(distance < 7.0f) {
+        this->sound->setVolume(std::clamp(distance, 0.0f, 1.0f));
+    }
+    else {
+        this->sound->setVolume(0.0f);
+    }
     this->model->shader->setTransform(transformation);
     this->model->render();
 }

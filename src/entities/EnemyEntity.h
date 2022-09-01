@@ -2,12 +2,13 @@
 #define CG_ENEMYENTITY_H
 
 #include "Entity.h"
+#include "../managers/SoundManager.h"
 
 class EnemyEntity : public Entity {
 public:
     explicit EnemyEntity(const ObjectModel *model);
 
-    ~EnemyEntity() override;
+    ~EnemyEntity();
 
     void update(float deltaTime) override;
 
@@ -32,6 +33,8 @@ private:
     Vector3f targetPosition;
 
     const ObjectModel *model;
+
+    irrklang::ISound *sound;
 };
 
 

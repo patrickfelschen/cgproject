@@ -103,6 +103,7 @@ int main(int argc, char **argv) {
                 "../assets/Sounds/heal.mp3",
                 "../assets/Sounds/damage.mp3",
                 "../assets/Sounds/hit.mp3",
+                "../assets/Sounds/ghost.mp3"
             }
     );
     GUIManager::getInstance().init(window, SCR_WIDTH, SCR_HEIGHT);

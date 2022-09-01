@@ -4,6 +4,8 @@
 #include <irrKlang.h>
 #include <map>
 #include <cstdarg>
+#include <iostream>
+#include "../maths/Vector3f.h"
 
 class SoundManager {
 private:
@@ -24,6 +26,10 @@ public:
     void playSingle2DSound(const char *file);
 
     void play2DSound(const char *file, bool loop = false);
+
+    irrklang::ISound* play3DSound(const char *file, const Vector3f &pos, bool loop = false, bool startPaused = false);
+
+    void setListenerPos(const Vector3f &pos, const Vector3f &dir);
 
     void stopPlaying();
 
