@@ -23,14 +23,11 @@ void SoundManager::destroy() {
     soundEngine->drop();
 }
 
-void SoundManager::playSingle2DSound(const char *file) {
-    if(!this->soundEngine->isCurrentlyPlaying(this->soundEngine->getSoundSource(file))) {
-        this->soundEngine->play2D(this->soundEngine->getSoundSource(file));
+void SoundManager::play2DSound(const char *file, bool loop, bool repeat) {
+    irrklang::ISoundSource *source = this->soundEngine->getSoundSource(file);
+    if((repeat && !this->soundEngine->isCurrentlyPlaying(source)) || !repeat) {
+        this->soundEngine->play2D(source);
     }
-}
-
-void SoundManager::play2DSound(const char *file, bool loop) {
-    this->soundEngine->play2D(this->soundEngine->getSoundSource(file), loop);
 }
 
 void SoundManager::stopPlaying() {

@@ -106,7 +106,7 @@ void Camera::handleKeyboardInputs(float deltaTime) {
     }
 
     if(soundPlaying) {
-        SoundManager::getInstance().playSingle2DSound("../assets/Sounds/step.mp3");
+        SoundManager::getInstance().play2DSound("../assets/Sounds/step.mp3", false, true);
     }
     else {
         SoundManager::getInstance().stopSound("../assets/Sounds/step.mp3");

@@ -23,9 +23,7 @@ public:
 
     void destroy();
 
-    void playSingle2DSound(const char *file);
-
-    void play2DSound(const char *file, bool loop = false);
+    void play2DSound(const char *file, bool loop = false, bool repeat = false);
 
     irrklang::ISound* play3DSound(const char *file, const Vector3f &pos, bool loop = false, bool startPaused = false);
 
