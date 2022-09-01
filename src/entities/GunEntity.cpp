@@ -20,6 +20,7 @@ GunEntity::~GunEntity() = default;
 
 void GunEntity::update(float deltaTime) {
     if (reloading) {
+        SoundManager::getInstance().playSingle2DSound("../assets/Sounds/reload.mp3");
         GUIManager::getInstance().updateSpinner(25.0f, 7.5f, 5.0f);
         reloadTimer += deltaTime;
         if (reloadTimer >= reloadTime) {

@@ -7,6 +7,7 @@ SoundManager &SoundManager::getInstance() {
 
 void SoundManager::init(std::initializer_list<const char*> sounds) {
     this->soundEngine = irrklang::createIrrKlangDevice();
+    this->soundEngine->setSoundVolume(0.02f);
 
     for(auto sound: sounds) {
         this->soundEngine->addSoundSourceFromFile(sound);

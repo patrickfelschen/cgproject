@@ -138,6 +138,8 @@ void Game::update(float deltaTime) {
                 life--;
                 isAlive = life > 0;
 
+                SoundManager::getInstance().play2DSound("../assets/Sounds/hit.mp3");
+                SoundManager::getInstance().play2DSound("../assets/Sounds/damage.mp3");
                 particleManager->spawn(entity->getPosition(), Color(1.0f, 0.0f, 0.0f, 1.0f));
                 entity->respawn(terrainEntity->getRandomPosition(Vector3f(0.0f, 1.2f, 0.0f)));
 
@@ -152,6 +154,7 @@ void Game::update(float deltaTime) {
         // Alle MagazineCases aktualisieren
         for (StaticEntity *entity: magazineCases) {
             if(checkPlayerCollision(entity, camera, 1.0f)) {
+                SoundManager::getInstance().play2DSound("../assets/Sounds/magazinecase.mp3");
                 particleManager->spawn(entity->getPosition(), Color(0.0f, 0.0f, 1.0f, 1.0f));
                 entity->setPosition(terrainEntity->getRandomPosition(Vector3f(0.0f, 0.33f, 0.0f)));
                 gunEntity->addMagazines(2);
@@ -162,6 +165,7 @@ void Game::update(float deltaTime) {
         // Alle MedicCases aktualisieren
         for (StaticEntity *entity: medicCases) {
             if(checkPlayerCollision(entity, camera, 1.0f)) {
+                SoundManager::getInstance().play2DSound("../assets/Sounds/heal.mp3");
                 particleManager->spawn(entity->getPosition(), Color(0.0f, 1.0f, 0.0f, 1.0f));
                 entity->setPosition(terrainEntity->getRandomPosition(Vector3f(0.0f, 0.275f, 0.0f)));
                 if(life < maxLife) life++;
