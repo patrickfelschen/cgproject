@@ -28,7 +28,7 @@ void glfwErrorCallback(int, const char *errorMsg);
 void GLAPIENTRY glErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
                                 const GLchar *message, const void *userParam);
 
-const bool fullScreen = true;
+const bool fullScreen = false;
 
 const unsigned int SCR_WIDTH = fullScreen ? 1920 : 1920 / 2;
 const unsigned int SCR_HEIGHT = fullScreen ?  1080 : 1080 / 2;
@@ -97,7 +97,12 @@ int main(int argc, char **argv) {
                 "../assets/Sounds/pop.mp3",
                 "../assets/Sounds/gunshot.mp3",
                 "../assets/Sounds/night-ambience-17064.mp3",
-                "../assets/Sounds/step.mp3"
+                "../assets/Sounds/step.mp3",
+                "../assets/Sounds/magazinecase.mp3",
+                "../assets/Sounds/reload.mp3",
+                "../assets/Sounds/heal.mp3",
+                "../assets/Sounds/damage.mp3",
+                "../assets/Sounds/hit.mp3",
             }
     );
     GUIManager::getInstance().init(window, SCR_WIDTH, SCR_HEIGHT);
