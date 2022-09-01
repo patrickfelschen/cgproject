@@ -9,10 +9,8 @@
 #define STATIC_OBJECTS_COUNT 50
 #define LIGHT_POLE_COUNT 20
 
-TerrainManager::TerrainManager(const TerrainEntity *terrainEntity, LightManager *lightManager) : terrainEntity(
-        terrainEntity), lightManager(lightManager) {
-    flowerYellowModel = new ObjectModel(new PhongShader(),
-                                        "../assets/Objects/FlowerYellow/DR293GUXZXKK16RTKE4Y8HOCH.obj");
+TerrainManager::TerrainManager(const TerrainEntity *terrainEntity, LightManager *lightManager) : terrainEntity(terrainEntity), lightManager(lightManager) {
+    flowerYellowModel = new ObjectModel(new PhongShader(),"../assets/Objects/FlowerYellow/DR293GUXZXKK16RTKE4Y8HOCH.obj");
     flowerRedModel = new ObjectModel(new PhongShader(), "../assets/Objects/FlowerRed/XBV47D0X9MNPQYA15BSYICAXS.obj");
     woodModel = new ObjectModel(new PhongShader(), "../assets/Objects/Wood/BJWDXMOHII5I7VAGI8Q12YATN.obj");
     treeModel = new ObjectModel(new PhongShader(), "../assets/Objects/Tree01/N6TIYZO5D41STEOW4SQBKWRRG.obj");
