@@ -57,6 +57,9 @@ void PlayerEntity::update(float deltaTime) {
     Ray camRay = Ray(camera->getPosition(), camera->getDirection());
 
     for (StaticEntity *medicCase: this->medicCases) {
+        if (checkEntityRayCollision(medicCase, camRay, 4.0f)) {
+            GUIManager::getInstance().drawInfo("+1 Life", Color(1.0f));
+        }
         if (checkEntityRayCollision(medicCase, camRay, 2.0f)) {
             SoundManager::getInstance().play2DSound("../assets/Sounds/heal.mp3");
             particleManager->spawn(medicCase->getPosition(), Color(0.0f, 1.0f, 0.0f, 1.0f));
@@ -68,6 +71,9 @@ void PlayerEntity::update(float deltaTime) {
     }
 
     for (StaticEntity *magazineCase: this->magazineCases) {
+        if (checkEntityRayCollision(magazineCase, camRay, 4.0f)) {
+            GUIManager::getInstance().drawInfo("+2 Magazines", Color(1.0f));
+        }
         if (checkEntityRayCollision(magazineCase, camRay, 2.0f)) {
             SoundManager::getInstance().play2DSound("../assets/Sounds/magazinecase.mp3");
             particleManager->spawn(magazineCase->getPosition(), Color(0.0f, 0.0f, 1.0f, 1.0f));

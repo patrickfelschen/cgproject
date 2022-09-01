@@ -180,3 +180,16 @@ void GUIManager::drawMainMenu(bool &buttonClicked, const char *mainButtonText, c
     ImGui::End();
     ImGui::PopStyleVar();
 }
+
+void GUIManager::drawInfo(const char *infoText, const Color &textColor) {
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    ImGui::SetNextWindowBgAlpha(0.0f);
+    ImGui::SetNextWindowSize(ImVec2(SCR_WIDTH, SCR_HEIGHT));
+    ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
+    ImGui::Begin("info", nullptr, WINDOW_FLAGS);
+    auto textWidth = ImGui::CalcTextSize(infoText).x;
+    ImGui::SetCursorPos(ImVec2((SCR_WIDTH - textWidth) * 0.5f, SCR_HEIGHT/2 + 50.0f));
+    ImGui::TextColored(ImVec4(textColor.r, textColor.g, textColor.b, textColor.a), "%s", infoText);
+    ImGui::End();
+    ImGui::PopStyleVar();
+}

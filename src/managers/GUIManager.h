@@ -51,6 +51,8 @@ public:
 
     void drawCrosshair(float thickness, float size, Color color, bool isEmpty);
 
+    void drawInfo(const char *infoText, const Color &textColor);
+
     void drawFPSCounter();
 
     void drawMainMenu(bool &buttonClicked, const char *mainButtonText, const char *mainText, const Color &mainTextColor, const char* secondaryText = "", const Color &secondaryTextColor = Color(1.0f)) const;
