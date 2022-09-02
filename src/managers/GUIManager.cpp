@@ -135,18 +135,29 @@ void GUIManager::drawFPSCounter() {
     ImGui::PopStyleVar();
 }
 
-void GUIManager::updateLifeWindow(unsigned int currentLife, unsigned int maxLife) {
-    float maxLength = 300;
-    float yPos = SCR_HEIGHT - 50.0f;
+void GUIManager::updateLifeWindow(const char* windowName, unsigned int currentLife, unsigned int maxLife, const Vector2f &pos , float barLength) {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     ImGui::SetNextWindowBgAlpha(0.0f);
-    ImGui::SetNextWindowSize(ImVec2(maxLength, 300.0f));
-    ImGui::SetNextWindowPos(ImVec2(0.0f, yPos));
-    ImGui::Begin("life", nullptr, WINDOW_FLAGS);
-    ImGui::GetWindowDrawList()->AddLine(ImVec2(0.0f, yPos), ImVec2(maxLength, yPos),
-                                        ImGui::ColorConvertFloat4ToU32(ImVec4(255.0f, 0.0f, 0.0f, 255.0f)), 25.0f);
-    ImGui::GetWindowDrawList()->AddLine(ImVec2(0.0f, yPos), ImVec2(((float) currentLife * (maxLength / maxLife)), yPos),
-                                        ImGui::ColorConvertFloat4ToU32(ImVec4(0.0f, 255.0f, 0.0f, 255.0f)), 25.0f);
+    ImGui::SetNextWindowSize(ImVec2(SCR_WIDTH, SCR_HEIGHT));
+    ImGui::SetNextWindowPos(ImVec2(0.0, 0.0));
+    ImGui::Begin(windowName, nullptr, WINDOW_FLAGS);
+    ImGui::GetWindowDrawList()->AddLine(
+            ImVec2(pos.x - (barLength / 2), pos.y),
+            ImVec2(pos.x + (barLength / 2), pos.y),
+            ImGui::ColorConvertFloat4ToU32(ImVec4(255.0f, 0.0f, 0.0f, 255.0f)),
+            25.0f
+    );
+    ImGui::GetWindowDrawList()->AddLine(
+            ImVec2(pos.x - (barLength / 2), pos.y),
+            ImVec2((pos.x - (barLength / 2)) + ((float) currentLife * (barLength / maxLife)), pos.y),
+            ImGui::ColorConvertFloat4ToU32(ImVec4(0.0f, 255.0f, 0.0f, 255.0f)),
+            25.0f
+    );
+    char lifeText[16];
+    sprintf(lifeText, "%i/%i", currentLife, maxLife);
+    auto lifeTextWidth = ImGui::CalcTextSize(lifeText).x;
+    ImGui::SetCursorPos(ImVec2(pos.x - lifeTextWidth * 0.5f, pos.y));
+    ImGui::Text("%s", lifeText);
     ImGui::End();
     ImGui::PopStyleVar();
 }

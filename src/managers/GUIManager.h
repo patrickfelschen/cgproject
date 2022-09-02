@@ -21,12 +21,13 @@ private:
     GLFWwindow *window;
 
     ImGuiIO io;
-    unsigned int SCR_WIDTH;
-    unsigned int SCR_HEIGHT;
 
     float infoTextDuration = 2.0f;
     float infoTextTimer = 0.0f;
 public:
+    unsigned int SCR_WIDTH;
+    unsigned int SCR_HEIGHT;
+
     static GUIManager &getInstance();
 
     GUIManager(GUIManager const &) = delete;
@@ -45,13 +46,13 @@ public:
 
     void updateScoreWindow(unsigned int score);
 
-    void updateLifeWindow(unsigned int currentLife, unsigned int maxLife);
+    void updateLifeWindow(const char* windowName, unsigned int currentLife, unsigned int maxLife, const Vector2f &pos, float barLength = 300);
 
     void updateSpinner(float radius, float speed, float thickness);
 
     void drawCrosshair(float thickness, float size, Color color, bool isEmpty);
 
-    void drawInfo(const char *infoText, const Color &textColor);
+    void drawInfo(const char *infoText, const Color &textColor = Color(1.0f));
 
     void drawFPSCounter();
 

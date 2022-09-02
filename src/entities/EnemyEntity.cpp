@@ -59,8 +59,8 @@ void EnemyEntity::setTargetPosition(const Vector3f &targetPosition) {
     this->targetPosition = targetPosition;
 }
 
-void EnemyEntity::setSpeed(float speed) {
-    this->speed = speed;
+void EnemyEntity::increaseSpeed(float value) {
+    this->speed += value;
 }
 
 bool EnemyEntity::isDead() const {
@@ -72,6 +72,18 @@ void EnemyEntity::decreaseLife(unsigned int value) {
     life -= value;
 }
 
+void EnemyEntity::increaseMaxLife(unsigned int value) {
+    maxLife += value;
+}
+
 irrklang::ISound *EnemyEntity::getSound() const {
     return sound;
+}
+
+unsigned int EnemyEntity::getLife() const {
+    return life;
+}
+
+unsigned int EnemyEntity::getMaxLife() const {
+    return maxLife;
 }

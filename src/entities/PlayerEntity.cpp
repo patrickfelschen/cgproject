@@ -31,19 +31,7 @@ void PlayerEntity::startShoot() {
         float gunRange = 200.0f;
         // Strahl in Kamerarichtung
         Ray ray(camera->getPosition(), camera->getTarget());
-        EnemyEntity *hitEnemy = nullptr;
-        float minHitDistance = 0;
-        for (EnemyEntity *enemy: enemies) {
-            // Überschneidung des Rays und der Bounding Boxen prüfen
-            if (checkEntityRayCollision(enemy, ray, gunRange)) {
-                // Bei mehreren Überschneidungen den nächsten Gegner wählen
-                float distanceToPlayer = enemy->getPosition().distanceTo(this->getPosition());
-                if (hitEnemy == nullptr || distanceToPlayer < minHitDistance) {
-                    hitEnemy = enemy;
-                    minHitDistance = distanceToPlayer;
-                }
-            }
-        }
+        EnemyEntity *hitEnemy = getFirstIntersection(ray, gunRange);
         // Gegner Leben abziehen
         if (hitEnemy != nullptr) {
             hitEnemy->decreaseLife(1);
@@ -75,7 +63,7 @@ void PlayerEntity::update(float deltaTime) {
     // Prüfen ob Spieler Medic Kisten öffnen möchte
     for (StaticEntity *medicCase: this->medicCases) {
         if (checkEntityRayCollision(medicCase, camRay, 4.0f)) {
-            GUIManager::getInstance().drawInfo("+1 Leben", Color(1.0f));
+            GUIManager::getInstance().drawInfo("+1 Leben");
         }
         if (checkEntityRayCollision(medicCase, camRay, 2.0f)) {
             particleManager->spawn(medicCase->getPosition(), Color(0.0f, 1.0f, 0.0f, 1.0f));
@@ -87,7 +75,7 @@ void PlayerEntity::update(float deltaTime) {
     // Prüfen ob Spieler Magazine Kisten öffnen möchte
     for (StaticEntity *magazineCase: this->magazineCases) {
         if (checkEntityRayCollision(magazineCase, camRay, 4.0f)) {
-            GUIManager::getInstance().drawInfo("+2 Magazine", Color(1.0f));
+            GUIManager::getInstance().drawInfo("+2 Magazine");
         }
         if (checkEntityRayCollision(magazineCase, camRay, 2.0f)) {
             particleManager->spawn(magazineCase->getPosition(), Color(0.0f, 0.0f, 1.0f, 1.0f));
@@ -98,8 +86,18 @@ void PlayerEntity::update(float deltaTime) {
     }
     // Prüfen ob Spieler Gegner trifft oder vom Gegner getroffen wird
     for (EnemyEntity *enemy: enemies) {
+        // Lebensbalken
+        EnemyEntity *targetedEnemy = getFirstIntersection(camRay, 10.0f);
+        if (targetedEnemy != nullptr) {
+            GUIManager::getInstance().updateLifeWindow("enemylife", targetedEnemy->getLife(), targetedEnemy->getMaxLife(), Vector2f(GUIManager::getInstance().SCR_WIDTH / 2, 150.0f));
+        }
+
         // Gegner erledigt
         if (enemy->isDead()) {
+            if((hitCount % 5) == 0) {
+                enemy->increaseMaxLife(1);
+                increaseDifficulty();
+            }
             hitCount++;
             SoundManager::getInstance().play2DSound("../assets/Sounds/fist-punch-or-kick-7171.mp3");
             particleManager->spawn(enemy->getPosition(), Color(1.0f));
@@ -119,12 +117,11 @@ void PlayerEntity::update(float deltaTime) {
         }
 
         enemy->setTargetPosition(camera->getPosition());
-        //entity->setSpeed(targetSpeed);
         enemy->update(deltaTime);
     }
 
     particleManager->update(deltaTime);
-    GUIManager::getInstance().updateLifeWindow(life, maxLife);
+    GUIManager::getInstance().updateLifeWindow("playerLife", life, maxLife, Vector2f(160.0f, GUIManager::getInstance().SCR_HEIGHT - 50.0f));
     GUIManager::getInstance().updateScoreWindow(hitCount);
 }
 
@@ -195,4 +192,28 @@ AABB PlayerEntity::getTransformedBoundingBox() const {
 
 unsigned int PlayerEntity::getHitCount() const {
     return hitCount;
+}
+
+void PlayerEntity::increaseDifficulty() {
+    std::cout << "difficulty increase" << std::endl;
+    for(EnemyEntity *entity: enemies) {
+        entity->increaseSpeed(0.1f);
+    }
+}
+
+EnemyEntity *PlayerEntity::getFirstIntersection(Ray ray, float range) {
+    EnemyEntity *hitEnemy = nullptr;
+    float minHitDistance = 0;
+    for (EnemyEntity *enemy: enemies) {
+        // Überschneidung des Rays und der Bounding Boxen prüfen
+        if (checkEntityRayCollision(enemy, ray, range)) {
+            // Bei mehreren Überschneidungen den nächsten Gegner wählen
+            float distanceToPlayer = enemy->getPosition().distanceTo(this->getPosition());
+            if (hitEnemy == nullptr || distanceToPlayer < minHitDistance) {
+                hitEnemy = enemy;
+                minHitDistance = distanceToPlayer;
+            }
+        }
+    }
+    return hitEnemy;
 }

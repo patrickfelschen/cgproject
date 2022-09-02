@@ -21,11 +21,17 @@ public:
 
     void setTargetPosition(const Vector3f &targetPosition);
 
-    void setSpeed(float speed);
+    void increaseSpeed(float value);
 
     bool isDead() const;
 
     void decreaseLife(unsigned int value);
+
+    void increaseMaxLife(unsigned int value);
+
+    unsigned int getLife() const;
+
+    unsigned int getMaxLife() const;
 
     irrklang::ISound *getSound() const;
 
@@ -34,7 +40,7 @@ private:
     const TerrainEntity *terrainEntity;
 
     unsigned int life = 1;
-    unsigned int maxLife = 1;
+    unsigned int maxLife;
 
     float yawOffset = 90;
     float pitchOffset = 20;
