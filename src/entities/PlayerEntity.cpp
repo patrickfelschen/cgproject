@@ -75,7 +75,7 @@ void PlayerEntity::update(float deltaTime) {
         // Lebensbalken
         EnemyEntity *targetedEnemy = getFirstIntersection(camRay, 10.0f);
         if (targetedEnemy != nullptr) {
-            GUIManager::getInstance().updateLifeWindow("enemylife", targetedEnemy->getLife(), targetedEnemy->getMaxLife(), Vector2f(GUIManager::getInstance().SCR_WIDTH / 2, 150.0f));
+            GUIManager::getInstance().updateLifeWindow("enemylife", targetedEnemy->getLife(), targetedEnemy->getMaxLife(), Vector2f(GUIManager::getInstance().SCR_WIDTH / 2, 25.0f), 200, 10);
         }
 
         // Gegner erledigt

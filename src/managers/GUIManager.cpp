@@ -135,7 +135,7 @@ void GUIManager::drawFPSCounter() {
     ImGui::PopStyleVar();
 }
 
-void GUIManager::updateLifeWindow(const char* windowName, unsigned int currentLife, unsigned int maxLife, const Vector2f &pos , float barLength) {
+void GUIManager::updateLifeWindow(const char* windowName, unsigned int currentLife, unsigned int maxLife, const Vector2f &pos , float barLength, float thickness) {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     ImGui::SetNextWindowBgAlpha(0.0f);
     ImGui::SetNextWindowSize(ImVec2(SCR_WIDTH, SCR_HEIGHT));
@@ -145,13 +145,13 @@ void GUIManager::updateLifeWindow(const char* windowName, unsigned int currentLi
             ImVec2(pos.x - (barLength / 2), pos.y),
             ImVec2(pos.x + (barLength / 2), pos.y),
             ImGui::ColorConvertFloat4ToU32(ImVec4(255.0f, 0.0f, 0.0f, 255.0f)),
-            25.0f
+            thickness
     );
     ImGui::GetWindowDrawList()->AddLine(
             ImVec2(pos.x - (barLength / 2), pos.y),
             ImVec2((pos.x - (barLength / 2)) + ((float) currentLife * (barLength / maxLife)), pos.y),
             ImGui::ColorConvertFloat4ToU32(ImVec4(0.0f, 255.0f, 0.0f, 255.0f)),
-            25.0f
+            thickness
     );
     char lifeText[16];
     sprintf(lifeText, "%i/%i", currentLife, maxLife);
