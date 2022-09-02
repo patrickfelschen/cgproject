@@ -1,4 +1,4 @@
-#version 460 core
+#version 420
 
 const int MAX_LIGHT_COUNT = 30;
 

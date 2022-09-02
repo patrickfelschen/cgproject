@@ -32,7 +32,7 @@ void GLAPIENTRY glErrorCallback(
         const void *userParam
 );
 
-const bool fullScreen = true;
+const bool fullScreen = false;
 const unsigned int SCR_WIDTH = fullScreen ? 1920 : 1920 / 2;
 const unsigned int SCR_HEIGHT = fullScreen ? 1080 : 1080 / 2;
 
@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
 
 #ifdef __APPLE__
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #endif
