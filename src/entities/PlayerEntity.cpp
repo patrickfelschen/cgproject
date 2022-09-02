@@ -87,7 +87,7 @@ void PlayerEntity::update(float deltaTime) {
         // Gegner erledigt
         if (enemy->isDead()) {
             hitCount++;
-            SoundManager::getInstance().play2DSound("../assets/Sounds/pop.mp3");
+            SoundManager::getInstance().play2DSound("../assets/Sounds/fist-punch-or-kick-7171.mp3");
             particleManager->spawn(enemy->getPosition(), Color(1.0f));
             enemy->respawn();
         }

@@ -132,8 +132,7 @@ int main(int argc, char **argv) {
             if(gameStarted) {
                 game->update((float) deltaTime);
                 game->render();
-            }
-            else {
+            } else {
                 GUIManager::getInstance().drawMainMenu(gameStarted, "Start Game", "Kleister", Color(1.0f));
             }
 
@@ -155,11 +154,15 @@ void glfwKeyCallback(GLFWwindow *window, int key, int scancode, int action, int 
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
     }
-    game->processKeyInput(key, action);
+    if(gameStarted) {
+        game->processKeyInput(key, action);
+    }
 }
 
 void glfwMouseButtonCallback(GLFWwindow *window, int button, int action, int mods) {
-    game->processKeyInput(button, action);
+    if(gameStarted) {
+        game->processKeyInput(button, action);
+    }
 }
 
 void glfwCursorPosCallback(GLFWwindow *window, double xpos, double ypos) {

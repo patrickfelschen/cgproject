@@ -127,11 +127,6 @@ void Game::processKeyInput(int key, int action) {
     if (key == GLFW_KEY_R && action == GLFW_PRESS) {
         playerEntity->reload();
     }
-    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
-        if (!playerEntity->isAlive()) {
-            initNewGame();
-        }
-    }
 }
 
 void Game::processMouseInput(float xpos, float ypos) {
