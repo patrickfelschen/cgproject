@@ -23,6 +23,8 @@ public:
 
     void increaseSpeed(float value);
 
+    void setSpeed(float speed);
+
     bool isDead() const;
 
     void decreaseLife(unsigned int value);
@@ -34,6 +36,8 @@ public:
     unsigned int getMaxLife() const;
 
     irrklang::ISound *getSound() const;
+
+    void setMaxLife(unsigned int maxLife);
 
 private:
     const ObjectModel *model;

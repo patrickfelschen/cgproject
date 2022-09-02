@@ -87,3 +87,11 @@ unsigned int EnemyEntity::getLife() const {
 unsigned int EnemyEntity::getMaxLife() const {
     return maxLife;
 }
+
+void EnemyEntity::setSpeed(float speed) {
+    EnemyEntity::speed = speed;
+}
+
+void EnemyEntity::setMaxLife(unsigned int maxLife) {
+    EnemyEntity::maxLife = maxLife;
+}

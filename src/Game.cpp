@@ -103,6 +103,8 @@ void Game::initNewGame() {
 
     // Gegner neu setzen
     for (EnemyEntity *entity: enemies) {
+        entity->setMaxLife(1);
+        entity->setSpeed(Random::randFloat(1.0f, 2.0f));
         entity->respawn();
     }
     // MagazineCases neu setzen
