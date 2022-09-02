@@ -135,7 +135,7 @@ int main(int argc, char **argv) {
                 game->update((float) deltaTime);
                 game->render();
             } else {
-                GUIManager::getInstance().drawMainMenu(gameStarted, "Start Game", "Kleister", Color(1.0f));
+                GUIManager::getInstance().drawMainMenu(gameStarted, "Spiel starten", "GEISTER!", Color(1.0f));
             }
 
             GUIManager::getInstance().render();

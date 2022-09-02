@@ -15,7 +15,7 @@ void GUIManager::init(GLFWwindow *window, unsigned int width, unsigned int heigh
     ImGui::StyleColorsDark();
 
     ImGui_ImplGlfw_InitForOpenGL(this->window, true);
-    ImGui_ImplOpenGL3_Init("#version 460");
+    ImGui_ImplOpenGL3_Init("#version 420");
 
     this->SCR_WIDTH = width;
     this->SCR_HEIGHT = height;
@@ -62,7 +62,7 @@ void GUIManager::updateScoreWindow(unsigned int score) {
     ImGui::SetNextWindowSize(ImVec2(SCR_WIDTH, 100.0f));
     ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
     ImGui::Begin("score", nullptr, WINDOW_FLAGS);
-    ImGui::Text("Score: %i", score);
+    ImGui::Text("Punkte: %i", score);
     ImGui::End();
     ImGui::PopStyleVar();
 }
@@ -191,7 +191,7 @@ void GUIManager::drawMainMenu(bool &buttonClicked, const char *mainButtonText, c
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
     ImGui::SetCursorPos(ImVec2(SCR_WIDTH / 2 - buttonSize.x / 2, SCR_HEIGHT / 2 + buttonSize.y / 2 + 20.0f));
-    if (ImGui::Button("Exit", ImVec2(buttonSize.x, buttonSize.y))) {
+    if (ImGui::Button("Beenden", ImVec2(buttonSize.x, buttonSize.y))) {
         exit(EXIT_SUCCESS);
     }
     ImGui::End();

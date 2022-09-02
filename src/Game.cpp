@@ -83,7 +83,7 @@ void Game::initEntities() {
     // Waffe
     auto *gunEntity = new GunEntity(gunModel);
     // Spieler
-    playerEntity = new PlayerEntity(camera);
+    playerEntity = new PlayerEntity(camera, terrainEntity);
     playerEntity->setGunEntity(gunEntity);
     playerEntity->setEnemies(enemies);
     playerEntity->setMagazineCases(magazineCases);
@@ -118,11 +118,13 @@ void Game::initNewGame() {
 }
 
 void Game::processKeyInput(int key, int action) {
-    if (key == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-        playerEntity->startShoot();
-    }
-    if (key == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
-        playerEntity->endShoot();
+    if (key == GLFW_MOUSE_BUTTON_LEFT) {
+        if (action == GLFW_PRESS) {
+            playerEntity->startShoot();
+        }
+        if (action == GLFW_RELEASE) {
+            playerEntity->endShoot();
+        }
     }
     if (key == GLFW_KEY_R && action == GLFW_PRESS) {
         playerEntity->reload();
@@ -135,8 +137,15 @@ void Game::processMouseInput(float xpos, float ypos) {
 
 void Game::update(float deltaTime) {
     if (playerEntity->isAlive()) {
-        float playerY = terrainModel->getHeightOfTerrain(camera->getPosition().x, camera->getPosition().z);
-        camera->setPosition(Vector3f(camera->getPosition().x, playerY + 1.0f, camera->getPosition().z));
+        bool onTerrain;
+        float playerY = terrainModel->getHeightOfTerrain(
+                camera->getPosition().x,
+                camera->getPosition().z,
+                onTerrain
+        );
+
+        camera->setPosition(Vector3f(camera->getPosition().x, playerY + 1.2f, camera->getPosition().z));
+
         // Kamera aktualisieren
         camera->update(deltaTime);
         SoundManager::getInstance().setListenerPos(camera);
@@ -153,10 +162,11 @@ void Game::update(float deltaTime) {
     } else {
         // Game Over Menu anzeigen
         char score[12];
-        sprintf(score, "Score: %i", playerEntity->getHitCount());
+        sprintf(score, "Punkte: %i", playerEntity->getHitCount());
+
         GUIManager::getInstance().drawMainMenu(
                 gameRestart,
-                "Restart", "Game Over!",
+                "Neustart", "Verloren!",
                 Color(1.0f, 0.0f, 0.0f, 1.0f),
                 score
         );
@@ -167,7 +177,9 @@ void Game::update(float deltaTime) {
         // Spiel neu starten wenn Button betätigt
         if (gameRestart) {
             gameRestart = false;
+
             initNewGame();
+
         }
     }
 }

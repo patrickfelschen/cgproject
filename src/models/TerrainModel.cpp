@@ -114,34 +114,37 @@ void TerrainModel::render() const {
 }
 
 //https://www.youtube.com/watch?v=6E2zjfzMs7c
-const float TerrainModel::getHeightOfTerrain(float worldX, float worldZ) const {
+const float TerrainModel::getHeightOfTerrain(float worldX, float worldZ, bool &onTerrain) const {
     // Welt-Position auf dem Terrain (Start in Mittelpunkt)
     float terrainX = worldX + width / 2;
     float terrainZ = worldZ + depth / 2;
-//    std::cout << "X: " << terrainX << std::endl;
-//    std::cout << "Z " << terrainZ << std::endl;
+    //std::cout << "X: " << terrainX << std::endl;
+    //std::cout << "Z " << terrainZ << std::endl;
 
     // Größe eines Quadrats des Terrains
     float gridSquareSize = size / (float) (imgWidth - 1);
-//    std::cout << gridSquareSize << std::endl;
+    //std::cout << gridSquareSize << std::endl;
 
     // Koordinaten des aktuellen Quadrats
     float gridX = std::floor(terrainX / gridSquareSize);
     float gridZ = std::floor(terrainZ / gridSquareSize);
-//    std::cout << "X: " << gridX << std::endl;
-//    std::cout << "Z " << gridZ << std::endl;
+    //std::cout << "X: " << gridX << std::endl;
+    //std::cout << "Z " << gridZ << std::endl;
 
-    if ((int) gridX >= imgWidth - 1 || (int) gridZ >= imgWidth - 1 || (int) gridX < -(int) (imgWidth - 1) ||
+    if ((int) gridX >= imgWidth - 1 ||
+        (int) gridZ >= imgWidth - 1 ||
+        (int) gridX < -(int) (imgWidth - 1) ||
         (int) gridX < -(int) (imgWidth - 1)) {
         std::cout << "TERRAIN::GET_HEIGHT: OUT OF BOUNDS" << std::endl;
+        onTerrain = false;
         return 0;
     }
 
     // Position im Quadrat
     float xCoord = fmod(terrainX, gridSquareSize) / gridSquareSize;
     float zCoord = fmod(terrainZ, gridSquareSize) / gridSquareSize;
-//    std::cout << xCoord << std::endl;
-//    std::cout << zCoord << std::endl;
+    //std::cout << xCoord << std::endl;
+    //std::cout << zCoord << std::endl;
 
     // 1 - zCoord = Diagonale des Quadrats, Prüfung in welcher Hälfte (Quadrat bestehend aus 2 Dreiecken) man sich befindet
     // Danach Lage des Punktes im Dreieck bestimmen
@@ -161,7 +164,7 @@ const float TerrainModel::getHeightOfTerrain(float worldX, float worldZ) const {
                 Vector2f(xCoord, zCoord)
         );
     }
-
+    onTerrain = true;
     return terrainHeight;
 }
 

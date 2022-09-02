@@ -11,9 +11,9 @@
 #include "StaticEntity.h"
 #include "../managers/ParticleManager.h"
 
-class PlayerEntity : Entity {
+class PlayerEntity : public Entity {
 public:
-    explicit PlayerEntity(const Camera *camera);
+    explicit PlayerEntity(Camera *camera, TerrainEntity* terrainEntity);
 
     ~PlayerEntity() override;
 
@@ -58,9 +58,11 @@ public:
     void increaseDifficulty();
 
 private:
-    const Camera *camera;
+    Camera *camera;
 
     GunEntity *gunEntity;
+
+    TerrainEntity *terrainEntity;
 
     std::vector<EnemyEntity *> enemies;
 
@@ -74,6 +76,10 @@ private:
     unsigned int life;
 
     unsigned int hitCount;
+
+    bool onTerrain = true;
+    float terrainDamageTime = 2;
+    float terrainDamageTimer = 0;
 };
 
 
