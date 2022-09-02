@@ -46,7 +46,7 @@ public:
 
     void updateScoreWindow(unsigned int score);
 
-    void updateLifeWindow(const char* windowName, unsigned int currentLife, unsigned int maxLife, const Vector2f &pos, float barLength = 300);
+    void updateLifeWindow(const char* windowName, unsigned int currentLife, unsigned int maxLife, const Vector2f &pos, float barLength = 300, float thickness = 20.0f);
 
     void updateSpinner(float radius, float speed, float thickness);
 
