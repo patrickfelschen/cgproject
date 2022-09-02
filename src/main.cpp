@@ -33,8 +33,8 @@ void GLAPIENTRY glErrorCallback(
 );
 
 const bool fullScreen = false;
-const unsigned int SCR_WIDTH = fullScreen ? 1920 : 1920 / 2;
-const unsigned int SCR_HEIGHT = fullScreen ? 1080 : 1080 / 2;
+const unsigned int SCR_WIDTH = fullScreen ? 1920 : 1280;
+const unsigned int SCR_HEIGHT = fullScreen ? 1080 : 720;
 
 Camera *camera;
 Game *game;
@@ -59,7 +59,8 @@ int main(int argc, char **argv) {
             SCR_WIDTH,
             SCR_HEIGHT,
             "CG Projekt",
-            fullScreen ? glfwGetPrimaryMonitor() : nullptr, nullptr
+            fullScreen ? glfwGetPrimaryMonitor() : nullptr,
+            nullptr
     );
     if (window == nullptr) {
         std::cerr << "ERROR::GLFW: Failed to create GLFW window" << std::endl;
