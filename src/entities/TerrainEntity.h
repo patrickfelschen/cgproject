@@ -24,6 +24,7 @@ public:
     Vector3f getRandomPosition(Vector3f offset = Vector3f()) const;
 
     float getHeightOfPosition(Vector3f position) const;
+
 private:
     const TerrainModel *model;
 };

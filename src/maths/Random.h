@@ -11,6 +11,7 @@
 class Random {
 public:
     static int randInt(int min, int max);
+
     static float randFloat(float min, float max);
 };
 

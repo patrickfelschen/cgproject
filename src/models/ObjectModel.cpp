@@ -99,10 +99,12 @@ Mesh ObjectModel::processMesh(aiMesh *mesh, const aiScene *scene) {
     unsigned int specCount = 0;
     aiMaterial *uiMaterial = scene->mMaterials[mesh->mMaterialIndex];
     // 1. diffuse maps
-    std::vector<Texture> diffuseMaps = loadMaterialTextures(uiMaterial, aiTextureType_DIFFUSE, "texture_diffuse", diffCount);
+    std::vector<Texture> diffuseMaps = loadMaterialTextures(uiMaterial, aiTextureType_DIFFUSE, "texture_diffuse",
+                                                            diffCount);
     textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
     // 2. specular maps
-    std::vector<Texture> specularMaps = loadMaterialTextures(uiMaterial, aiTextureType_SPECULAR, "texture_specular", specCount);
+    std::vector<Texture> specularMaps = loadMaterialTextures(uiMaterial, aiTextureType_SPECULAR, "texture_specular",
+                                                             specCount);
     textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
     // 3. normal maps
     // std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");

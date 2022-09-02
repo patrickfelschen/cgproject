@@ -109,7 +109,7 @@ void Loader::addShader(const std::string &shaderText, GLuint id, GLenum shaderTy
     glDeleteShader(shaderObject);
 }
 
-GLuint Loader::compileShaders(const std::string& vsFilePath, const std::string& fsFilePath) {
+GLuint Loader::compileShaders(const std::string &vsFilePath, const std::string &fsFilePath) {
     std::string shaderName = vsFilePath + fsFilePath;
 
     if (shaderCache.find(shaderName) != shaderCache.end()) {
@@ -166,7 +166,7 @@ void Loader::writeScoreToFile(unsigned int score) {
 
 unsigned int Loader::readScoreFromFile() {
     unsigned int score;
-    std::ifstream  scoreFile;
+    std::ifstream scoreFile;
     scoreFile.open("../assets/score.txt");
     scoreFile >> score;
     scoreFile.close();

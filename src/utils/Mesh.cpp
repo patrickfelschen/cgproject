@@ -8,8 +8,10 @@
 
 Mesh::Mesh() = default;
 
-Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices,
-           const std::vector<Texture> &textures, const Material &material) {
+Mesh::Mesh(const std::vector<Vertex> &vertices,
+           const std::vector<unsigned int> &indices,
+           const std::vector<Texture> &textures,
+           const Material &material) {
     this->vertices = vertices;
     this->indices = indices;
     this->textures = textures;
@@ -18,7 +20,8 @@ Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> 
     this->setupMesh();
 }
 
-Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices,
+Mesh::Mesh(const std::vector<Vertex> &vertices,
+           const std::vector<unsigned int> &indices,
            const std::vector<Texture> &textures) {
     this->vertices = vertices;
     this->indices = indices;
@@ -74,15 +77,15 @@ void Mesh::render(Shader *shader) const {
     unsigned int specCount = 0;
     unsigned int mixCount = 0;
     int unit = 0;
-    for(auto& texture: textures){
+    for (auto &texture: textures) {
         texture.activate(unit);
-        if(texture.type == "texture_diffuse"){
+        if (texture.type == "texture_diffuse") {
             shader->setUniform(texture.type + std::to_string(diffCount++), unit++);
         }
-        if(texture.type == "texture_specular"){
+        if (texture.type == "texture_specular") {
             shader->setUniform(texture.type + std::to_string(specCount++), unit++);
         }
-        if(texture.type == "texture_mixmap"){
+        if (texture.type == "texture_mixmap") {
             shader->setUniform(texture.type + std::to_string(mixCount++), unit++);
         }
     }
@@ -103,7 +106,7 @@ void Mesh::render(Shader *shader) const {
     );
     glBindVertexArray(0);
     // Texturen deaktivieren
-    for(auto& texture: textures){
+    for (auto &texture: textures) {
         texture.deactivate(unit--);
     }
     glActiveTexture(GL_TEXTURE0);

@@ -13,9 +13,9 @@ class Texture {
 public:
     Texture();
 
-    Texture(const std::string& type);
+    Texture(const std::string &type);
 
-    Texture(const Color &pixel, const std::string& type);
+    Texture(const Color &pixel, const std::string &type);
 
     Texture(const std::string &filePath, const std::string &type);
 

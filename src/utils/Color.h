@@ -2,6 +2,7 @@
 #define CG_COLOR_H
 
 #include "assimp/types.h"
+#include <cassert>
 
 class Color {
 public:

@@ -18,20 +18,20 @@ class GUIManager {
 private:
     GUIManager() {}
 
-    GLFWwindow* window;
+    GLFWwindow *window;
 
     ImGuiIO io;
     unsigned int SCR_WIDTH;
     unsigned int SCR_HEIGHT;
-
 
     float infoTextDuration = 2.0f;
     float infoTextTimer = 0.0f;
 public:
     static GUIManager &getInstance();
 
-    GUIManager(GUIManager const&)       = delete;
-    void operator=(GUIManager const&)   = delete;
+    GUIManager(GUIManager const &) = delete;
+
+    void operator=(GUIManager const &) = delete;
 
     void init(GLFWwindow *window, unsigned int width, unsigned int height);
 
@@ -39,7 +39,7 @@ public:
 
     void startDraw();
 
-    void setFont(const char* path);
+    void setFont(const char *path);
 
     void updateAmmoWindow(unsigned int ammoCount, unsigned int magazines);
 
@@ -55,7 +55,8 @@ public:
 
     void drawFPSCounter();
 
-    void drawMainMenu(bool &buttonClicked, const char *mainButtonText, const char *mainText, const Color &mainTextColor, const char* secondaryText = "", const Color &secondaryTextColor = Color(1.0f)) const;
+    void drawMainMenu(bool &buttonClicked, const char *mainButtonText, const char *mainText, const Color &mainTextColor,
+                      const char *secondaryText = "", const Color &secondaryTextColor = Color(1.0f)) const;
 
     void render();
 };

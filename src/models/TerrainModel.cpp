@@ -122,7 +122,7 @@ const float TerrainModel::getHeightOfTerrain(float worldX, float worldZ) const {
 //    std::cout << "Z " << terrainZ << std::endl;
 
     // Größe eines Quadrats des Terrains
-    float gridSquareSize = size / (float)(imgWidth - 1);
+    float gridSquareSize = size / (float) (imgWidth - 1);
 //    std::cout << gridSquareSize << std::endl;
 
     // Koordinaten des aktuellen Quadrats
@@ -131,7 +131,8 @@ const float TerrainModel::getHeightOfTerrain(float worldX, float worldZ) const {
 //    std::cout << "X: " << gridX << std::endl;
 //    std::cout << "Z " << gridZ << std::endl;
 
-    if((int)gridX >= imgWidth - 1 || (int)gridZ >= imgWidth - 1 || (int)gridX < -(int)(imgWidth - 1) || (int)gridX < -(int)(imgWidth - 1))  {
+    if ((int) gridX >= imgWidth - 1 || (int) gridZ >= imgWidth - 1 || (int) gridX < -(int) (imgWidth - 1) ||
+        (int) gridX < -(int) (imgWidth - 1)) {
         std::cout << "TERRAIN::GET_HEIGHT: OUT OF BOUNDS" << std::endl;
         return 0;
     }
@@ -145,15 +146,14 @@ const float TerrainModel::getHeightOfTerrain(float worldX, float worldZ) const {
     // 1 - zCoord = Diagonale des Quadrats, Prüfung in welcher Hälfte (Quadrat bestehend aus 2 Dreiecken) man sich befindet
     // Danach Lage des Punktes im Dreieck bestimmen
     float terrainHeight = 0;
-    if(xCoord <= (1-zCoord)) {
+    if (xCoord <= (1 - zCoord)) {
         terrainHeight = baryCentric(
                 Vector3f(0, heights[(gridX * imgWidth) + gridZ], 0),
-                Vector3f(1,heights[((gridX + 1) * imgWidth) + gridZ], 0),
+                Vector3f(1, heights[((gridX + 1) * imgWidth) + gridZ], 0),
                 Vector3f(0, heights[(gridX * imgWidth) + (gridZ + 1)], 1),
                 Vector2f(xCoord, zCoord)
         );
-    }
-    else {
+    } else {
         terrainHeight = baryCentric(
                 Vector3f(1, heights[((gridX + 1) * imgWidth) + gridZ], 0),
                 Vector3f(1, heights[((gridX + 1) * imgWidth) + (gridZ + 1)], 1),

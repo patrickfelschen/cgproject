@@ -80,17 +80,15 @@ void GUIManager::updateSpinner(float radius, float speed, float thickness) {
 
     const int numSegments = drawList->_CalcCircleAutoSegmentCount(radius);
     const float bg_angle_offset = std::numbers::pi * 2.f / numSegments;
-    float start = (float)ImGui::GetTime()* speed;
+    float start = (float) ImGui::GetTime() * speed;
     ImVec2 center(SCR_WIDTH / 2, SCR_HEIGHT / 2);
-    for (size_t i = 0; i <= numSegments; i++)
-    {
+    for (size_t i = 0; i <= numSegments; i++) {
         const float a = start + (i * bg_angle_offset);
         drawList->PathLineTo(ImVec2(center.x + cos(a) * radius, center.y + sin(a) * radius));
     }
     drawList->PathClear();
     const float angle_offset = (std::numbers::pi * 0.5f) / numSegments;
-    for (size_t i = 0; i < numSegments; i++)
-    {
+    for (size_t i = 0; i < numSegments; i++) {
         const float a = start + (i * angle_offset);
         drawList->PathLineTo(ImVec2(center.x + cos(a) * radius, center.y + sin(a) * radius));
     }
@@ -109,14 +107,17 @@ void GUIManager::drawCrosshair(float thickness, float size, Color color, bool is
     ImGui::Begin("#CH", nullptr, WINDOW_FLAGS);
     ImDrawList *drawlist = ImGui::GetForegroundDrawList();
 
-    if(isEmpty) {
-        drawlist->AddLine(ImVec2(SCR_WIDTH/2 - size,SCR_HEIGHT/2), ImVec2(SCR_WIDTH/2 + size,SCR_HEIGHT/2), ImGui::ColorConvertFloat4ToU32(ImVec4(1.0f, 0.0f, 0.0f, 1.0f)), thickness);
-        drawlist->AddLine(ImVec2(SCR_WIDTH/2,SCR_HEIGHT/2  - size), ImVec2(SCR_WIDTH/2,SCR_HEIGHT/2 + size), ImGui::ColorConvertFloat4ToU32(ImVec4(1.0f, 0.0f, 0.0f, 1.0f)), thickness);
+    if (isEmpty) {
+        drawlist->AddLine(ImVec2(SCR_WIDTH / 2 - size, SCR_HEIGHT / 2), ImVec2(SCR_WIDTH / 2 + size, SCR_HEIGHT / 2),
+                          ImGui::ColorConvertFloat4ToU32(ImVec4(1.0f, 0.0f, 0.0f, 1.0f)), thickness);
+        drawlist->AddLine(ImVec2(SCR_WIDTH / 2, SCR_HEIGHT / 2 - size), ImVec2(SCR_WIDTH / 2, SCR_HEIGHT / 2 + size),
+                          ImGui::ColorConvertFloat4ToU32(ImVec4(1.0f, 0.0f, 0.0f, 1.0f)), thickness);
 //        drawlist->AddText(ImVec2(SCR_WIDTH/2, SCR_HEIGHT/2), ImGui::ColorConvertFloat4ToU32(ImVec4(1.0f, 0.0f, 0.0f, 1.0f)), "Reload");
-    }
-    else {
-        drawlist->AddLine(ImVec2(SCR_WIDTH/2 - size,SCR_HEIGHT/2), ImVec2(SCR_WIDTH/2 + size,SCR_HEIGHT/2), ImGui::ColorConvertFloat4ToU32(ImVec4(color.r, color.g, color.b, color.a)), thickness);
-        drawlist->AddLine(ImVec2(SCR_WIDTH/2,SCR_HEIGHT/2  - size), ImVec2(SCR_WIDTH/2,SCR_HEIGHT/2 + size), ImGui::ColorConvertFloat4ToU32(ImVec4(color.r, color.g, color.b, color.a)), thickness);
+    } else {
+        drawlist->AddLine(ImVec2(SCR_WIDTH / 2 - size, SCR_HEIGHT / 2), ImVec2(SCR_WIDTH / 2 + size, SCR_HEIGHT / 2),
+                          ImGui::ColorConvertFloat4ToU32(ImVec4(color.r, color.g, color.b, color.a)), thickness);
+        drawlist->AddLine(ImVec2(SCR_WIDTH / 2, SCR_HEIGHT / 2 - size), ImVec2(SCR_WIDTH / 2, SCR_HEIGHT / 2 + size),
+                          ImGui::ColorConvertFloat4ToU32(ImVec4(color.r, color.g, color.b, color.a)), thickness);
     }
 
     ImGui::End();
@@ -142,39 +143,44 @@ void GUIManager::updateLifeWindow(unsigned int currentLife, unsigned int maxLife
     ImGui::SetNextWindowSize(ImVec2(maxLength, 300.0f));
     ImGui::SetNextWindowPos(ImVec2(0.0f, yPos));
     ImGui::Begin("life", nullptr, WINDOW_FLAGS);
-    ImGui::GetWindowDrawList()->AddLine(ImVec2(0.0f, yPos), ImVec2(maxLength, yPos), ImGui::ColorConvertFloat4ToU32(ImVec4(255.0f, 0.0f, 0.0f, 255.0f)), 25.0f);
-    ImGui::GetWindowDrawList()->AddLine(ImVec2(0.0f, yPos), ImVec2(((float)currentLife * (maxLength/maxLife)), yPos), ImGui::ColorConvertFloat4ToU32(ImVec4(0.0f, 255.0f, 0.0f, 255.0f)), 25.0f);
+    ImGui::GetWindowDrawList()->AddLine(ImVec2(0.0f, yPos), ImVec2(maxLength, yPos),
+                                        ImGui::ColorConvertFloat4ToU32(ImVec4(255.0f, 0.0f, 0.0f, 255.0f)), 25.0f);
+    ImGui::GetWindowDrawList()->AddLine(ImVec2(0.0f, yPos), ImVec2(((float) currentLife * (maxLength / maxLife)), yPos),
+                                        ImGui::ColorConvertFloat4ToU32(ImVec4(0.0f, 255.0f, 0.0f, 255.0f)), 25.0f);
     ImGui::End();
     ImGui::PopStyleVar();
 }
 
-void GUIManager::drawMainMenu(bool &buttonClicked, const char *mainButtonText, const char *mainText, const Color &mainTextColor, const char* secondaryText, const Color &secondaryTextColor) const {
+void GUIManager::drawMainMenu(bool &buttonClicked, const char *mainButtonText, const char *mainText,
+                              const Color &mainTextColor, const char *secondaryText,
+                              const Color &secondaryTextColor) const {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     Vector2f buttonSize(200.0f, 75.0f);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     ImGui::SetNextWindowSize(ImVec2(SCR_WIDTH, SCR_HEIGHT));
     ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
-    ImGui::Begin("mainmenu", nullptr, ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoResize|ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoScrollbar|ImGuiWindowFlags_NoSavedSettings);
+    ImGui::Begin("mainmenu", nullptr,
+                 ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
+                 ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings);
     char score[32];
     sprintf(score, "Highscore: %i", Loader::getInstance().readScoreFromFile());
     auto mainTextWidth = ImGui::CalcTextSize(mainText).x;
     auto secondaryTextWidth = ImGui::CalcTextSize(secondaryText).x;
     auto highscoreTextWidth = ImGui::CalcTextSize(score).x;
-    ImGui::SetCursorPos(ImVec2((SCR_WIDTH - mainTextWidth) * 0.5f, SCR_HEIGHT/2 - buttonSize.y / 2 - 180.0f));
+    ImGui::SetCursorPos(ImVec2((SCR_WIDTH - mainTextWidth) * 0.5f, SCR_HEIGHT / 2 - buttonSize.y / 2 - 180.0f));
     ImGui::TextColored(ImVec4(mainTextColor.r, mainTextColor.g, mainTextColor.b, mainTextColor.a), "%s", mainText);
-    ImGui::SetCursorPos(ImVec2((SCR_WIDTH - secondaryTextWidth) * 0.5f, SCR_HEIGHT/2 - buttonSize.y / 2 - 120.0f));
-    ImGui::TextColored(ImVec4(secondaryTextColor.r, secondaryTextColor.g, secondaryTextColor.b, secondaryTextColor.a), "%s", secondaryText);
-    ImGui::SetCursorPos(ImVec2((SCR_WIDTH - highscoreTextWidth) * 0.5f, SCR_HEIGHT/2 - buttonSize.y / 2 - 60.0f));
+    ImGui::SetCursorPos(ImVec2((SCR_WIDTH - secondaryTextWidth) * 0.5f, SCR_HEIGHT / 2 - buttonSize.y / 2 - 120.0f));
+    ImGui::TextColored(ImVec4(secondaryTextColor.r, secondaryTextColor.g, secondaryTextColor.b, secondaryTextColor.a),
+                       "%s", secondaryText);
+    ImGui::SetCursorPos(ImVec2((SCR_WIDTH - highscoreTextWidth) * 0.5f, SCR_HEIGHT / 2 - buttonSize.y / 2 - 60.0f));
     ImGui::Text("%s", score);
-    ImGui::SetCursorPos(ImVec2(SCR_WIDTH/2 - buttonSize.x / 2, SCR_HEIGHT/2 - buttonSize.y / 2));
-    if(ImGui::Button(mainButtonText, ImVec2(buttonSize.x, buttonSize.y))) {
+    ImGui::SetCursorPos(ImVec2(SCR_WIDTH / 2 - buttonSize.x / 2, SCR_HEIGHT / 2 - buttonSize.y / 2));
+    if (ImGui::Button(mainButtonText, ImVec2(buttonSize.x, buttonSize.y))) {
         buttonClicked = true;
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        SoundManager::getInstance().stopSound("../assets/Sounds/getout.ogg");
-        SoundManager::getInstance().play2DSound("../assets/Sounds/night-ambience-17064.mp3", true);
     }
-    ImGui::SetCursorPos(ImVec2(SCR_WIDTH/2 - buttonSize.x / 2, SCR_HEIGHT/2 + buttonSize.y / 2 + 20.0f));
-    if(ImGui::Button("Exit", ImVec2(buttonSize.x, buttonSize.y))) {
+    ImGui::SetCursorPos(ImVec2(SCR_WIDTH / 2 - buttonSize.x / 2, SCR_HEIGHT / 2 + buttonSize.y / 2 + 20.0f));
+    if (ImGui::Button("Exit", ImVec2(buttonSize.x, buttonSize.y))) {
         exit(EXIT_SUCCESS);
     }
     ImGui::End();
@@ -188,7 +194,7 @@ void GUIManager::drawInfo(const char *infoText, const Color &textColor) {
     ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
     ImGui::Begin("info", nullptr, WINDOW_FLAGS);
     auto textWidth = ImGui::CalcTextSize(infoText).x;
-    ImGui::SetCursorPos(ImVec2((SCR_WIDTH - textWidth) * 0.5f, SCR_HEIGHT/2 + 50.0f));
+    ImGui::SetCursorPos(ImVec2((SCR_WIDTH - textWidth) * 0.5f, SCR_HEIGHT / 2 + 50.0f));
     ImGui::TextColored(ImVec4(textColor.r, textColor.g, textColor.b, textColor.a), "%s", infoText);
     ImGui::End();
     ImGui::PopStyleVar();

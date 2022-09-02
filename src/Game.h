@@ -27,7 +27,7 @@
 
 class Game {
 public:
-    explicit Game(Camera* camera);
+    explicit Game(Camera *camera);
 
     virtual ~Game();
 
@@ -40,7 +40,7 @@ public:
     void render();
 
 private:
-    Camera* camera;
+    Camera *camera;
 
     UniformBuffer *uboMatrices;
 
@@ -78,7 +78,8 @@ private:
     struct Matrices {
         Matrix projection;
         Matrix view;
-        Vector3f camPos; float padding0;
+        Vector3f camPos;
+        float padding0;
     } matrices;
 
 };

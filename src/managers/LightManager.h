@@ -20,10 +20,13 @@ enum LightType {
 };
 
 struct Light {
-    int type; Vector3f p5;
+    int type;
+    Vector3f p5;
 
-    Vector3f position; float p0;
-    Vector3f direction; float p1;
+    Vector3f position;
+    float p0;
+    Vector3f direction;
+    float p1;
 
     Color ambient;
     Color diffuse;
@@ -40,7 +43,8 @@ struct Light {
 };
 
 struct Lights {
-    int staticLightsCount = 0; Vector3f p0;
+    int staticLightsCount = 0;
+    Vector3f p0;
     Light dynamicLight;
     Light staticLights[MAX_LIGHT_COUNT];
 };
@@ -54,8 +58,11 @@ public:
     void render();
 
     void setDynamicLight(Vector3f position, Vector3f direction);
+
     void addPoint(Vector3f position);
+
     void addSpot(Vector3f position, Vector3f direction);
+
     void addDir(Vector3f dir);
 
 private:

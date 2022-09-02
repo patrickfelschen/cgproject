@@ -74,7 +74,7 @@ Vector3f &Vector3f::operator*=(float c) {
 
 Vector3f &Vector3f::normalize() {
     float tmp = 0;
-    if(this->length() != 0) {
+    if (this->length() != 0) {
         tmp = 1 / this->length();
     }
 
@@ -108,7 +108,7 @@ float Vector3f::distanceTo(const Vector3f &v) const {
     float diffY = this->y - v.y;
     float diffZ = this->z - v.z;
 
-    return sqrtf(powf(diffX,2) + powf(diffY,2) + powf(diffZ,2));
+    return sqrtf(powf(diffX, 2) + powf(diffY, 2) + powf(diffZ, 2));
 }
 
 

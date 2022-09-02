@@ -6,14 +6,14 @@
 
 Texture::Texture() {}
 
-Texture::Texture(const std::string& type) : id(0), type(type) {
+Texture::Texture(const std::string &type) : id(0), type(type) {
     // Weiße Textur für texturlose Objekte
     RGBImage image(1, 1, GL_RGBA);
     image.setPixelColor(0, 0, Color(1.0f));
     create(image);
 }
 
-Texture::Texture(const Color &pixel, const std::string& type) {
+Texture::Texture(const Color &pixel, const std::string &type) {
     RGBImage image(1, 1, GL_RGBA);
     image.setPixelColor(0, 0, pixel);
     create(image);

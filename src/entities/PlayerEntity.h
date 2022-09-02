@@ -13,7 +13,7 @@
 
 class PlayerEntity : Entity {
 public:
-    explicit PlayerEntity(const Camera* camera);
+    explicit PlayerEntity(const Camera *camera);
 
     ~PlayerEntity() override;
 
@@ -49,12 +49,12 @@ public:
 
     void increaseMagazines(unsigned int count);
 
-    bool checkEntityRayCollision(Entity *entity, const Ray& ray, float range) const;
+    bool checkEntityRayCollision(Entity *entity, const Ray &ray, float range) const;
 
-    bool checkEntityPositionCollision(Entity* entity1, Entity* entity2, float offset) const;
+    bool checkEntityPositionCollision(Entity *entity1, Entity *entity2, float offset) const;
 
 private:
-    const Camera* camera;
+    const Camera *camera;
 
     GunEntity *gunEntity;
 

@@ -37,7 +37,7 @@ private:
     unsigned int VBO = 0;
     unsigned int EBO = 0;
 
-    bool hasMaterial;
+    bool hasMaterial = false;
 
     void setupMesh();
 };

@@ -21,10 +21,11 @@ void TerrainEntity::render() {
 }
 
 Vector3f TerrainEntity::getRandomPosition(Vector3f offset) const {
-    float x = Random::randFloat(-100, 100);
-    float z = Random::randFloat(-100, 100);
+    float size = this->model->getSize() - 40;
+    float x = Random::randFloat(-size / 2, size / 2);
+    float z = Random::randFloat(-size / 2, size / 2);
     float y = this->model->getHeightOfTerrain(x, z);
-    return Vector3f(x,y,z) + offset;
+    return Vector3f(x, y, z) + offset;
 }
 
 AABB TerrainEntity::getTransformedBoundingBox() const {

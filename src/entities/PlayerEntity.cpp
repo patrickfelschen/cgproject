@@ -103,8 +103,7 @@ void PlayerEntity::update(float deltaTime) {
         float distance = enemy->getPosition().distanceTo(this->position);
         if (distance < 7.0f) {
             enemy->getSound()->setVolume(std::clamp(distance, 0.0f, 1.0f));
-        }
-        else {
+        } else {
             enemy->getSound()->setVolume(0.0f);
         }
 

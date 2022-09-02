@@ -4,7 +4,7 @@
 
 #include "StaticEntity.h"
 
-StaticEntity::StaticEntity(const ObjectModel *model, const TerrainEntity* terrainEntity) {
+StaticEntity::StaticEntity(const ObjectModel *model, const TerrainEntity *terrainEntity) {
     this->model = model;
     this->terrainEntity = terrainEntity;
 }

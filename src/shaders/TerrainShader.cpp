@@ -9,7 +9,7 @@
 #define VERT "../assets/shaders/terrainShader.vert"
 #define FRAG "../assets/shaders/terrainShader.frag"
 
-TerrainShader::TerrainShader() : Shader(VERT, FRAG) { }
+TerrainShader::TerrainShader() : Shader(VERT, FRAG) {}
 
 TerrainShader::~TerrainShader() = default;
 

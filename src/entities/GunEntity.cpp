@@ -49,7 +49,7 @@ void GunEntity::render() {
     this->model->shader->setTransform(transformation);
     this->model->render();
 
-    if(!reloading) {
+    if (!reloading) {
         GUIManager::getInstance().drawCrosshair(2.0f, 10.0f, Color(1.0f, 1.0f, 1.0f, 1.0f), ammo == 0);
     }
 }

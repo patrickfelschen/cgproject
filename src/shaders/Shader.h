@@ -38,6 +38,7 @@ public:
 
 protected:
     virtual void setUniforms() = 0;
+
     Matrix transform;
 private:
     // ID des shaders

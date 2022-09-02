@@ -43,7 +43,7 @@ irrklang::ISound *SoundManager::play3DSound(const char *file, const Vector3f &po
     return this->soundEngine->play3D(file, irrklang::vec3df(pos.x, pos.y, pos.z), loop, startPaused);
 }
 
-void SoundManager::setListenerPos(const Camera* camera) {
+void SoundManager::setListenerPos(const Camera *camera) {
     this->soundEngine->setListenerPosition(
             irrklang::vec3df(camera->getPosition().x, camera->getPosition().y, camera->getPosition().z),
             irrklang::vec3df(camera->getTarget().x, camera->getTarget().y, camera->getTarget().z),
