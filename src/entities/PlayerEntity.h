@@ -53,6 +53,8 @@ public:
 
     bool checkEntityPositionCollision(Entity *entity1, Entity *entity2, float offset) const;
 
+    EnemyEntity* getFirstIntersection(Ray ray, float range);
+
     void increaseDifficulty();
 
 private:

@@ -30,19 +30,7 @@ void PlayerEntity::startShoot() {
         float gunRange = 200.0f;
         // Strahl in Kamerarichtung
         Ray ray(camera->getPosition(), camera->getTarget());
-        EnemyEntity *hitEnemy = nullptr;
-        float minHitDistance = 0;
-        for (EnemyEntity *enemy: enemies) {
-            // Überschneidung des Rays und der Bounding Boxen prüfen
-            if (checkEntityRayCollision(enemy, ray, gunRange)) {
-                // Bei mehreren Überschneidungen den nächsten Gegner wählen
-                float distanceToPlayer = enemy->getPosition().distanceTo(this->getPosition());
-                if (hitEnemy == nullptr || distanceToPlayer < minHitDistance) {
-                    hitEnemy = enemy;
-                    minHitDistance = distanceToPlayer;
-                }
-            }
-        }
+        EnemyEntity *hitEnemy = getFirstIntersection(ray, gunRange);
         // Gegner Leben abziehen
         if (hitEnemy != nullptr) {
             hitEnemy->decreaseLife(1);
@@ -85,9 +73,11 @@ void PlayerEntity::update(float deltaTime) {
 
     for (EnemyEntity *enemy: enemies) {
         // Lebensbalken
-        if (checkEntityRayCollision(enemy, camRay, 10.0f)) {
-            GUIManager::getInstance().updateLifeWindow("enemyLife", enemy->getLife(), enemy->getMaxLife(), Vector2f(GUIManager::getInstance().SCR_WIDTH / 2 - (300 / 2), 50.0f));
+        EnemyEntity *targetedEnemy = getFirstIntersection(camRay, 10.0f);
+        if (targetedEnemy != nullptr) {
+            GUIManager::getInstance().updateLifeWindow("enemylife", targetedEnemy->getLife(), targetedEnemy->getMaxLife(), Vector2f(GUIManager::getInstance().SCR_WIDTH / 2, 150.0f));
         }
+
         // Gegner erledigt
         if (enemy->isDead()) {
             if((hitCount % 5) == 0) {
@@ -120,7 +110,7 @@ void PlayerEntity::update(float deltaTime) {
     }
 
     particleManager->update(deltaTime);
-    GUIManager::getInstance().updateLifeWindow("playerLife", life, maxLife, Vector2f(0.0f, GUIManager::getInstance().SCR_HEIGHT - 50.0f));
+    GUIManager::getInstance().updateLifeWindow("playerLife", life, maxLife, Vector2f(160.0f, GUIManager::getInstance().SCR_HEIGHT - 50.0f));
     GUIManager::getInstance().updateScoreWindow(hitCount);
 }
 
@@ -193,4 +183,21 @@ void PlayerEntity::increaseDifficulty() {
     for(EnemyEntity *entity: enemies) {
         entity->increaseSpeed(0.1f);
     }
+}
+
+EnemyEntity *PlayerEntity::getFirstIntersection(Ray ray, float range) {
+    EnemyEntity *hitEnemy = nullptr;
+    float minHitDistance = 0;
+    for (EnemyEntity *enemy: enemies) {
+        // Überschneidung des Rays und der Bounding Boxen prüfen
+        if (checkEntityRayCollision(enemy, ray, range)) {
+            // Bei mehreren Überschneidungen den nächsten Gegner wählen
+            float distanceToPlayer = enemy->getPosition().distanceTo(this->getPosition());
+            if (hitEnemy == nullptr || distanceToPlayer < minHitDistance) {
+                hitEnemy = enemy;
+                minHitDistance = distanceToPlayer;
+            }
+        }
+    }
+    return hitEnemy;
 }

@@ -40,7 +40,7 @@ private:
     const TerrainEntity *terrainEntity;
 
     unsigned int life = 1;
-    unsigned int maxLife = 1;
+    unsigned int maxLife;
 
     float yawOffset = 90;
     float pitchOffset = 20;
