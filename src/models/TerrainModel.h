@@ -20,7 +20,7 @@ public:
 
     TerrainShader *shader;
 
-    const float getHeightOfTerrain(float worldX, float worldZ) const;
+    const float getHeightOfTerrain(float worldX, float worldZ, bool &onTerrain) const;
 
     float getSize() const;
 

@@ -37,8 +37,9 @@ void EnemyEntity::update(float deltaTime) {
     setRotation(Vector3f(0.0f, yaw, pitch));
     // Objekt bewegen und auf Terrainoberfläche halten
     setPositionVelocity(dirToTarget * speed);
-    float height = terrainEntity->getHeightOfPosition(this->getPosition());
-    if (this->getPosition().y <= (height + groundOffset)) {
+    bool onTerrain;
+    float height = terrainEntity->getHeightOfPosition(this->getPosition(), onTerrain);
+    if (onTerrain && this->getPosition().y <= (height + groundOffset)) {
         this->setPosition(Vector3f(this->getPosition().x, height + groundOffset, this->getPosition().z));
     }
     sound->setPosition(irrklang::vec3df(this->position.x, this->position.y, this->position.z));

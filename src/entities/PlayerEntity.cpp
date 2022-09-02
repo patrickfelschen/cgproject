@@ -4,7 +4,8 @@
 
 #include "PlayerEntity.h"
 
-PlayerEntity::PlayerEntity(const Camera *camera) : Entity() {
+PlayerEntity::PlayerEntity(Camera *camera, TerrainEntity *terrainEntity) : Entity() {
+    this->terrainEntity = terrainEntity;
     this->camera = camera;
     this->hitCount = 0;
     this->maxLife = 5;
@@ -51,38 +52,51 @@ void PlayerEntity::startShoot() {
 }
 
 void PlayerEntity::update(float deltaTime) {
+    // Prüfen ob Spieler im Terrain Bereich ist
+    terrainEntity->getHeightOfPosition(
+            camera->getPosition(),
+            onTerrain
+    );
+    // Wenn Spieler außerhalb des Terrains, Leben abziehen
+    if (!onTerrain) {
+        GUIManager::getInstance().drawInfo("Geh zurück!", Color(1.0f, 0, 0));
+        terrainDamageTimer += deltaTime;
+        if (terrainDamageTimer >= terrainDamageTime) {
+            decreaseLife(1);
+            terrainDamageTimer = 0;
+        }
+    }
+
     this->setPosition(camera->getPosition());
     this->gunEntity->update(deltaTime);
 
     Ray camRay = Ray(camera->getPosition(), camera->getTarget());
 
+    // Prüfen ob Spieler Medic Kisten öffnen möchte
     for (StaticEntity *medicCase: this->medicCases) {
         if (checkEntityRayCollision(medicCase, camRay, 4.0f)) {
-            GUIManager::getInstance().drawInfo("+1 Life", Color(1.0f));
+            GUIManager::getInstance().drawInfo("+1 Leben", Color(1.0f));
         }
         if (checkEntityRayCollision(medicCase, camRay, 2.0f)) {
-            SoundManager::getInstance().play2DSound("../assets/Sounds/heal.mp3");
             particleManager->spawn(medicCase->getPosition(), Color(0.0f, 1.0f, 0.0f, 1.0f));
             medicCase->respawn();
             increaseLife(1);
-
         }
         medicCase->update(deltaTime);
     }
-
+    // Prüfen ob Spieler Magazine Kisten öffnen möchte
     for (StaticEntity *magazineCase: this->magazineCases) {
         if (checkEntityRayCollision(magazineCase, camRay, 4.0f)) {
-            GUIManager::getInstance().drawInfo("+2 Magazines", Color(1.0f));
+            GUIManager::getInstance().drawInfo("+2 Magazine", Color(1.0f));
         }
         if (checkEntityRayCollision(magazineCase, camRay, 2.0f)) {
-            SoundManager::getInstance().play2DSound("../assets/Sounds/magazinecase.mp3");
             particleManager->spawn(magazineCase->getPosition(), Color(0.0f, 0.0f, 1.0f, 1.0f));
             magazineCase->respawn();
             increaseMagazines(2);
         }
         magazineCase->update(deltaTime);
     }
-
+    // Prüfen ob Spieler Gegner trifft oder vom Gegner getroffen wird
     for (EnemyEntity *enemy: enemies) {
         // Gegner erledigt
         if (enemy->isDead()) {
@@ -94,9 +108,6 @@ void PlayerEntity::update(float deltaTime) {
         // Spieler getroffen
         if (checkEntityPositionCollision(enemy, this, 0.4f)) {
             decreaseLife(1);
-            SoundManager::getInstance().play2DSound("../assets/Sounds/hit.mp3");
-            SoundManager::getInstance().play2DSound("../assets/Sounds/damage.mp3");
-            particleManager->spawn(enemy->getPosition(), Color(1.0f, 0.0f, 0.0f, 1.0f));
             enemy->respawn();
         }
 
@@ -123,12 +134,16 @@ void PlayerEntity::render() {
 }
 
 void PlayerEntity::increaseLife(unsigned int value) {
+    SoundManager::getInstance().play2DSound("../assets/Sounds/heal.mp3");
     if (life == maxLife) return;
     this->life += value;
 }
 
 void PlayerEntity::decreaseLife(unsigned int value) {
+    SoundManager::getInstance().play2DSound("../assets/Sounds/hit.mp3");
+    SoundManager::getInstance().play2DSound("../assets/Sounds/damage.mp3");
     if (life == 0) return;
+    particleManager->spawn(this->getPosition(), Color(1.0f, 0.0f, 0.0f, 1.0f));
     this->life -= value;
 }
 
@@ -170,6 +185,7 @@ void PlayerEntity::reload() {
 }
 
 void PlayerEntity::increaseMagazines(unsigned int count) {
+    SoundManager::getInstance().play2DSound("../assets/Sounds/magazinecase.mp3");
     this->gunEntity->addMagazines(count);
 }
 
