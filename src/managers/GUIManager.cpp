@@ -32,6 +32,9 @@ void GUIManager::setFont(const char *path) {
     ImGui::GetIO().Fonts->AddFontFromFileTTF(path, size);
 }
 
+/**
+ * Bereitet neuen Frame vor
+ */
 void GUIManager::startDraw() {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
@@ -44,13 +47,19 @@ void GUIManager::destroy() {
     ImGui::DestroyContext();
 }
 
+/**
+ * Zeichnet alle ImGui Elemente
+ */
 void GUIManager::render() {
-    // Show info text for x-seconds
-
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
+/**
+ * Stellt Munition und Magazine dar um unteren rechten Bildschirmrand dar
+ * @param ammoCount Aktuelle Munition
+ * @param magazines Anzahl Magazine
+ */
 void GUIManager::drawAmmoWindow(unsigned int ammoCount, unsigned int magazines) {
     this->startNewWindow("ammo", ImVec2(200.0f, 100.0f), ImVec2(SCR_WIDTH - 150.0f, SCR_HEIGHT - 75.0f));
     ImGui::Text("%i | %i", ammoCount, magazines);
@@ -58,6 +67,10 @@ void GUIManager::drawAmmoWindow(unsigned int ammoCount, unsigned int magazines) 
     ImGui::PopStyleVar();
 }
 
+/**
+ * Stellt Punktestand am oberen linken Bildschirmrand dar
+ * @param score Aktueller Punktestand
+ */
 void GUIManager::drawScoreWindow(unsigned int score) {
     this->startNewWindow("score", ImVec2(SCR_WIDTH, 100.0f),ImVec2(0.0f, 0.0f));
     ImGui::Text("Punkte: %i", score);
@@ -65,6 +78,13 @@ void GUIManager::drawScoreWindow(unsigned int score) {
     ImGui::PopStyleVar();
 }
 
+// https://github.com/dalerank/imspinner
+/**
+ * Stellt einen Spinner in der Mitte des Bildschirmes dar
+ * @param radius Radius des Kreises
+ * @param speed Geschwindigkeit des Kreisverlaufs
+ * @param thickness Breite des Strichs
+ */
 void GUIManager::updateSpinner(float radius, float speed, float thickness) {
     this->startNewWindow("reloadIndicator", ImVec2(SCR_WIDTH, SCR_HEIGHT), ImVec2(0, 0));
 
@@ -91,6 +111,13 @@ void GUIManager::updateSpinner(float radius, float speed, float thickness) {
     ImGui::PopStyleVar();
 }
 
+/**
+ * Stellt ein Kreuz in der Mitte des Bildschirmes dar
+ * @param thickness Breite des Striches
+ * @param size Länge der Striche
+ * @param color Farbe der Striche
+ * @param isEmpty Gibt an, ob Kreuz angezeigt werden soll
+ */
 void GUIManager::drawCrosshair(float thickness, float size, Color color, bool isEmpty) {
     this->startNewWindow("crosshair", ImVec2(SCR_WIDTH, SCR_HEIGHT), ImVec2(0, 0));
 
@@ -113,6 +140,9 @@ void GUIManager::drawCrosshair(float thickness, float size, Color color, bool is
     ImGui::PopStyleVar();
 }
 
+/**
+ * Stellt einen FPS-Zähler am oberen rechten Bildschirmrand dar
+ */
 void GUIManager::drawFPSCounter() {
     this->startNewWindow("fps", ImVec2(SCR_WIDTH, 100.0f), ImVec2(SCR_WIDTH - 150.0f, 0.0f));
     ImGui::Text("%f", ImGui::GetIO().Framerate);
@@ -120,6 +150,15 @@ void GUIManager::drawFPSCounter() {
     ImGui::PopStyleVar();
 }
 
+/**
+ * Stellt einen Lebensbalken dar
+ * @param windowName Zur Unterscheidung zwischen Lebensbalken von Spieler und Gegner
+ * @param currentLife Aktuelle Lebensanzahl
+ * @param maxLife Maximale Lebensanzahl
+ * @param pos Position des Fensters, welches den Balken enthält
+ * @param barLength Länge des Balkens
+ * @param thickness Höhe des Balkens
+ */
 void GUIManager::drawLifeWindow(const char* windowName, unsigned int currentLife, unsigned int maxLife, const Vector2f &pos , float barLength, float thickness) {
     this->startNewWindow(windowName, ImVec2(SCR_WIDTH, SCR_HEIGHT), ImVec2(0.0, 0.0));
     ImGui::GetWindowDrawList()->AddLine(
@@ -143,6 +182,15 @@ void GUIManager::drawLifeWindow(const char* windowName, unsigned int currentLife
     ImGui::PopStyleVar();
 }
 
+/**
+ * Stellt ein Menü mit vertikal angeordneten Buttons dar
+ * @param buttonClicked Liefer Wert über Betätigung des Haupt-Buttons zurück
+ * @param mainButtonText Text des Haupt-Buttons
+ * @param mainText Primärer Text (oben)
+ * @param mainTextColor Farbe des primären Textes
+ * @param secondaryText Sekundärer Text (unten)
+ * @param secondaryTextColor Farbe des sekundären Textes
+ */
 void GUIManager::drawMainMenu(bool &buttonClicked, const char *mainButtonText, const char *mainText,
                               const Color &mainTextColor, const char *secondaryText,
                               const Color &secondaryTextColor) {
@@ -176,6 +224,11 @@ void GUIManager::drawMainMenu(bool &buttonClicked, const char *mainButtonText, c
     ImGui::PopStyleVar();
 }
 
+/**
+ * Stellt einen Infotext in der Mitte des Bildschirmes (unterhalb des Crosshairs) dar
+ * @param infoText Infotext
+ * @param textColor Infotext Farbe
+ */
 void GUIManager::drawInfo(const char *infoText, const Color &textColor) {
     this->startNewWindow("info", ImVec2(SCR_WIDTH, SCR_HEIGHT), ImVec2(0.0f, 0.0f));
     auto textWidth = ImGui::CalcTextSize(infoText).x;
@@ -185,6 +238,14 @@ void GUIManager::drawInfo(const char *infoText, const Color &textColor) {
     ImGui::PopStyleVar();
 }
 
+/**
+ * Bereitet ein neues Fenster zum Zeichnen vor
+ * @param windowName Name des Fensters, über Name kann erneut auf Fenster zugegriffen werden
+ * @param size Fenstergröße
+ * @param pos Fentserposition
+ * @param alpha Alpha-Wert des Hintergrundes
+ * @param flags Window-Flags
+ */
 void GUIManager::startNewWindow(const char *windowName, const ImVec2 &size, const ImVec2 &pos,float alpha, ImGuiWindowFlags flags) {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     ImGui::SetNextWindowBgAlpha(alpha);
