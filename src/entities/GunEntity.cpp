@@ -50,7 +50,7 @@ void GunEntity::update(float deltaTime) {
         GUIManager::getInstance().drawCrosshair(2.0f, 10.0f, Color(1.0f, 1.0f, 1.0f, 1.0f), ammo == 0);
     }
 
-    GUIManager::getInstance().updateAmmoWindow(ammo, magazines);
+    GUIManager::getInstance().drawAmmoWindow(ammo, magazines);
     Entity::update(deltaTime);
 }
 

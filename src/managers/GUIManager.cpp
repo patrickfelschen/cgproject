@@ -6,6 +6,12 @@ GUIManager &GUIManager::getInstance() {
     return instance;
 }
 
+/**
+ * Initialisert ImGui
+ * @param window GLFWwindow Pointer
+ * @param width Fensterbreite
+ * @param height Fensterhöhe
+ */
 void GUIManager::init(GLFWwindow *window, unsigned int width, unsigned int height) {
     this->window = window;
 
@@ -45,35 +51,22 @@ void GUIManager::render() {
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void GUIManager::updateAmmoWindow(unsigned int ammoCount, unsigned int magazines) {
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-    ImGui::SetNextWindowBgAlpha(0.0f);
-    ImGui::SetNextWindowSize(ImVec2(200.0f, 100.0f));
-    ImGui::SetNextWindowPos(ImVec2(SCR_WIDTH - 150.0f, SCR_HEIGHT - 75.0f));
-    ImGui::Begin("ammo", nullptr, WINDOW_FLAGS);
+void GUIManager::drawAmmoWindow(unsigned int ammoCount, unsigned int magazines) {
+    this->startNewWindow("ammo", ImVec2(200.0f, 100.0f), ImVec2(SCR_WIDTH - 150.0f, SCR_HEIGHT - 75.0f));
     ImGui::Text("%i | %i", ammoCount, magazines);
     ImGui::End();
     ImGui::PopStyleVar();
 }
 
-void GUIManager::updateScoreWindow(unsigned int score) {
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-    ImGui::SetNextWindowBgAlpha(0.0f);
-    ImGui::SetNextWindowSize(ImVec2(SCR_WIDTH, 100.0f));
-    ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
-    ImGui::Begin("score", nullptr, WINDOW_FLAGS);
+void GUIManager::drawScoreWindow(unsigned int score) {
+    this->startNewWindow("score", ImVec2(SCR_WIDTH, 100.0f),ImVec2(0.0f, 0.0f));
     ImGui::Text("Punkte: %i", score);
     ImGui::End();
     ImGui::PopStyleVar();
 }
 
 void GUIManager::updateSpinner(float radius, float speed, float thickness) {
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-    ImGui::SetNextWindowBgAlpha(0.0f);
-    ImGui::SetNextWindowSize(ImVec2(SCR_WIDTH, SCR_HEIGHT));
-    ImGui::SetNextWindowPos(ImVec2(0, 0));
-
-    ImGui::Begin("reloadIndicator", nullptr, WINDOW_FLAGS);
+    this->startNewWindow("reloadIndicator", ImVec2(SCR_WIDTH, SCR_HEIGHT), ImVec2(0, 0));
 
     ImDrawList *drawList = ImGui::GetWindowDrawList();
     drawList->PathClear();
@@ -99,12 +92,8 @@ void GUIManager::updateSpinner(float radius, float speed, float thickness) {
 }
 
 void GUIManager::drawCrosshair(float thickness, float size, Color color, bool isEmpty) {
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-    ImGui::SetNextWindowBgAlpha(0.0f);
-    ImGui::SetNextWindowSize(ImVec2(SCR_WIDTH, SCR_HEIGHT));
-    ImGui::SetNextWindowPos(ImVec2(0, 0));
+    this->startNewWindow("crosshair", ImVec2(SCR_WIDTH, SCR_HEIGHT), ImVec2(0, 0));
 
-    ImGui::Begin("#CH", nullptr, WINDOW_FLAGS);
     ImDrawList *drawlist = ImGui::GetForegroundDrawList();
 
     if (isEmpty) {
@@ -125,22 +114,14 @@ void GUIManager::drawCrosshair(float thickness, float size, Color color, bool is
 }
 
 void GUIManager::drawFPSCounter() {
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-    ImGui::SetNextWindowBgAlpha(0.0f);
-    ImGui::SetNextWindowSize(ImVec2(SCR_WIDTH, 100.0f));
-    ImGui::SetNextWindowPos(ImVec2(SCR_WIDTH - 150.0f, 0.0f));
-    ImGui::Begin("fps", nullptr, WINDOW_FLAGS);
+    this->startNewWindow("fps", ImVec2(SCR_WIDTH, 100.0f), ImVec2(SCR_WIDTH - 150.0f, 0.0f));
     ImGui::Text("%f", ImGui::GetIO().Framerate);
     ImGui::End();
     ImGui::PopStyleVar();
 }
 
-void GUIManager::updateLifeWindow(const char* windowName, unsigned int currentLife, unsigned int maxLife, const Vector2f &pos , float barLength, float thickness) {
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-    ImGui::SetNextWindowBgAlpha(0.0f);
-    ImGui::SetNextWindowSize(ImVec2(SCR_WIDTH, SCR_HEIGHT));
-    ImGui::SetNextWindowPos(ImVec2(0.0, 0.0));
-    ImGui::Begin(windowName, nullptr, WINDOW_FLAGS);
+void GUIManager::drawLifeWindow(const char* windowName, unsigned int currentLife, unsigned int maxLife, const Vector2f &pos , float barLength, float thickness) {
+    this->startNewWindow(windowName, ImVec2(SCR_WIDTH, SCR_HEIGHT), ImVec2(0.0, 0.0));
     ImGui::GetWindowDrawList()->AddLine(
             ImVec2(pos.x - (barLength / 2), pos.y),
             ImVec2(pos.x + (barLength / 2), pos.y),
@@ -164,15 +145,12 @@ void GUIManager::updateLifeWindow(const char* windowName, unsigned int currentLi
 
 void GUIManager::drawMainMenu(bool &buttonClicked, const char *mainButtonText, const char *mainText,
                               const Color &mainTextColor, const char *secondaryText,
-                              const Color &secondaryTextColor) const {
+                              const Color &secondaryTextColor) {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     Vector2f buttonSize(200.0f, 75.0f);
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-    ImGui::SetNextWindowSize(ImVec2(SCR_WIDTH, SCR_HEIGHT));
-    ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
-    ImGui::Begin("mainmenu", nullptr,
-                 ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
-                 ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings);
+
+    this->startNewWindow("mainmenu", ImVec2(SCR_WIDTH, SCR_HEIGHT), ImVec2(0.0f, 0.0f), 1.0f, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
+                                                                                        ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings);
     char score[32];
     sprintf(score, "Highscore: %i", Loader::getInstance().readScoreFromFile());
     auto mainTextWidth = ImGui::CalcTextSize(mainText).x;
@@ -199,14 +177,18 @@ void GUIManager::drawMainMenu(bool &buttonClicked, const char *mainButtonText, c
 }
 
 void GUIManager::drawInfo(const char *infoText, const Color &textColor) {
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-    ImGui::SetNextWindowBgAlpha(0.0f);
-    ImGui::SetNextWindowSize(ImVec2(SCR_WIDTH, SCR_HEIGHT));
-    ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
-    ImGui::Begin("info", nullptr, WINDOW_FLAGS);
+    this->startNewWindow("info", ImVec2(SCR_WIDTH, SCR_HEIGHT), ImVec2(0.0f, 0.0f));
     auto textWidth = ImGui::CalcTextSize(infoText).x;
     ImGui::SetCursorPos(ImVec2((SCR_WIDTH - textWidth) * 0.5f, SCR_HEIGHT / 2 + 50.0f));
     ImGui::TextColored(ImVec4(textColor.r, textColor.g, textColor.b, textColor.a), "%s", infoText);
     ImGui::End();
     ImGui::PopStyleVar();
+}
+
+void GUIManager::startNewWindow(const char *windowName, const ImVec2 &size, const ImVec2 &pos,float alpha, ImGuiWindowFlags flags) {
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    ImGui::SetNextWindowBgAlpha(alpha);
+    ImGui::SetNextWindowSize(size);
+    ImGui::SetNextWindowPos(ImVec2(pos));
+    ImGui::Begin(windowName, nullptr, flags);
 }
