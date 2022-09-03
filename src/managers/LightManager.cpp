@@ -7,6 +7,10 @@
 
 #define TO_RAD(deg) (deg * std::numbers::pi / 180.0)
 
+/**
+ * Initialisiert einen UniformBuffer für die Lichter und fügt eine globale Beleuchtun hinzu
+ * @param camera
+ */
 LightManager::LightManager(const Camera *camera) : camera(camera) {
     this->uboSpotLights = new UniformBuffer(sizeof(Lights), 1);
 
@@ -24,11 +28,19 @@ LightManager::~LightManager() {
     delete uboSpotLights;
 }
 
+/**
+ * Aktualisiert dynamisches Spotlight im UniformBuffer
+ */
 void LightManager::render() {
     setDynamicLight(camera->getPosition(), camera->getTarget());
     this->uboSpotLights->setSubData(offsetof(Lights, dynamicLight), sizeof(Light), &lights.dynamicLight);
 }
 
+/**
+ * Erzeugt ein dynamisches Spotlight
+ * @param position Position des Lichtes
+ * @param direction Richtung des Lichtes
+ */
 void LightManager::setDynamicLight(Vector3f position, Vector3f direction) {
     Light l;
     l.type = SPOT;
@@ -40,6 +52,7 @@ void LightManager::setDynamicLight(Vector3f position, Vector3f direction) {
     l.diffuse = Color(1.0f, 1.0f, 1.0f);
     l.specular = Color(1.0f, 1.0f, 1.0f);
 
+    // https://learnopengl.com/Lighting/Light-casters
     l.constant = 1.0f;
     l.linear = 0.09f;
     l.quadratic = 0.032f;
@@ -50,6 +63,10 @@ void LightManager::setDynamicLight(Vector3f position, Vector3f direction) {
     this->lights.dynamicLight = l;
 }
 
+/**
+ * Erzeugt ein statisches Pointlight
+ * @param position Position des Spotlights
+ */
 void LightManager::addPoint(Vector3f position) {
     Light l;
     l.type = POINT;
@@ -60,14 +77,21 @@ void LightManager::addPoint(Vector3f position) {
     l.diffuse = Color(0.8f, 0.8f, 0.1f);
     l.specular = Color(0.7f, 0.7f, 0.1f);
 
+    // https://learnopengl.com/Lighting/Light-casters
     l.constant = 1.0f;
     l.linear = 0.35f;
     l.quadratic = 0.44f;
 
+    // Licht zu staticLights hinzufügen und in UniformBuffer setzen
     this->lights.staticLights[lights.staticLightsCount++] = l;
     this->uboSpotLights->setSubData(0, sizeof(Lights), &lights);
 }
 
+/**
+ * Erzeugt eine statisches Spotlight
+ * @param position Position des Spotlights
+ * @param direction Richtung des Spotlights
+ */
 void LightManager::addSpot(Vector3f position, Vector3f direction) {
     Light l;
     l.type = SPOT;
@@ -90,6 +114,10 @@ void LightManager::addSpot(Vector3f position, Vector3f direction) {
     this->uboSpotLights->setSubData(0, sizeof(Lights), &lights);
 }
 
+/**
+ * Fügt eine statisches Directionallight hinzu
+ * @param dir Richtung des Lichtes
+ */
 void LightManager::addDir(Vector3f dir) {
     Light l;
     l.type = DIR;
@@ -100,6 +128,7 @@ void LightManager::addDir(Vector3f dir) {
     l.diffuse = Color(0.010f, 0.010f, 0.010f);
     l.specular = Color(0.005f, 0.005f, 0.005f);
 
+    // Licht zu staticLights hinzufügen und in UniformBuffer setzen
     this->lights.staticLights[lights.staticLightsCount++] = l;
     this->uboSpotLights->setSubData(0, sizeof(Lights), &lights);
 }

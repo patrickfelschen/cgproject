@@ -24,6 +24,8 @@ private:
 
     float infoTextDuration = 2.0f;
     float infoTextTimer = 0.0f;
+
+    void startNewWindow(const char* windowName, const ImVec2 &size, const ImVec2 &pos, float alpha = 0.0f, ImGuiWindowFlags flags = WINDOW_FLAGS);
 public:
     unsigned int SCR_WIDTH;
     unsigned int SCR_HEIGHT;
@@ -42,11 +44,11 @@ public:
 
     void setFont(const char *path);
 
-    void updateAmmoWindow(unsigned int ammoCount, unsigned int magazines);
+    void drawAmmoWindow(unsigned int ammoCount, unsigned int magazines);
 
-    void updateScoreWindow(unsigned int score);
+    void drawScoreWindow(unsigned int score);
 
-    void updateLifeWindow(const char* windowName, unsigned int currentLife, unsigned int maxLife, const Vector2f &pos, float barLength = 300, float thickness = 20.0f);
+    void drawLifeWindow(const char* windowName, unsigned int currentLife, unsigned int maxLife, const Vector2f &pos, float barLength = 300, float thickness = 20.0f);
 
     void updateSpinner(float radius, float speed, float thickness);
 
@@ -57,7 +59,7 @@ public:
     void drawFPSCounter();
 
     void drawMainMenu(bool &buttonClicked, const char *mainButtonText, const char *mainText, const Color &mainTextColor,
-                      const char *secondaryText = "", const Color &secondaryTextColor = Color(1.0f)) const;
+                      const char *secondaryText = "", const Color &secondaryTextColor = Color(1.0f));
 
     void render();
 };

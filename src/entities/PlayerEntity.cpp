@@ -98,7 +98,7 @@ void PlayerEntity::update(float deltaTime) {
         // Lebensbalken eines Gegners
         EnemyEntity *targetedEnemy = getFirstIntersection(camRay, 10.0f);
         if (targetedEnemy != nullptr) {
-            GUIManager::getInstance().updateLifeWindow("enemylife", targetedEnemy->getLife(), targetedEnemy->getMaxLife(), Vector2f(GUIManager::getInstance().SCR_WIDTH / 2, 25.0f), 200, 10);
+            GUIManager::getInstance().drawLifeWindow("enemylife", targetedEnemy->getLife(), targetedEnemy->getMaxLife(), Vector2f(GUIManager::getInstance().SCR_WIDTH / 2, 25.0f), 200, 10);
         }
 
         // Gegner erledigt
@@ -132,8 +132,8 @@ void PlayerEntity::update(float deltaTime) {
     }
 
     particleManager->update(deltaTime);
-    GUIManager::getInstance().updateLifeWindow("playerLife", life, maxLife, Vector2f(160.0f, GUIManager::getInstance().SCR_HEIGHT - 50.0f));
-    GUIManager::getInstance().updateScoreWindow(hitCount);
+    GUIManager::getInstance().drawLifeWindow("playerLife", life, maxLife, Vector2f(160.0f, GUIManager::getInstance().SCR_HEIGHT - 50.0f));
+    GUIManager::getInstance().drawScoreWindow(hitCount);
 }
 
 void PlayerEntity::render() {

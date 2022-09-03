@@ -24,6 +24,11 @@ AABB TerrainEntity::getTransformedBoundingBox() const {
     return this->model->getBoundingBox().transform(transformation);
 }
 
+/**
+ * Berechnet zufällige X- und Z-Koordinaten und ruft an dieser Stelle die Höhe des Terrains ab (Y-Koordinate)
+ * @param offset Verschiebung des zurückgelieferten Vektors
+ * @return Zufälliger Positionsvektor + Offset
+ */
 Vector3f TerrainEntity::getRandomPosition(Vector3f offset) const {
     float size = this->model->getSize() - 40;
     bool onTerrain; // immer true, da zwischen Size - 40
