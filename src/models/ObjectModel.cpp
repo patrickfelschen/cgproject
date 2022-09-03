@@ -4,12 +4,10 @@
 //
 
 #include "ObjectModel.h"
-#include "../shaders/PhongShader.h"
-
 
 ObjectModel::ObjectModel(Shader *shader, const std::string &filePath) : Model() {
     this->shader = shader;
-    // read file via ASSIMP
+    // Liest Datei über Assimp
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(
             filePath,
@@ -18,11 +16,12 @@ ObjectModel::ObjectModel(Shader *shader, const std::string &filePath) : Model() 
             aiProcess_FlipUVs |
             aiProcess_CalcTangentSpace
     );
+    // Fehlerprüfung
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
         std::cout << "ERROR::ASSIMP: " << importer.GetErrorString() << std::endl;
         return;
     }
-    // retrieve the directory path of the filepath
+    // Liest das Verzeichnis aus der Zeichenkette des gesamten Pfades
     this->directory = filePath.substr(0, filePath.find_last_of('/'));
     this->processNode(scene->mRootNode, scene);
     std::cout << "OBJECTMODEL::LOADED: " << filePath << std::endl;
@@ -39,16 +38,29 @@ void ObjectModel::render() const {
     this->shader->deactivate();
 }
 
+/**
+ * Lädt alle Meshes aus gegebener Node
+ * @param node Node enthält Meshes und ggf. Kind-Knoten
+ * @param scene Szene wird zum auslesen der Meshes verwendet
+ */
 void ObjectModel::processNode(aiNode *node, const aiScene *scene) {
     for (unsigned int i = 0; i < node->mNumMeshes; i++) {
+        // Einträge aus mMeshes sind Index-Werte der Mesh-Liste aus der Szene
         aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
         meshes.push_back(processMesh(mesh, scene));
     }
+    // Weitere Kind-Knote abarbeiten
     for (unsigned int i = 0; i < node->mNumChildren; i++) {
         processNode(node->mChildren[i], scene);
     }
 }
 
+/**
+ * Liest Werte aus Mesh und liefert diese in einer Mesh-Klasse zurück
+ * @param mesh Mesh der Szene
+ * @param scene Szene wird zum auslesen der Materials verwendet
+ * @return Mesh mit ausgelesenen Vertex-, Index-, Textur- und Material-Daten
+ */
 Mesh ObjectModel::processMesh(aiMesh *mesh, const aiScene *scene) {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
@@ -57,19 +69,19 @@ Mesh ObjectModel::processMesh(aiMesh *mesh, const aiScene *scene) {
     for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
         Vertex vertex;
         Vector3f vector;
-        // positions
+        // Positionen
         vector.x = mesh->mVertices[i].x;
         vector.y = mesh->mVertices[i].y;
         vector.z = mesh->mVertices[i].z;
         vertex.pos = vector;
-        // normals
+        // Normalen
         if (mesh->HasNormals()) {
             vector.x = mesh->mNormals[i].x;
             vector.y = mesh->mNormals[i].y;
             vector.z = mesh->mNormals[i].z;
             vertex.normal = vector;
         }
-        // texture coordinates
+        // Texturkoordinaten
         Vector2f texCoord;
         if (mesh->mTextureCoords[0]) {
             texCoord.x = mesh->mTextureCoords[0][i].x;
@@ -87,18 +99,18 @@ Mesh ObjectModel::processMesh(aiMesh *mesh, const aiScene *scene) {
         }
         vertices.push_back(vertex);
     }
-    // Indices
+    // Indizes
     for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
         aiFace face = mesh->mFaces[i];
         for (unsigned int j = 0; j < face.mNumIndices; j++) {
             indices.push_back(face.mIndices[j]);
         }
     }
-    // Materials
+    // Texturen
     unsigned int diffCount = 0;
     unsigned int specCount = 0;
     aiMaterial *uiMaterial = scene->mMaterials[mesh->mMaterialIndex];
-    // 1. diffuse tex
+    // 1. Diffuse-Textur
     std::vector<Texture> diffuseMaps = loadMaterialTextures(
             uiMaterial,
             aiTextureType_DIFFUSE,
@@ -106,7 +118,7 @@ Mesh ObjectModel::processMesh(aiMesh *mesh, const aiScene *scene) {
             diffCount
     );
     textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-    // 2. specular tex
+    // 2. Specular-Textur
     std::vector<Texture> specularMaps = loadMaterialTextures(
             uiMaterial,
             aiTextureType_SPECULAR,
@@ -114,6 +126,7 @@ Mesh ObjectModel::processMesh(aiMesh *mesh, const aiScene *scene) {
             specCount
     );
     textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+    // Material-Daten
     Material material;
     aiColor4D aiColor;
     float shininess = 1;
@@ -126,6 +139,7 @@ Mesh ObjectModel::processMesh(aiMesh *mesh, const aiScene *scene) {
     uiMaterial->Get(AI_MATKEY_SHININESS, shininess);
     material.shininess = shininess;
 
+    // Falls keine Textur gefunden, weiße Textur setzen
     if (diffCount == 0) {
         Texture diffTex("texture_diffuse");
         textures.push_back(diffTex);
@@ -136,10 +150,17 @@ Mesh ObjectModel::processMesh(aiMesh *mesh, const aiScene *scene) {
         textures.push_back(specTex);
     }
 
-    // return a mesh object created from the extracted mesh data
     return {vertices, indices, textures, material};
 }
 
+/**
+ * Lädt Texturen aus Material
+ * @param mat Material, welches Textur(en) entählt
+ * @param type Art der Textur (Specular, Diffuse)
+ * @param typeName
+ * @param textureCount In textureCount wird anzahl der Texturen gespeichert
+ * @return Liste aller ausgelesener Texturen
+ */
 std::vector<Texture> ObjectModel::loadMaterialTextures(
         aiMaterial *mat,
         aiTextureType type,

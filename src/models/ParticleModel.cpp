@@ -4,7 +4,12 @@
 
 #include "ParticleModel.h"
 
+/**
+ * Erzeugt Partikel-Mesh mit Index-, Vertex- und Textur-Daten
+ * @param shader Shader, der für die Partikel verwendet wird
+ */
 ParticleModel::ParticleModel(ParticleShader *shader) : shader(shader) {
+    // Indizes eines Würfels
     std::vector<unsigned int> indices = {
             0, 1, 3, 3, 1, 2,
             1, 5, 2, 2, 5, 6,
@@ -13,6 +18,7 @@ ParticleModel::ParticleModel(ParticleShader *shader) : shader(shader) {
             3, 2, 7, 7, 2, 6,
             4, 5, 0, 0, 5, 1
     };
+    // Vertices eines Würfels
     std::vector<Vertex> vertices = {
             Vertex(Vector3f(-1, -1, -1), Vector3f(), Vector2f(0, 0), Vector2f()),
             Vertex(Vector3f(1, -1, -1), Vector3f(), Vector2f(1, 0), Vector2f()),
@@ -25,6 +31,7 @@ ParticleModel::ParticleModel(ParticleShader *shader) : shader(shader) {
     };
     std::vector<Texture> textures = {
             //Texture("../assets/Objects/Ghost/texture.png", "texture_defuse")
+            // Erzeugt Textur aus einer Farbe (weiß)
             Texture(Color(1.0f), "texture_diffuse")
     };
     Mesh particleMesh(vertices, indices, textures);
