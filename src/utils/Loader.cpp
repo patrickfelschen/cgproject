@@ -5,7 +5,11 @@
 
 #include "Loader.h"
 
-
+/**
+ * Liest Shader Datei zeilenweise aus und speichert den Text in einem String
+ * @param filePath Pfad zur Shader Datei
+ * @param outFile Beinhaltet nach Ausführung den Shader Text
+ */
 void Loader::readShaderFile(const std::string &filePath, std::string &outFile) {
     std::ifstream f(filePath);
     if (f.is_open()) {
@@ -23,6 +27,11 @@ void Loader::readShaderFile(const std::string &filePath, std::string &outFile) {
     }
 }
 
+/**
+ * Liest mit Hilfe von FreeImage eine Bilddatei
+ * @param filePath Pfad zum Bild
+ * @param outImage Beinhaltet nach Ausführung Farbwerte des Bildes
+ */
 void Loader::readImageFile(const char *filePath, RGBImage &outImage) {
     // Prüfe den Dateityp, ob es sich um eine BitMap handelt
     FREE_IMAGE_FORMAT imageFormat = FreeImage_GetFileType(filePath, 0);
@@ -33,12 +42,14 @@ void Loader::readImageFile(const char *filePath, RGBImage &outImage) {
     if (imageFormat == FIF_UNKNOWN) {
         std::cout << "WARNING::LOADER::READIMAGEFILE: Unbekanntes Dateiformat! " << filePath << std::endl;
     }
+    // Erzeugt Bitmap aus Bilddatei
     FIBITMAP *pBitMap = FreeImage_Load(imageFormat, filePath);
     if (pBitMap == nullptr) {
         std::cout << "ERROR::LOADER::READIMAGEFILE: Dateiformat kann nicht geoeffnet werden! " << filePath << std::endl;
         exit(EXIT_FAILURE);
     }
 
+    // Drehen um Koordinaten richtig anzupassen
     FreeImage_FlipVertical(pBitMap);
 
     FREE_IMAGE_TYPE type = FreeImage_GetImageType(pBitMap);
@@ -80,8 +91,16 @@ void Loader::readImageFile(const char *filePath, RGBImage &outImage) {
     outImage = image;
 }
 
+/**
+ * Erstellt einen Shader
+ * @param shaderText Shader-Code
+ * @param id ID des Shaders
+ * @param shaderType Typ des Shaders (Vertex, Fragment)
+ */
 void Loader::addShader(const std::string &shaderText, GLuint id, GLenum shaderType) {
+    // Shader Objekt erstellen, welcher durch zurückgelieferte ID angesprochen werden kann
     GLuint shaderObject = glCreateShader(shaderType);
+    // Fehlerprüfung
     if (shaderObject == 0) {
         std::cerr << "ERROR::SHADER::ADDSHADER: Can not create shader type " << shaderType << std::endl;
         exit(EXIT_FAILURE);
@@ -92,9 +111,11 @@ void Loader::addShader(const std::string &shaderText, GLuint id, GLenum shaderTy
     GLint lengths[1];
     lengths[0] = (GLint) strlen(shaderText.c_str());
 
+    // Shader Code an Shader Objekt senden und kompilieren
     glShaderSource(shaderObject, 1, p, lengths);
     glCompileShader(shaderObject);
 
+    // Statusabfrage
     GLint success;
     glGetShaderiv(shaderObject, GL_COMPILE_STATUS, &success);
 
@@ -105,7 +126,9 @@ void Loader::addShader(const std::string &shaderText, GLuint id, GLenum shaderTy
         exit(EXIT_FAILURE);
     }
 
+    // Shader Objekt an id binden
     glAttachShader(id, shaderObject);
+    // Shader kann nun wieder freigegeben werden und später über id angesprochen werden
     glDeleteShader(shaderObject);
 }
 
