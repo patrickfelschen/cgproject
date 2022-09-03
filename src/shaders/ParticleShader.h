@@ -16,14 +16,11 @@ public:
 
     void setColor(const Color &c);
 
-    void setScale(float scale);
-
 protected:
     void setUniforms() override;
 
 private:
     Color color;
-    float scale;
 };
 
 
