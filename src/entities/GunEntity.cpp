@@ -4,13 +4,13 @@
 
 #include "GunEntity.h"
 
-
 #define TO_RAD(deg) (deg * std::numbers::pi / 180.0)
 #define TO_DEG(rad) (rad * 180.0 / std::numbers::pi)
 
 GunEntity::GunEntity(ObjectModel *model) : Entity() {
     this->model = model;
 
+    // Positioniert Waffe vor der Kamera
     setScaling(0.025);
     setPosition(Vector3f(0.026, -0.015, -0.045));
     setRotation(Vector3f(0, -95, 0));
@@ -28,6 +28,12 @@ GunEntity::GunEntity(ObjectModel *model) : Entity() {
 
 GunEntity::~GunEntity() = default;
 
+/**
+ * Spielt im Nachladevorgang einen Ton ab und zeigt im GUI das Nachladen an
+ * Befindet sich die Waffe nicht im Nachladevorgang, wird ein Kreuz in der Mitte des Bildschirmes angezeigt
+ * Danach wird im GUI die Anzeige für Munition und Magazine aktualisiert
+ * @param deltaTime Zeitunterschied zum letzten Frame
+ */
 void GunEntity::update(float deltaTime) {
     if (reloading) {
         SoundManager::getInstance().play2DSound("../assets/Sounds/reload.mp3", false, true);
@@ -40,6 +46,9 @@ void GunEntity::update(float deltaTime) {
             ammo = maxAmmo;
         }
     }
+    else {
+        GUIManager::getInstance().drawCrosshair(2.0f, 10.0f, Color(1.0f, 1.0f, 1.0f, 1.0f), ammo == 0);
+    }
 
     GUIManager::getInstance().updateAmmoWindow(ammo, magazines);
     Entity::update(deltaTime);
@@ -48,12 +57,11 @@ void GunEntity::update(float deltaTime) {
 void GunEntity::render() {
     this->model->shader->setTransform(transformation);
     this->model->render();
-
-    if (!reloading) {
-        GUIManager::getInstance().drawCrosshair(2.0f, 10.0f, Color(1.0f, 1.0f, 1.0f, 1.0f), ammo == 0);
-    }
 }
 
+/**
+ * Wenn die aktuelle Munition kleiner ist als die maximale Munition, aktuell nicht nachgeladen wird und Magazine vorhanden sind, kann nachgeladen werden
+ */
 void GunEntity::reload() {
     if (ammo < maxAmmo && !reloading && magazines > 0) {
         this->reloading = true;
@@ -61,6 +69,11 @@ void GunEntity::reload() {
     }
 }
 
+/**
+ * Prüft Abbruchbedingungen, spielt danach einen Ton ab und verringert die Munition um 1
+ * readyToFire verhindert Dauerfeuer
+ * @return Wert, ob Schuss abgefeuert wurde
+ */
 bool GunEntity::startShoot() {
     if (!readyToFire || ammo == 0 || reloading) {
         SoundManager::getInstance().play2DSound("../assets/Sounds/gun-dry-firing-7-39792.mp3");
