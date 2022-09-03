@@ -5,7 +5,11 @@
 
 #include "Shader.h"
 
-
+/**
+ * Lädt Vertex- und Fragment-Shader
+ * @param vsFilePath Pfad zum Vertex-Shader
+ * @param fsFilePath Pfad zum Fragment-Shader
+ */
 Shader::Shader(const char *vsFilePath, const char *fsFilePath) {
     this->vsFilePath = vsFilePath;
     this->fsFilePath = fsFilePath;
@@ -52,17 +56,25 @@ void Shader::setUniform(const std::string &name, const Matrix &value) {
     glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, value.m);
 }
 
+/**
+ * Liefert die Position einer Uniform-Variable
+ * @param name
+ * @return
+ */
 GLint Shader::getUniformLocation(const std::string &name) {
+    // Prüfung, ob Uniform Location schon im Cache vorhanden ist
     if (uniformLocationCache.find(name) != uniformLocationCache.end()) {
         //std::cout << "Cache HIT" << std::endl;
         return uniformLocationCache[name];
     }
+    // Uniform in Shader finden
     GLint locationId = glGetUniformLocation(id, name.c_str());
     if (locationId == -1) {
         std::cerr << "WARNING::SHADER::GETUNIFORMLOCATION: "
                   << fsFilePath << ": can not find location: "
                   << name << std::endl;
     }
+    // Uniform Location zu Cache hinzufügen
     uniformLocationCache[name] = locationId;
     return locationId;
 }
