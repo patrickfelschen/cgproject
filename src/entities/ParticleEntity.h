@@ -29,14 +29,11 @@ public:
 
     void setLife(float l);
 
-    void setScale(float s);
-
 private:
     const ParticleModel *model;
     Color color;
     float life;
     float maxLife;
-    float scale;
 };
 
 

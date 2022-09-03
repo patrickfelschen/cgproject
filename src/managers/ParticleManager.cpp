@@ -49,6 +49,6 @@ void ParticleManager::spawn(const Vector3f &origin, Color color) {
         p->setPositionVelocity(Vector3f(x, y, z));
         p->setColor(color);
         p->setLife(Random::randFloat(0.2, 0.5));
-        p->setScale(Random::randFloat(0.005, 0.01));
+        p->setScaling(Random::randFloat(0.005, 0.01));
     }
 }

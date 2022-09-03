@@ -21,7 +21,6 @@ void ParticleEntity::update(float deltaTime) {
 void ParticleEntity::render() {
     this->model->shader->setTransform(transformation);
     this->model->shader->setColor(color);
-    this->model->shader->setScale(scale);
 
     this->model->render();
 }
@@ -41,10 +40,6 @@ float ParticleEntity::getLife() const {
 void ParticleEntity::setLife(float l) {
     this->maxLife = l;
     this->life = l;
-}
-
-void ParticleEntity::setScale(float s) {
-    this->scale = s;
 }
 
 AABB ParticleEntity::getTransformedBoundingBox() const {

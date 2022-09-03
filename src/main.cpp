@@ -175,6 +175,8 @@ void glfwCursorPosCallback(GLFWwindow *window, double xpos, double ypos) {
 }
 
 void glfwFramebufferSizeCallback(GLFWwindow *window, int width, int height) {
+    // Viewport transformation
+    // https://learnopengl.com/Getting-started/Coordinate-Systems
     glViewport(0, 0, width, height);
 }
 
