@@ -97,9 +97,9 @@ vec4 calcDirLight(Light light, vec3 normal, vec3 viewDir) {
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), uMaterial.shininess);
     // combine results
-    vec4 ambient  = light.ambient * diffuseTexture;
-    vec4 diffuse  = light.diffuse  * diff * diffuseTexture;
-    vec4 specular = light.specular * spec * specularTexture;
+    vec4 ambient  = light.ambient * diffuseTexture * uMaterial.ambient;
+    vec4 diffuse  = light.diffuse  * diff * diffuseTexture * uMaterial.diffuse;
+    vec4 specular = light.specular * spec * specularTexture * uMaterial.specular;
     return (ambient + diffuse + specular);
 }
 
@@ -114,9 +114,9 @@ vec4 calcPointLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir) {
     float distance = length(light.position.xyz - fragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
     // combine results
-    vec4 ambient = light.ambient * diffuseTexture;
-    vec4 diffuse = light.diffuse * diff * diffuseTexture;
-    vec4 specular = light.specular * spec * specularTexture;
+    vec4 ambient = light.ambient * diffuseTexture * uMaterial.ambient;
+    vec4 diffuse = light.diffuse * diff * diffuseTexture * uMaterial.diffuse;
+    vec4 specular = light.specular * spec * specularTexture * uMaterial.specular;
     ambient *= attenuation;
     diffuse *= attenuation;
     specular *= attenuation;
@@ -138,9 +138,9 @@ vec4 calcSpotLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir) {
     float epsilon = light.cutOff - light.outerCutOff;
     float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
     // combine results
-    vec4 ambient = light.ambient * diffuseTexture;
-    vec4 diffuse = light.diffuse * diff * diffuseTexture;
-    vec4 specular = light.specular * spec * specularTexture;
+    vec4 ambient = light.ambient * diffuseTexture * uMaterial.ambient;
+    vec4 diffuse = light.diffuse * diff * diffuseTexture * uMaterial.diffuse;
+    vec4 specular = light.specular * spec * specularTexture * uMaterial.specular;
     ambient *= attenuation * intensity;
     diffuse *= attenuation * intensity;
     specular *= attenuation * intensity;

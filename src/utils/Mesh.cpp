@@ -91,9 +91,9 @@ void Mesh::render(Shader *shader) const {
     }
     // Material Eigenschaften setzen
     if (hasMaterial) {
-        //shader->setUniform("uMaterial.ambient", material.ambient);
-        //shader->setUniform("uMaterial.diffuse", material.diffuse);
-        //shader->setUniform("uMaterial.specular", material.specular);
+        shader->setUniform("uMaterial.ambient", material.ambient);
+        shader->setUniform("uMaterial.diffuse", material.diffuse);
+        shader->setUniform("uMaterial.specular", material.specular);
         shader->setUniform("uMaterial.shininess", material.shininess);
     }
     // Mesh zeichnen

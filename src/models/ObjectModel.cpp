@@ -98,20 +98,22 @@ Mesh ObjectModel::processMesh(aiMesh *mesh, const aiScene *scene) {
     unsigned int diffCount = 0;
     unsigned int specCount = 0;
     aiMaterial *uiMaterial = scene->mMaterials[mesh->mMaterialIndex];
-    // 1. diffuse maps
-    std::vector<Texture> diffuseMaps = loadMaterialTextures(uiMaterial, aiTextureType_DIFFUSE, "texture_diffuse",
-                                                            diffCount);
+    // 1. diffuse tex
+    std::vector<Texture> diffuseMaps = loadMaterialTextures(
+            uiMaterial,
+            aiTextureType_DIFFUSE,
+            "texture_diffuse",
+            diffCount
+    );
     textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-    // 2. specular maps
-    std::vector<Texture> specularMaps = loadMaterialTextures(uiMaterial, aiTextureType_SPECULAR, "texture_specular",
-                                                             specCount);
+    // 2. specular tex
+    std::vector<Texture> specularMaps = loadMaterialTextures(
+            uiMaterial,
+            aiTextureType_SPECULAR,
+            "texture_specular",
+            specCount
+    );
     textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-    // 3. normal maps
-    // std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
-    // textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-    // 4. height maps
-    // std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
-    // textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
     Material material;
     aiColor4D aiColor;
     float shininess = 1;
