@@ -4,7 +4,6 @@
 //
 
 #include "TerrainModel.h"
-#include "../utils/Vertex.h"
 
 TerrainModel::TerrainModel(TerrainShader *shader) : Model() {
     this->shader = shader;
@@ -23,11 +22,15 @@ void TerrainModel::generate() {
     RGBImage image;
     Loader::getInstance().readImageFile("../assets/Terrain/heightmap.bmp", image);
 
+    // Auslesen der Breite und Höhe der Heightmap
     this->imgWidth = image.getWidth();
     this->imgHeight = image.getHeight();
+
+    // Nur quadratisches Format zulassen
     assert(imgWidth == imgHeight);
 
     // Weiten- und Höhenskalierung berechnung
+    // widthScale/heightScale ermöglichen Skalierung der Werte über size
     float widthScale = width / imgWidth;
     float heightScale = depth / imgHeight;
 
@@ -142,7 +145,7 @@ void TerrainModel::render() const {
 }
 
 //https://www.youtube.com/watch?v=6E2zjfzMs7c
-const float TerrainModel::getHeightOfTerrain(float worldX, float worldZ, bool &onTerrain) const {
+float TerrainModel::getHeightOfTerrain(float worldX, float worldZ, bool &onTerrain) const {
     // Welt-Position auf dem Terrain (Start in Mittelpunkt)
     float terrainX = worldX + width / 2;
     float terrainZ = worldZ + depth / 2;
