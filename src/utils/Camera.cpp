@@ -101,9 +101,9 @@ void Camera::handleKeyboardInputs(float deltaTime) {
         soundPlaying = true;
         position += getRight() * speed;
     }
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-        position.y += speed;
-    }
+//    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+//        position.y += speed;
+//    }
 
     if (soundPlaying) {
         SoundManager::getInstance().play2DSound("../assets/Sounds/step.mp3", false, true);
