@@ -12,6 +12,10 @@ ParticleEntity::ParticleEntity(const ParticleModel *model) {
 
 ParticleEntity::~ParticleEntity() = default;
 
+/**
+ * Verringert über die Zeit das Leben und den Alphawert der Farbe
+ * @param deltaTime Zeitunterschied zum letzten Frame
+ */
 void ParticleEntity::update(float deltaTime) {
     life -= deltaTime;
     color.a -= deltaTime / maxLife;

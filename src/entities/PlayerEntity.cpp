@@ -4,6 +4,11 @@
 
 #include "PlayerEntity.h"
 
+/**
+ * Initialisierung von Werten und erstellund eines ParticleManagers
+ * @param camera First-Person Kamera des Spielers
+ * @param terrainEntity Entitiy des Terrains
+ */
 PlayerEntity::PlayerEntity(Camera *camera, TerrainEntity *terrainEntity) : Entity() {
     this->terrainEntity = terrainEntity;
     this->camera = camera;
@@ -62,9 +67,11 @@ void PlayerEntity::update(float deltaTime) {
 
     // Prüfen ob Spieler Medic Kisten öffnen möchte
     for (StaticEntity *medicCase: this->medicCases) {
+        // Anzeige eines Infotextes
         if (checkEntityRayCollision(medicCase, camRay, 4.0f)) {
             GUIManager::getInstance().drawInfo("+1 Leben");
         }
+        // Bei Kollision Particle anzeigen, Kiste neu setzen und das Leben des Spieler erhöhen
         if (checkEntityRayCollision(medicCase, camRay, 2.0f)) {
             particleManager->spawn(medicCase->getPosition(), Color(0.0f, 1.0f, 0.0f, 1.0f));
             medicCase->respawn();
@@ -74,9 +81,11 @@ void PlayerEntity::update(float deltaTime) {
     }
     // Prüfen ob Spieler Magazine Kisten öffnen möchte
     for (StaticEntity *magazineCase: this->magazineCases) {
+        // Anzeige eines Infotextes
         if (checkEntityRayCollision(magazineCase, camRay, 4.0f)) {
             GUIManager::getInstance().drawInfo("+2 Magazine");
         }
+        // Bei Kollision Particle anzeigen, Kiste neu setzen und die Magazinanzahl des Spieler erhöhen
         if (checkEntityRayCollision(magazineCase, camRay, 2.0f)) {
             particleManager->spawn(magazineCase->getPosition(), Color(0.0f, 0.0f, 1.0f, 1.0f));
             magazineCase->respawn();
@@ -86,7 +95,7 @@ void PlayerEntity::update(float deltaTime) {
     }
     // Prüfen ob Spieler Gegner trifft oder vom Gegner getroffen wird
     for (EnemyEntity *enemy: enemies) {
-        // Lebensbalken
+        // Lebensbalken eines Gegners
         EnemyEntity *targetedEnemy = getFirstIntersection(camRay, 10.0f);
         if (targetedEnemy != nullptr) {
             GUIManager::getInstance().updateLifeWindow("enemylife", targetedEnemy->getLife(), targetedEnemy->getMaxLife(), Vector2f(GUIManager::getInstance().SCR_WIDTH / 2, 25.0f), 200, 10);
@@ -94,6 +103,7 @@ void PlayerEntity::update(float deltaTime) {
 
         // Gegner erledigt
         if (enemy->isDead()) {
+            // Pro 5 getötete Gegner wird die Schwierigkeit des Spiel erhöht
             if((hitCount % 5) == 0) {
                 enemy->increaseMaxLife(1);
                 increaseDifficulty();
@@ -109,6 +119,7 @@ void PlayerEntity::update(float deltaTime) {
             enemy->respawn();
         }
 
+        // Lautstärke des Gegners je nach Distanz zum Spieler erhöhen
         float distance = enemy->getPosition().distanceTo(this->position);
         if (distance < 7.0f) {
             enemy->getSound()->setVolume(std::clamp(distance, 0.0f, 1.0f));
@@ -164,11 +175,25 @@ void PlayerEntity::setMagazineCases(const std::vector<StaticEntity *> &magazineC
     this->magazineCases = magazineCases;
 }
 
+/**
+ * Prüft die Kollision zwischen der BoundingBox einer Einheit und eime Strahl
+ * @param entity Einheit
+ * @param ray Strahl mit Ursprung und Richtung
+ * @param range Reichweite des Strahls
+ * @return true - Kollision erkannt, false - Keine Kollision
+ */
 bool PlayerEntity::checkEntityRayCollision(Entity *entity, const Ray &ray, float range) const {
     Ray rangeRay = Ray(ray.origin, ray.direction * range);
     return entity->getTransformedBoundingBox().intersection(rangeRay);
 }
 
+/**
+ * Prüft ob die Distanz zwischen zwei Einheiten kleiner als ein Offset ist
+ * @param entity1 Einheit 1
+ * @param entity2 Einheit 2
+ * @param offset Zu prüfende Distanz
+ * @return true - Kollision erkannt, false - Keine Kollision
+ */
 bool PlayerEntity::checkEntityPositionCollision(Entity *entity1, Entity *entity2, float offset) const {
     return entity1->getPosition().distanceTo(entity2->getPosition()) <= offset;
 }
@@ -194,6 +219,9 @@ unsigned int PlayerEntity::getHitCount() const {
     return hitCount;
 }
 
+/**
+ * Die Geschwindigkeit aller EnemyEntities wird erhöht
+ */
 void PlayerEntity::increaseDifficulty() {
     std::cout << "difficulty increase" << std::endl;
     for(EnemyEntity *entity: enemies) {
@@ -201,6 +229,12 @@ void PlayerEntity::increaseDifficulty() {
     }
 }
 
+/**
+ * Prüft den Strahl gegen alle gegnerischen Entities und liefert die vorderste (geprüft durch Distanz) Einheit zurück
+ * @param ray Strahl mit Ursprung und Richtung
+ * @param range Reichweite des Strahls
+ * @return Vorderste Entity, die von dem Strahl getroffen wurde
+ */
 EnemyEntity *PlayerEntity::getFirstIntersection(Ray ray, float range) {
     EnemyEntity *hitEnemy = nullptr;
     float minHitDistance = 0;
