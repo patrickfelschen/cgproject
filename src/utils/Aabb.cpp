@@ -21,6 +21,11 @@ Vector3f AABB::size() const {
     return Max - Min;
 }
 
+/**
+ * Erzeugt eine neue, transformierte Bounding Box
+ * @param m Transformationsmatrix
+ * @return Transformierte Bounding Box
+ */
 AABB AABB::transform(const Matrix &m) const {
     Vector3f c[8];
     corners(c);
@@ -31,6 +36,13 @@ AABB AABB::transform(const Matrix &m) const {
     return r;
 }
 
+
+/**
+ * Vereint zwei Bounding Boxen
+ * @param a Bounding Box 1
+ * @param b Bounding Box 2
+ * @return Neue, vereinte Bounding Box
+ */
 AABB AABB::merge(const AABB &a, const AABB &b) const {
     AABB r;
 
@@ -45,6 +57,11 @@ AABB AABB::merge(const AABB &a, const AABB &b) const {
     return r;
 }
 
+/**
+ * Vereint aktuelle Bounding Box (Bounding Box 1) mit einer anderen
+ * @param a Bounding Box 2
+ * @return Aktuelle, geänderte Bounding Box
+ */
 AABB &AABB::merge(const AABB &a) {
     Min.x = a.Min.x < Min.x ? a.Min.x : Min.x;
     Min.y = a.Min.y < Min.y ? a.Min.y : Min.y;
@@ -57,6 +74,10 @@ AABB &AABB::merge(const AABB &a) {
     return *this;
 }
 
+/**
+ * Speichert Eckpunkte der Bounding Box in c
+ * @param c Enthält nach Ausführung die Eckpunkte der Bounding Box
+ */
 void AABB::corners(Vector3f c[8]) const {
     c[0].x = Min.x;
     c[0].y = Min.y;
@@ -85,6 +106,11 @@ void AABB::corners(Vector3f c[8]) const {
     c[7].z = Max.z;
 }
 
+/**
+ * Erstellt eine Bounding Box aus einer Liste von Punkten
+ * @param Points Punkte
+ * @param PointCount Anzahl der Punkte
+ */
 void AABB::fromPoints(const Vector3f *Points, unsigned int PointCount) {
     Max = Vector3f(-1e20f, -1e20f, -1e20f);
     Min = Vector3f(1e20f, 1e20f, 1e20f);
@@ -108,7 +134,7 @@ const AABB &AABB::unitBox() {
     return UnitBox;
 }
 
-// https://gdbooks.gitbooks.io/3dcollisions/content/Chapter3/raycast_aabb.html
+// https://sudhamr.wordpress.com/2019/05/01/week-12/
 bool AABB::intersection(const Ray &ray) const {
 //    printf("Ray-Origin: X: %f Y: %f Z: %f\n", ray.origin.x, ray.origin.y, ray.origin.z);
 //    printf("Ray-Direction: X: %f Y: %f Z: %f\n", ray.direction.x, ray.direction.y, ray.direction.z);
@@ -118,6 +144,7 @@ bool AABB::intersection(const Ray &ray) const {
 
     // xt = Ray bis zur Intersection, xn = normalisierter Einheitsvektor der AABB Fläche, zur Bestimmung, ob Fläche in gleiche Richtung schaut wie Ray
     float xt, xn;
+    // Prüfen, ob Ray sich außerhalb der Box befindet
     if (ray.origin.x < Min.x) {
         // Distanz zwischen Ray-Origin und Box auf X-Achse
         xt = Min.x - ray.origin.x;
@@ -151,9 +178,12 @@ bool AABB::intersection(const Ray &ray) const {
     }
 
     float yt, yn;
+    // Prüfen, ob Ray sich außerhalb der Box befindet
     if (ray.origin.y < Min.y) {
+        // Distanz zwischen Ray-Origin und Box auf Y-Achse
         yt = Min.y - ray.origin.y;
 
+        // Wenn yt > Ende des Rays -> Ray endet, bevor Box erreicht wurde
         if (yt > ray.direction.y) {
             //printf("INTERSECTION:: Objekt ausser Reichweite (Y-Achse)\n");
             return false;
@@ -162,8 +192,10 @@ bool AABB::intersection(const Ray &ray) const {
         yt /= ray.direction.y;
         yn = -1.0f;
     } else if (ray.origin.y > Max.y) {
+        // Distanz zwischen Ray-Origin und Box auf Y-Achse
         yt = Max.y - ray.origin.y;
 
+        // Wenn yt > Ende des Rays -> Ray endet, bevor Box erreicht wurde
         if (yt < ray.direction.y) {
             //printf("INTERSECTION:: Objekt ausser Reichweite (Y-Achse)\n");
             return false;
@@ -176,9 +208,12 @@ bool AABB::intersection(const Ray &ray) const {
     }
 
     float zt, zn;
+    // Prüfen, ob Ray sich außerhalb der Box befindet
     if (ray.origin.z < Min.z) {
+        // Distanz zwischen Ray-Origin und Box auf Z-Achse
         zt = Min.z - ray.origin.z;
 
+        // Wenn zt > Ende des Rays -> Ray endet, bevor Box erreicht wurde
         if (zt > ray.direction.z) {
             //printf("INTERSECTION:: Objekt ausser Reichweite (Z-Achse)\n");
             return false;
@@ -187,9 +222,11 @@ bool AABB::intersection(const Ray &ray) const {
         zt /= ray.direction.z;
         zn = -1.0f;
     } else if (ray.origin.z > Max.z) {
+        // Distanz zwischen Ray-Origin und Box auf Z-Achse
         zt = Max.z - ray.origin.z;
 
-        if (zt < ray.direction.z) {
+    // Wenn zt > Ende des Rays -> Ray endet, bevor Box erreicht wurde
+    if (zt < ray.direction.z) {
             //printf("INTERSECTION:: Objekt ausser Reichweite (Z-Achse)\n");
             return false;
         }
@@ -200,6 +237,7 @@ bool AABB::intersection(const Ray &ray) const {
         zt = -1.0f;
     }
 
+    // Prüfen, welche Dimension den längsten Weg zur Box hat
     int which = 0;
     float t = xt;
     if (yt > t) {
@@ -212,6 +250,7 @@ bool AABB::intersection(const Ray &ray) const {
     }
 
     switch (which) {
+        // Prüfen, ob Ray aus Sicht der X-Koordinate außerhalb der Box liegt
         case 0: {
             float y = ray.origin.y + ray.direction.y * t;
             if (y < Min.y || y > Max.y) return false;
@@ -220,6 +259,7 @@ bool AABB::intersection(const Ray &ray) const {
             if (z < Min.z || z > Max.z) return false;
         }
             break;
+        // Prüfen, ob Ray aus Sicht der Y-Koordinate außerhalb der Box liegt
         case 1: {
             float x = ray.origin.x + ray.direction.x * t;
             if (x < Min.x || x > Max.x) return false;
@@ -228,6 +268,7 @@ bool AABB::intersection(const Ray &ray) const {
             if (z < Min.z || z > Max.z) return false;
         }
             break;
+        // Prüfen, ob Ray aus Sicht der Z-Koordinate außerhalb der Box liegt
         case 2: {
             float x = ray.origin.x + ray.direction.x * t;
             if (x < Min.x || x > Max.x) return false;
