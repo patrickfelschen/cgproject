@@ -56,7 +56,7 @@ void GUIManager::render() {
 }
 
 /**
- * Stellt Munition und Magazine dar um unteren rechten Bildschirmrand dar
+ * Stellt Munition und Magazine am unteren rechten Bildschirmrand dar
  * @param ammoCount Aktuelle Munition
  * @param magazines Anzahl Magazine
  */
