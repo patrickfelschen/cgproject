@@ -6,7 +6,7 @@
 #include "../entities/StaticEntity.h"
 #include "../maths/Random.h"
 
-#define STATIC_OBJECTS_COUNT 50
+#define STATIC_OBJECTS_COUNT 150
 #define LIGHT_POLE_COUNT 20
 
 TerrainManager::TerrainManager(const TerrainEntity *terrainEntity, LightManager *lightManager) : terrainEntity(
