@@ -6,6 +6,9 @@
 
 #define TO_RAD(deg) (deg * std::numbers::pi / 180.0)
 
+/**
+ * Setzt Position, Rotation, Skalierung und Transformationsmatrix auf Standardwerte
+ */
 Entity::Entity() {
     this->position = Vector3f();
     this->positionOffset = Vector3f();
@@ -36,6 +39,10 @@ void Entity::setRotationVelocity(const Vector3f &rotationVelocity) {
     this->rotationVelocity = rotationVelocity;
 }
 
+/**
+ * Berechnet die Transformation aus Translation, Rotation und Skalierung
+ * @param deltaTime Zeitunterschied zum letzten Frame
+ */
 void Entity::update(float deltaTime) {
     this->position += positionVelocity * deltaTime;
     this->rotation += rotationVelocity * deltaTime;
@@ -48,6 +55,7 @@ void Entity::update(float deltaTime) {
     rotationZ.rotationZ(TO_RAD(this->rotation.z));
     scaling.scale(this->scaleFactor);
 
+    // Richtige Reihenfolge der Berechnung wird hier sichergestellt
     this->transformation = translation * rotationX * rotationY * rotationZ * scaling;
 }
 

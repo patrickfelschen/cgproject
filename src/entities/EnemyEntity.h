@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "TerrainEntity.h"
 #include "../managers/SoundManager.h"
+#include "../maths/Random.h"
 
 class EnemyEntity : public Entity {
 public:

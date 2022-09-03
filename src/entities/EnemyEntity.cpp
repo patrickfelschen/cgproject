@@ -1,17 +1,22 @@
+
 #include "EnemyEntity.h"
-#include "../maths/Random.h"
-#include "TerrainEntity.h"
-#include <algorithm>
 
 #define TO_RAD(deg) (deg * std::numbers::pi / 180.0)
 #define TO_DEG(rad) (rad * 180.0 / std::numbers::pi)
 
+/**
+ * Initialisiert Entitiy Werte
+ * 3D Sound wird gestartet (startPaused = true, damit Pointer zurückgegeben wird) und verstummt
+ * @param model Zur Entity gehöriges 3D Modell
+ * @param terrainEntity Entitiy des Terrains
+ */
 EnemyEntity::EnemyEntity(const ObjectModel *model, const TerrainEntity *terrainEntity) : Entity() {
     this->model = model;
     this->terrainEntity = terrainEntity;
     this->maxLife = 1;
     this->life = maxLife;
     this->speed = Random::randFloat(1, 2);
+
     this->sound = SoundManager::getInstance().play3DSound("../assets/Sounds/ghost.mp3", this->position, true, true);
     this->sound->setIsPaused(false);
     this->sound->setVolume(0.0f);
@@ -21,15 +26,26 @@ EnemyEntity::~EnemyEntity() {
     this->sound->drop();
 }
 
+/**
+ * Setzt das aktuelle Leben der Entitiy auf das maximale Leben
+ * Setzt Entitiy auf eine zufällige Position
+ */
 void EnemyEntity::respawn() {
     this->life = maxLife;
     Vector3f newPos = terrainEntity->getRandomPosition(Vector3f(0, 1.2f, 0));
     setPosition(newPos);
 }
 
+/**
+ * Berechnet Ausrichtung zum Spieler, prüft Höhe auf dem Terrain und verschiebt die Position des 3D-Sounds
+ * @param deltaTime Zeitunterschied zum letzten Frame
+ */
 void EnemyEntity::update(float deltaTime) {
-    // Objekt zum Spieler drehen
+    // Vektor von Entity zu Spieler
     Vector3f dirToTarget = (targetPosition - position).normalize();
+    // Aus dirToTarget Rotation der Entitiy berechnen
+    // https://stackoverflow.com/questions/2782647/how-to-get-yaw-pitch-and-roll-from-a-3d-vector
+    // https://stackoverflow.com/questions/283406/what-is-the-difference-between-atan-and-atan2-in-c
     float pitch = asin(-dirToTarget.y);
     float yaw = atan2(dirToTarget.x, dirToTarget.z);
     yaw = TO_DEG(yaw) + yawOffset;
