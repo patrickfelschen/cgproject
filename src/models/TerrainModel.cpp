@@ -6,57 +6,73 @@
 #include "TerrainModel.h"
 
 TerrainModel::TerrainModel(TerrainShader *shader) : Model() {
-    this->size = 200;
     this->shader = shader;
-    this->width = size;
+    this->size = 200;
     this->height = 6.5;
+    this->width = size;
     this->depth = size;
-    generate();
+    this->generate();
 }
 
+/**
+ * Erstellt eine Landschaft auf Basis einer HeightMap
+ */
 void TerrainModel::generate() {
-    // Einlesen der Heightmap
+    // HeightMap Bild einlesen
     RGBImage image;
     Loader::getInstance().readImageFile("../assets/Terrain/heightmap.bmp", image);
 
     // Auslesen der Breite und Höhe der Heightmap
-    imgWidth = image.getWidth();
-    imgHeight = image.getHeight();
+    this->imgWidth = image.getWidth();
+    this->imgHeight = image.getHeight();
 
     // Nur quadratisches Format zulassen
     assert(imgWidth == imgHeight);
 
+    // Weiten- und Höhenskalierung berechnung
     // widthScale/heightScale ermöglichen Skalierung der Werte über size
     float widthScale = width / imgWidth;
     float heightScale = depth / imgHeight;
 
+    // Anzahl der Vertices anhand der HeightMap Weite und Höhe berechnen
     unsigned int vertexCount = imgWidth * imgHeight;
 
+    // Speicher für Terrain Höhen um Kollisionen zu erkennen
     heights.resize(vertexCount);
 
+    // Speicher initialisieren
     std::vector<Vertex> vertices = std::vector<Vertex>(vertexCount);
     std::vector<unsigned int> indices = std::vector<unsigned int>(6 * (imgWidth - 1) * (imgHeight - 1));
     std::vector<Texture> textures = std::vector<Texture>();
 
+    // Alle Bild Farben iterieren und Vertices erstellen
     for (unsigned int i = 0; i < imgWidth; i++) {
         for (unsigned int j = 0; j < imgHeight; j++) {
             unsigned int index = i * imgWidth + j;
-            float x = (j * heightScale - (depth / 2));
-            float y = image.getPixelColor(i, j).r * this->height;
-            float z = (i * widthScale - (width / 2));
 
+            // Vertex Position skalieren und
+            // verschieben, sodass Nullpunkt mitte vom Terrain ist
+            float x = (j * heightScale - (depth / 2));
+            float z = (i * widthScale - (width / 2));
+            // Vertex Höhe anhand der Bild Farbe ermitteln
+            float y = image.getPixelColor(i, j).r * this->height;
+
+            // Höhe für Kollisionen setzen
             heights[j * imgWidth + i] = y;
 
+            // Vertex Position setzen
             vertices[index].pos = Vector3f(x, y, z);
-            // Texturkoordinaten für Mixtextur
+
+            // Texturkoordinaten für Mixtextur setzen
             vertices[index].texCoord0.x = (i / (float) imgWidth - 1);
             vertices[index].texCoord0.y = (j / (float) imgHeight - 1);
-            // Texturkoordinaten für Grastextur und Steintextur
-            vertices[index].texCoord1.x = (i / ((float) imgWidth - 1) * 200);
-            vertices[index].texCoord1.y = (j / ((float) imgHeight - 1) * 200);
+            // Texturkoordinaten für Grastextur und Steintextur setzen
+            vertices[index].texCoord1.x = (i / ((float) imgWidth - 1) * size);
+            vertices[index].texCoord1.y = (j / ((float) imgHeight - 1) * size);
         }
     }
     int pos = 0;
+    // Alle Bild Farben erneut iterieren und Indices erstellen
     for (unsigned int i = 0; i < imgWidth - 1; i++) {
         int topLeft = 0;
         int topRight = 0;
@@ -79,32 +95,44 @@ void TerrainModel::generate() {
         }
     }
     // Gemittelte Normalen pro Dreieck erstellen
+    // https://gamedev.stackexchange.com/a/66937
     for (unsigned int i = 0; i < indices.size(); i += 3) {
+        // Drei Vertices eines Faces holen
         Vector3f p0 = vertices[indices[i + 0]].pos;
         Vector3f p1 = vertices[indices[i + 1]].pos;
         Vector3f p2 = vertices[indices[i + 2]].pos;
+        // Ebene aufstellen
         Vector3f e1 = p1 - p0;
         Vector3f e2 = p2 - p0;
+        // Senkrechte über Kreuzprodukt berechnen
         Vector3f normal = e1.cross(e2);
+        // Normalisieren
         normal = normal.normalize();
+        // Summieren (Summe jetzt nicht mehr normalisiert!)
         vertices[indices[i + 0]].normal += normal;
         vertices[indices[i + 1]].normal += normal;
         vertices[indices[i + 2]].normal += normal;
     }
 
-    // Texturen
+    // Alle summierten Normalen normalisieren
+    for (auto &vertex: vertices) {
+        vertex.normal.normalize();
+    }
+
+    // Texturen erstellen
     Texture grassTexture = Texture("../assets/Terrain/grass.bmp", "texture_diffuse");
     Texture rockTexture = Texture("../assets/Terrain/rock.bmp", "texture_diffuse");
     Texture mixTexture = Texture("../assets/Terrain/mixmap.bmp", "texture_mixmap");
-    Texture specTexture = Texture("texture_specular");
+    Texture specTexture = Texture("texture_specular"); // Weiß
 
+    // Texturen hinzufügen
     textures.push_back(grassTexture);
     textures.push_back(rockTexture);
     textures.push_back(mixTexture);
     textures.push_back(specTexture);
 
+    // Mesh erstellen
     Mesh terrainMash = Mesh(vertices, indices, textures, Material());
-
     this->meshes.push_back(terrainMash);
 }
 
@@ -116,7 +144,14 @@ void TerrainModel::render() const {
     this->shader->deactivate();
 }
 
-//https://www.youtube.com/watch?v=6E2zjfzMs7c
+/**
+ * Berechnet die Höhe (y-Koordinate) auf dem Terrain
+ * Quelle: https://www.youtube.com/watch?v=6E2zjfzMs7c
+ * @param worldX x-Position auf Terrain
+ * @param worldZ z-Position auf Terrain
+ * @param onTerrain liefer zurück ob sich Position auf Terrain befinden
+ * @return height der Angegebenen Position
+ */
 float TerrainModel::getHeightOfTerrain(float worldX, float worldZ, bool &onTerrain) const {
     // Welt-Position auf dem Terrain (Start in Mittelpunkt)
     float terrainX = worldX + width / 2;
@@ -149,8 +184,8 @@ float TerrainModel::getHeightOfTerrain(float worldX, float worldZ, bool &onTerra
     //std::cout << xCoord << std::endl;
     //std::cout << zCoord << std::endl;
 
-    // 1 - zCoord = Diagonale des Quadrats, Prüfung in welcher Hälfte (Quadrat bestehend aus 2 Dreiecken) man sich befindet
-    // Danach Lage des Punktes im Dreieck bestimmen
+    // 1 - zCoord = Diagonale des Quadrats, Prüfung in welcher Hälfte (Quadrat bestehend aus 2 Dreiecken)
+    // man sich befindet, danach Lage des Punktes im Dreieck bestimmen
     float terrainHeight = 0;
     if (xCoord <= (1 - zCoord)) {
         terrainHeight = baryCentric(
