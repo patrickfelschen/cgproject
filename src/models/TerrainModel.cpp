@@ -4,7 +4,6 @@
 //
 
 #include "TerrainModel.h"
-#include "../utils/Vertex.h"
 
 TerrainModel::TerrainModel(TerrainShader *shader) : Model() {
     this->size = 200;
@@ -16,14 +15,18 @@ TerrainModel::TerrainModel(TerrainShader *shader) : Model() {
 }
 
 void TerrainModel::generate() {
+    // Einlesen der Heightmap
     RGBImage image;
     Loader::getInstance().readImageFile("../assets/Terrain/heightmap.bmp", image);
 
+    // Auslesen der Breite und Höhe der Heightmap
     imgWidth = image.getWidth();
     imgHeight = image.getHeight();
 
+    // Nur quadratisches Format zulassen
     assert(imgWidth == imgHeight);
 
+    // widthScale/heightScale ermöglichen Skalierung der Werte über size
     float widthScale = width / imgWidth;
     float heightScale = depth / imgHeight;
 
@@ -59,7 +62,7 @@ void TerrainModel::generate() {
         int topRight = 0;
         int bottomLeft = 0;
         int bottomRight = 0;
-        // Eckpunkt f�r ein Viereck, 6 Punkte, da 2 Dreiecke
+        // Eckpunkt für ein Viereck, 6 Punkte, da 2 Dreiecke
         for (int j = 0; j < imgHeight - 1; j++) {
             topLeft = (i * imgWidth) + j;
             topRight = topLeft + 1;
@@ -114,7 +117,7 @@ void TerrainModel::render() const {
 }
 
 //https://www.youtube.com/watch?v=6E2zjfzMs7c
-const float TerrainModel::getHeightOfTerrain(float worldX, float worldZ, bool &onTerrain) const {
+float TerrainModel::getHeightOfTerrain(float worldX, float worldZ, bool &onTerrain) const {
     // Welt-Position auf dem Terrain (Start in Mittelpunkt)
     float terrainX = worldX + width / 2;
     float terrainZ = worldZ + depth / 2;
