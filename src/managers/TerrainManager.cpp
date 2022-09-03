@@ -9,6 +9,11 @@
 #define STATIC_OBJECTS_COUNT 150
 #define LIGHT_POLE_COUNT 20
 
+/**
+ * Lädt Modelle der Objekte, die sich auf dem Terrain befinden und plaziert diese Zufällig
+ * @param terrainEntity Wird für die Positionsberechnung der StaticEntities benötigt
+ * @param lightManager Fügt den Lightpoles Licht hinzu
+ */
 TerrainManager::TerrainManager(const TerrainEntity *terrainEntity, LightManager *lightManager) : terrainEntity(
         terrainEntity), lightManager(lightManager) {
     flowerYellowModel = new ObjectModel(new PhongShader(),
