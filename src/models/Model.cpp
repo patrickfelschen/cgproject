@@ -8,6 +8,10 @@ Model::Model() = default;
 
 Model::~Model() = default;
 
+/**
+ * Sucht aus allen Meshes die größte Ausdehnung in X-,Y- und Z-Richtung (positiv und negativ) und bildet daraus min und max
+ * min und max liegen diagonal zueinander und bilden die Eckpunkte der Bounding Box
+ */
 void Model::setBoundingBox() {
     Vector3f min = Vector3f(0, 0, 0);
     Vector3f max = Vector3f(0, 0, 0);
@@ -30,6 +34,9 @@ AABB Model::getBoundingBox() const {
     return boundingBox;
 }
 
+/**
+ * Zeichnet Linien der Bounding Box
+ */
 void Model::drawBoundingBox() const {
     glBegin(GL_LINES);
 
