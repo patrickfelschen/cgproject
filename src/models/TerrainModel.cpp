@@ -144,7 +144,14 @@ void TerrainModel::render() const {
     this->shader->deactivate();
 }
 
-//https://www.youtube.com/watch?v=6E2zjfzMs7c
+/**
+ * Berechnet die Höhe (y-Koordinate) auf dem Terrain
+ * Quelle: https://www.youtube.com/watch?v=6E2zjfzMs7c
+ * @param worldX x-Position auf Terrain
+ * @param worldZ z-Position auf Terrain
+ * @param onTerrain liefer zurück ob sich Position auf Terrain befinden
+ * @return height der Angegebenen Position
+ */
 float TerrainModel::getHeightOfTerrain(float worldX, float worldZ, bool &onTerrain) const {
     // Welt-Position auf dem Terrain (Start in Mittelpunkt)
     float terrainX = worldX + width / 2;
