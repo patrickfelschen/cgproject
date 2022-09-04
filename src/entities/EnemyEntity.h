@@ -43,6 +43,7 @@ public:
 private:
     const ObjectModel *model;
     const TerrainEntity *terrainEntity;
+    irrklang::ISound *sound;
 
     unsigned int life = 1;
     unsigned int maxLife;
@@ -53,8 +54,6 @@ private:
     float speed = 1.0f;
     float groundOffset = 0.2f;
     Vector3f targetPosition;
-
-    irrklang::ISound *sound;
 };
 
 

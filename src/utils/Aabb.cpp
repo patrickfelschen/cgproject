@@ -36,7 +36,6 @@ AABB AABB::transform(const Matrix &m) const {
     return r;
 }
 
-
 /**
  * Vereint zwei Bounding Boxen
  * @param a Bounding Box 1

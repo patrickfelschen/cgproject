@@ -14,7 +14,7 @@ public:
 
     virtual ~UniformBuffer();
 
-    void setSubData(GLintptr offset, GLsizeiptr size, const void *data);
+    void setSubData(int offset, unsigned int size, const void *data) const;
 
 private:
     GLuint id = 0;

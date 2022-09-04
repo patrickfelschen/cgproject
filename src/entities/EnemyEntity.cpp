@@ -1,4 +1,3 @@
-
 #include "EnemyEntity.h"
 
 #define TO_RAD(deg) (deg * std::numbers::pi / 180.0)

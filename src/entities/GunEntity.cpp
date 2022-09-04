@@ -45,8 +45,7 @@ void GunEntity::update(float deltaTime) {
             reloading = false;
             ammo = maxAmmo;
         }
-    }
-    else {
+    } else {
         GUIManager::getInstance().drawCrosshair(2.0f, 10.0f, Color(1.0f, 1.0f, 1.0f, 1.0f), ammo == 0);
     }
 
@@ -60,7 +59,8 @@ void GunEntity::render() {
 }
 
 /**
- * Wenn die aktuelle Munition kleiner ist als die maximale Munition, aktuell nicht nachgeladen wird und Magazine vorhanden sind, kann nachgeladen werden
+ * Wenn die aktuelle Munition kleiner ist als die maximale Munition, aktuell nicht nachgeladen wird
+ * und Magazine vorhanden sind, kann nachgeladen werden
  */
 void GunEntity::reload() {
     if (ammo < maxAmmo && !reloading && magazines > 0) {

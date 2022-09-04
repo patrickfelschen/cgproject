@@ -5,7 +5,7 @@
 #include "PlayerEntity.h"
 
 /**
- * Initialisierung von Werten und erstellund eines ParticleManagers
+ * Initialisierung von Werten und Erstellung eines ParticleManagers
  * @param camera First-Person Kamera des Spielers
  * @param terrainEntity Entitiy des Terrains
  */
@@ -59,10 +59,11 @@ void PlayerEntity::update(float deltaTime) {
             terrainDamageTimer = 0;
         }
     }
-
+    // Spieler Position der Kamera übernehmen
     this->setPosition(camera->getPosition());
+    // Waffe aktualisieren
     this->gunEntity->update(deltaTime);
-
+    // Strahl in Kamerarichtung erstellen
     Ray camRay = Ray(camera->getPosition(), camera->getTarget());
 
     // Prüfen ob Spieler Medic Kisten öffnen möchte
@@ -71,7 +72,7 @@ void PlayerEntity::update(float deltaTime) {
         if (checkEntityRayCollision(medicCase, camRay, 4.0f)) {
             GUIManager::getInstance().drawInfo("+1 Leben");
         }
-        // Bei Kollision Particle anzeigen, Kiste neu setzen und das Leben des Spieler erhöhen
+        // Bei Kollision Particle anzeigen, Kiste neu setzen und das Leben des Spielers erhöhen
         if (checkEntityRayCollision(medicCase, camRay, 2.0f)) {
             particleManager->spawn(medicCase->getPosition(), Color(0.0f, 1.0f, 0.0f, 1.0f));
             medicCase->respawn();
@@ -85,7 +86,7 @@ void PlayerEntity::update(float deltaTime) {
         if (checkEntityRayCollision(magazineCase, camRay, 4.0f)) {
             GUIManager::getInstance().drawInfo("+2 Magazine");
         }
-        // Bei Kollision Particle anzeigen, Kiste neu setzen und die Magazinanzahl des Spieler erhöhen
+        // Bei Kollision Particle anzeigen, Kiste neu setzen und die Magazinanzahl des Spielers erhöhen
         if (checkEntityRayCollision(magazineCase, camRay, 2.0f)) {
             particleManager->spawn(magazineCase->getPosition(), Color(0.0f, 0.0f, 1.0f, 1.0f));
             magazineCase->respawn();
@@ -98,13 +99,17 @@ void PlayerEntity::update(float deltaTime) {
         // Lebensbalken eines Gegners
         EnemyEntity *targetedEnemy = getFirstIntersection(camRay, 10.0f);
         if (targetedEnemy != nullptr) {
-            GUIManager::getInstance().drawLifeWindow("enemylife", targetedEnemy->getLife(), targetedEnemy->getMaxLife(), Vector2f(GUIManager::getInstance().SCR_WIDTH / 2, 25.0f), 200, 10);
+            GUIManager::getInstance().drawLifeWindow(
+                    "enemylife",
+                    targetedEnemy->getLife(),
+                    targetedEnemy->getMaxLife(),
+                    Vector2f(GUIManager::getInstance().SCR_WIDTH / 2, 25.0f), 200, 10
+            );
         }
-
         // Gegner erledigt
         if (enemy->isDead()) {
-            // Pro 5 getötete Gegner wird die Schwierigkeit des Spiel erhöht
-            if((hitCount % 5) == 0) {
+            // Pro 5 getötete Gegner wird die Schwierigkeit des Spiels erhöht
+            if ((hitCount % 5) == 0) {
                 enemy->increaseMaxLife(1);
                 increaseDifficulty();
             }
@@ -118,7 +123,6 @@ void PlayerEntity::update(float deltaTime) {
             decreaseLife(1);
             enemy->respawn();
         }
-
         // Lautstärke des Gegners je nach Distanz zum Spieler erhöhen
         float distance = enemy->getPosition().distanceTo(this->position);
         if (distance < 7.0f) {
@@ -126,13 +130,19 @@ void PlayerEntity::update(float deltaTime) {
         } else {
             enemy->getSound()->setVolume(0.0f);
         }
-
+        // Bewegungsrichtung zum Spieler aktualisieren
         enemy->setTargetPosition(camera->getPosition());
         enemy->update(deltaTime);
     }
-
+    // Partikel aktualisieren
     particleManager->update(deltaTime);
-    GUIManager::getInstance().drawLifeWindow("playerLife", life, maxLife, Vector2f(160.0f, GUIManager::getInstance().SCR_HEIGHT - 50.0f));
+    // Spielerleben in GUI anzeigen
+    GUIManager::getInstance().drawLifeWindow(
+            "playerLife",
+            life, maxLife,
+            Vector2f(160.0f, GUIManager::getInstance().SCR_HEIGHT - 50.0f)
+    );
+    // Punkte in GUI anzeigen
     GUIManager::getInstance().drawScoreWindow(hitCount);
 }
 
@@ -176,7 +186,7 @@ void PlayerEntity::setMagazineCases(const std::vector<StaticEntity *> &magazineC
 }
 
 /**
- * Prüft die Kollision zwischen der BoundingBox einer Einheit und eime Strahl
+ * Prüft die Kollision zwischen der BoundingBox einer Einheit und einem Strahl
  * @param entity Einheit
  * @param ray Strahl mit Ursprung und Richtung
  * @param range Reichweite des Strahls
@@ -212,7 +222,7 @@ void PlayerEntity::increaseMagazines(unsigned int count) {
 }
 
 AABB PlayerEntity::getTransformedBoundingBox() const {
-    return AABB();
+    return AABB(); // Spieler besteht aus keinem Model
 }
 
 unsigned int PlayerEntity::getHitCount() const {
@@ -223,8 +233,8 @@ unsigned int PlayerEntity::getHitCount() const {
  * Die Geschwindigkeit aller EnemyEntities wird erhöht
  */
 void PlayerEntity::increaseDifficulty() {
-    std::cout << "difficulty increase" << std::endl;
-    for(EnemyEntity *entity: enemies) {
+    //std::cout << "difficulty increase" << std::endl;
+    for (EnemyEntity *entity: enemies) {
         entity->increaseSpeed(0.1f);
     }
 }
@@ -233,7 +243,7 @@ void PlayerEntity::increaseDifficulty() {
  * Prüft den Strahl gegen alle gegnerischen Entities und liefert die vorderste (geprüft durch Distanz) Einheit zurück
  * @param ray Strahl mit Ursprung und Richtung
  * @param range Reichweite des Strahls
- * @return Vorderste Entity, die von dem Strahl getroffen wurde
+ * @return Vorderste Entity, die von dem Strahl getroffen wurde (kein Treffer = nullptr)
  */
 EnemyEntity *PlayerEntity::getFirstIntersection(Ray ray, float range) {
     EnemyEntity *hitEnemy = nullptr;
