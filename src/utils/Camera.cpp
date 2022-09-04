@@ -23,6 +23,7 @@ Camera::Camera(GLFWwindow *window) : window(window) {
     lastMouseY = (float) windowHeight / 2;
 
     view.identity();
+    // erstellt eine PROJECTION MATRIX
     proj.perspective(
             TO_RAD(65),
             (float) windowWidth / (float) windowHeight,
@@ -69,6 +70,10 @@ Vector3f Camera::getRight() const {
     return target.cross(up).normalize();
 }
 
+/**
+ * Erstellt pro Frame aus neu berechneten Daten eine VIEW MATRIX
+ * @param deltaTime
+ */
 void Camera::update(float deltaTime) {
     handleKeyboardInputs(deltaTime);
     target.x = cos(TO_RAD(yaw)) * cos(TO_RAD(pitch));

@@ -7,17 +7,16 @@
 #include "managers/LightManager.h"
 #include "shaders/GunShader.h"
 
-#define TARGET_COUNT 50
+#define ENEMY_COUNT 50
 #define MEDIC_CASE_COUNT 50
 #define MAGAZINE_CASE_COUNT 20
 
 Game::Game(Camera *camera) : camera(camera) {
     // Uniform Buffer inizialisieren
-    uboMatrices = new UniformBuffer(sizeof(Matrices), 0);
+    this->uboMatrices = new UniformBuffer(sizeof(Matrices), 0);
     // Projektion in Uniform Buffer laden
-    matrices.projection = camera->getProj();
-    uboMatrices->setSubData(offsetof(Matrices, projection), sizeof(Matrix), &matrices.projection);
-
+    this->matrices.projection = camera->getProj();
+    this->uboMatrices->setSubData(offsetof(Matrices, projection), sizeof(Matrix), &matrices.projection);
     // Modelle laden
     this->initModels();
     // Einheiten laden
@@ -26,6 +25,9 @@ Game::Game(Camera *camera) : camera(camera) {
     this->initManagers();
 }
 
+/**
+ * Lädt einmalig alle Objekt Dateien
+ */
 void Game::initModels() {
     magazineCaseModel = new ObjectModel(
             new PhongShader(),
@@ -50,6 +52,9 @@ void Game::initModels() {
     terrainModel = new TerrainModel(new TerrainShader());
 }
 
+/**
+ * Erstellt Einheiten aus den geladenen Models
+ */
 void Game::initEntities() {
     // Umgebung
     terrainEntity = new TerrainEntity(terrainModel);
@@ -73,7 +78,7 @@ void Game::initEntities() {
         medicCases.push_back(entity);
     }
     // Gegner
-    for (unsigned int i = 0; i < TARGET_COUNT; i++) {
+    for (unsigned int i = 0; i < ENEMY_COUNT; i++) {
         auto *entity = new EnemyEntity(ghostModel, terrainEntity);
         entity->setScaling(0.2f);
         entity->setTargetPosition(camera->getPosition());
@@ -93,11 +98,17 @@ void Game::initEntities() {
     entities.push_back(skyboxEntity);
 }
 
+/**
+ * Initialisiert Manager, welche gewissen Funktionen bündeln
+ */
 void Game::initManagers() {
     lightManager = new LightManager(camera);
     terrainManager = new TerrainManager(terrainEntity, lightManager);
 }
 
+/**
+ * Initialisiert ein neues Spiel
+ */
 void Game::initNewGame() {
     this->playerEntity->init();
 
@@ -119,6 +130,11 @@ void Game::initNewGame() {
     camera->setPosition(Vector3f(0.0f, 0.0f, 0.0f));
 }
 
+/**
+ * Wertet Benutzereingaben aus
+ * @param key betätigte Taste
+ * @param action zustand der Taste
+ */
 void Game::processKeyInput(int key, int action) {
     if (key == GLFW_MOUSE_BUTTON_LEFT) {
         if (action == GLFW_PRESS) {
@@ -133,19 +149,30 @@ void Game::processKeyInput(int key, int action) {
     }
 }
 
+/**
+ * Wertet Mouse-Bewegungen des Benutzers aus
+ * @param xpos x-Position der Maus
+ * @param ypos y-Position der Maus
+ */
 void Game::processMouseInput(float xpos, float ypos) {
     camera->handleMouseInputs(xpos, ypos);
 }
 
+/**
+ * Aktualisierung des Spiels, wird pro Frame ausgeführt
+ * @param deltaTime Zeitunterschied zum letzten Frame
+ */
 void Game::update(float deltaTime) {
     if (playerEntity->isAlive()) {
+        // Spieler ist am Leben
+
+        // Kamera aus Terrain positionieren
         bool onTerrain;
         float playerY = terrainModel->getHeightOfTerrain(
                 camera->getPosition().x,
                 camera->getPosition().z,
                 onTerrain
         );
-
         camera->setPosition(Vector3f(camera->getPosition().x, playerY + 1.2f, camera->getPosition().z));
 
         // Kamera aktualisieren
@@ -179,13 +206,14 @@ void Game::update(float deltaTime) {
         // Spiel neu starten wenn Button betätigt
         if (gameRestart) {
             gameRestart = false;
-
             initNewGame();
-
         }
     }
 }
 
+/**
+ * Darstellung des Spiels, wird pro Frame nach update(...) ausgeführt
+ */
 void Game::render() {
     // View Matrix und Camera Position in Uniform Buffer laden (pro Frame)
     matrices.view = camera->getView();
@@ -216,12 +244,28 @@ void Game::render() {
     terrainManager->render();
 }
 
+/**
+ * Speicher frei geben
+ */
 Game::~Game() {
+    delete skyboxEntity;
+    delete playerEntity;
+    delete terrainEntity;
+
+    for (StaticEntity *entity: medicCases) {
+        delete entity;
+    }
+
+    for (StaticEntity *entity: magazineCases) {
+        delete entity;
+    }
+
+    for (EnemyEntity *entity: enemies) {
+        delete entity;
+    }
+
     delete terrainManager;
     delete lightManager;
-
-    delete skyboxEntity;
-    delete terrainEntity;
 
     delete terrainModel;
     delete gunModel;
@@ -229,16 +273,6 @@ Game::~Game() {
     delete skyboxModel;
     delete magazineCaseModel;
     delete medicCaseModel;
-
-    for (EnemyEntity *entity: enemies) {
-        delete entity;
-    }
-    for (StaticEntity *entity: magazineCases) {
-        delete entity;
-    }
-    for (StaticEntity *entity: medicCases) {
-        delete entity;
-    }
 
     delete uboMatrices;
 };

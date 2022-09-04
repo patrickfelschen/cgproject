@@ -49,14 +49,6 @@ private:
     std::vector<StaticEntity *> magazineCases;
     std::vector<StaticEntity *> medicCases;
 
-    void initModels();
-
-    void initEntities();
-
-    void initManagers();
-
-    void initNewGame();
-
     ObjectModel *gunModel;
     ObjectModel *ghostModel;
     ObjectModel *skyboxModel;
@@ -81,6 +73,14 @@ private:
         Vector3f camPos;
         float padding0;
     } matrices;
+
+    void initModels();
+
+    void initEntities();
+
+    void initManagers();
+
+    void initNewGame();
 
 };
 

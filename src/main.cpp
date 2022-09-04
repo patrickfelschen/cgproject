@@ -145,11 +145,13 @@ int main(int argc, char **argv) {
         }
     }
 
+    delete game;
+    delete camera;
+
     GUIManager::getInstance().destroy();
     SoundManager::getInstance().destroy();
     glfwTerminate();
-    delete game;
-    delete camera;
+
     exit(EXIT_SUCCESS);
 }
 
