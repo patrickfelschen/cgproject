@@ -83,6 +83,10 @@ void Camera::update(float deltaTime) {
     view.lookAt(target + position, up, position);
 }
 
+/**
+ * Ermöglicht eine Bewegung der Kamera über Benutzereingaben
+ * @param deltaTime Zeitunterschied zum letzten Frame
+ */
 void Camera::handleKeyboardInputs(float deltaTime) {
     float speed = 3.0f * deltaTime;
     bool soundPlaying = false;
@@ -106,9 +110,9 @@ void Camera::handleKeyboardInputs(float deltaTime) {
         soundPlaying = true;
         position += getRight() * speed;
     }
-//    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-//        position.y += speed;
-//    }
+    //if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+    //    position.y += speed;
+    //}
 
     if (soundPlaying) {
         SoundManager::getInstance().play2DSound("../assets/Sounds/step.mp3", false, true);
