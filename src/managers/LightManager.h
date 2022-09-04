@@ -11,6 +11,8 @@
 #include "../utils/Camera.h"
 #include "../utils/Color.h"
 
+// Maximale Anzahl an statischen Lichtquellen,
+// diese muss mit dem Shader abgeglichen werden.
 #define MAX_LIGHT_COUNT 30
 
 enum LightType {
@@ -19,14 +21,18 @@ enum LightType {
     SPOT = 2
 };
 
+/**
+ * Struktur einer einzelnen Lichtquelle
+ * Paddings:
+ * https://learnopengl.com/Advanced-OpenGL/Advanced-GLSL (Uniform block layout)
+ * https://www.khronos.org/opengl/wiki/Interface_Block_(GLSL)#Memory_layout (Memory layout, std140)
+ * Definition: siehe Shader
+ */
 struct Light {
-    int type;
-    Vector3f p5;
+    int type; Vector3f padding0;
 
-    Vector3f position;
-    float p0;
-    Vector3f direction;
-    float p1;
+    Vector3f position; float padding1;
+    Vector3f direction; float padding2;
 
     Color ambient;
     Color diffuse;
@@ -39,12 +45,13 @@ struct Light {
     float cutOff;
     float outerCutOff;
 
-    Vector3f p2;
+    Vector3f padding3;
 };
-
+/**
+ * Struktur für mehrere Lichtquellen
+ */
 struct Lights {
-    int staticLightsCount = 0;
-    Vector3f p0;
+    int staticLightsCount = 0; Vector3f padding0;
     Light dynamicLight;
     Light staticLights[MAX_LIGHT_COUNT];
 };

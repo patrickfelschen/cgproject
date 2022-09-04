@@ -13,6 +13,9 @@ ParticleShader::ParticleShader() : Shader(VERT, FRAG) {
 
 ParticleShader::~ParticleShader() = default;
 
+/**
+ * Transformations Matrix und Farbe in den Shader laden
+ */
 void ParticleShader::setUniforms() {
     setUniform("uTransform", transform);
     setUniform("uColor", color);

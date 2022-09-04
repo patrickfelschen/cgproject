@@ -4,10 +4,6 @@
 
 #include "Model.h"
 
-Model::Model() = default;
-
-Model::~Model() = default;
-
 /**
  * Sucht aus allen Meshes die größte Ausdehnung in X-,Y- und Z-Richtung (positiv und negativ) und bildet daraus min und max
  * min und max liegen diagonal zueinander und bilden die Eckpunkte der Bounding Box

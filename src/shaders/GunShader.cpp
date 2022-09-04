@@ -11,6 +11,9 @@ GunShader::GunShader() : Shader(VERT, FRAG) {}
 
 GunShader::~GunShader() = default;
 
+/**
+ * Transformations Matrix in den Shader laden
+ */
 void GunShader::setUniforms() {
     // Transformation
     setUniform("uTransform", transform);

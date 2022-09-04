@@ -11,6 +11,9 @@ PhongShader::PhongShader() : Shader(VERT, FRAG) {
     this->transform.identity();
 }
 
+/**
+ * Transformations Matrix in den Shader laden
+ */
 void PhongShader::setUniforms() {
     // Transformation
     setUniform("uTransform", transform);

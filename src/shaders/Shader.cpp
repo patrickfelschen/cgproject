@@ -1,6 +1,6 @@
 //
 // Created by Patrick on 02.08.2022.
-// https://youtu.be/gDtHL6hy9R8
+// Quelle: https://youtu.be/gDtHL6hy9R8
 //
 
 #include "Shader.h"
@@ -17,6 +17,9 @@ Shader::Shader(const char *vsFilePath, const char *fsFilePath) {
     this->id = Loader::getInstance().compileShaders(vsFilePath, fsFilePath);
 }
 
+/**
+ * Shader aktivieren und alle definierten Uniforms setzen
+ */
 void Shader::activate() {
     if (id <= 0) {
         std::cerr << "ERROR::SHADER::ACTIVATE can not activate shader" << std::endl;
@@ -28,6 +31,9 @@ void Shader::activate() {
     setUniforms();
 }
 
+/**
+ * Shader deaktivieren
+ */
 void Shader::deactivate() const {
     glUseProgram(0);
 }
@@ -58,8 +64,9 @@ void Shader::setUniform(const std::string &name, const Matrix &value) {
 
 /**
  * Liefert die Position einer Uniform-Variable
- * @param name
- * @return
+ * Quelle: https://youtu.be/gDtHL6hy9R8?t=1040
+ * @param name Bezeichnung der Uniform
+ * @return ID der Uniform
  */
 GLint Shader::getUniformLocation(const std::string &name) {
     // Prüfung, ob Uniform Location schon im Cache vorhanden ist

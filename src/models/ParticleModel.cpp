@@ -31,7 +31,7 @@ ParticleModel::ParticleModel(ParticleShader *shader) : shader(shader) {
     };
     std::vector<Texture> textures = {
             //Texture("../assets/Objects/Ghost/texture.png", "texture_defuse")
-            // Erzeugt Textur aus einer Farbe (weiß)
+            // erzeugt diffuse Textur aus einer Farbe (weiß)
             Texture(Color(1.0f), "texture_diffuse")
     };
     Mesh particleMesh(vertices, indices, textures);
@@ -40,6 +40,10 @@ ParticleModel::ParticleModel(ParticleShader *shader) : shader(shader) {
 
 ParticleModel::~ParticleModel() = default;
 
+/**
+ * Aktiviert Shader (Uniforms werden gesetzt), zeichnet alle zugehörigen Meshes
+ * (Partikel besteht aktuell nur aus einem) und deaktivert den Shader wieder.
+ */
 void ParticleModel::render() const {
     this->shader->activate();
     for (auto &mesh: meshes) {

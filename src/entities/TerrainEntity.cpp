@@ -5,6 +5,11 @@
 #include "TerrainEntity.h"
 #include "../maths/Random.h"
 
+/**
+ * Erstellt Terrain Einheit, welche zur Aktualisierung und Darstellung
+ * eines TerrainModels zuständig ist
+ * @param model Terrain Modell
+ */
 TerrainEntity::TerrainEntity(const TerrainModel *model) : Entity() {
     this->model = model;
 }
@@ -18,10 +23,6 @@ void TerrainEntity::update(float deltaTime) {
 void TerrainEntity::render() {
     this->model->shader->setTransform(transformation);
     this->model->render();
-}
-
-AABB TerrainEntity::getTransformedBoundingBox() const {
-    return this->model->getBoundingBox().transform(transformation);
 }
 
 /**
@@ -40,4 +41,8 @@ Vector3f TerrainEntity::getRandomPosition(Vector3f offset) const {
 
 float TerrainEntity::getHeightOfPosition(Vector3f position, bool &onTerrain) const {
     return this->model->getHeightOfTerrain(position.x, position.z, onTerrain);
+}
+
+AABB TerrainEntity::getTransformedBoundingBox() const {
+    return this->model->getBoundingBox().transform(transformation);
 }

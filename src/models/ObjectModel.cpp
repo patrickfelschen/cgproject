@@ -1,5 +1,6 @@
 //
 // Created by Patrick on 17.08.2022.
+// Quelle: https://learnopengl.com/Model-Loading/Model
 // https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/model.h
 //
 
@@ -30,6 +31,10 @@ ObjectModel::ObjectModel(Shader *shader, const std::string &filePath) : Model() 
 
 ObjectModel::~ObjectModel() = default;
 
+/**
+ * Aktiviert Shader (Uniforms werden gesetzt), zeichnet alle zugehörigen Meshes
+ * und deaktivert den Shader wieder.
+ */
 void ObjectModel::render() const {
     this->shader->activate();
     for (auto &mesh: meshes) {
@@ -157,7 +162,7 @@ Mesh ObjectModel::processMesh(aiMesh *mesh, const aiScene *scene) {
  * Lädt Texturen aus Material
  * @param mat Material, welches Textur(en) entählt
  * @param type Art der Textur (Specular, Diffuse)
- * @param typeName
+ * @param typeName Texture Typ Bezeichnung
  * @param textureCount In textureCount wird anzahl der Texturen gespeichert
  * @return Liste aller ausgelesener Texturen
  */

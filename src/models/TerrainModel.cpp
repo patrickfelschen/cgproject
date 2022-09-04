@@ -136,6 +136,10 @@ void TerrainModel::generate() {
     this->meshes.push_back(terrainMash);
 }
 
+/**
+ * Aktiviert Shader (Uniforms werden gesetzt), zeichnet alle zugehörigen Meshes
+ * und deaktivert den Shader wieder.
+ */
 void TerrainModel::render() const {
     this->shader->activate();
     for (auto &mesh: meshes) {

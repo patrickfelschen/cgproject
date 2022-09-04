@@ -9,19 +9,19 @@
 
 /**
  * Initialisiert einen UniformBuffer für die Lichter und fügt eine globale Beleuchtun hinzu
- * @param camera
+ * @param camera Kamera um dynamische Beleuchtung anhand der Kamera Richtung und Position zu ermöglichen
  */
 LightManager::LightManager(const Camera *camera) : camera(camera) {
     this->uboSpotLights = new UniformBuffer(sizeof(Lights), 1);
 
     // STATIC SPOTS
-    // addSpot(Vector3f(0, 2, 0), down);
+    // addSpot(...);
 
     // STATIC DIRS
     addDir(Vector3f(0, -1, 0));
 
     // STATIC POINTS
-    // addPoint(Vector3f(0, 3, 0));
+    // addPoint(...);
 }
 
 LightManager::~LightManager() {
@@ -53,6 +53,7 @@ void LightManager::setDynamicLight(Vector3f position, Vector3f direction) {
     l.specular = Color(1.0f, 1.0f, 1.0f);
 
     // https://learnopengl.com/Lighting/Light-casters
+    // https://wiki.ogre3d.org/tiki-index.php?page=-Point+Light+Attenuation
     l.constant = 1.0f;
     l.linear = 0.09f;
     l.quadratic = 0.032f;
@@ -78,6 +79,7 @@ void LightManager::addPoint(Vector3f position) {
     l.specular = Color(0.7f, 0.7f, 0.1f);
 
     // https://learnopengl.com/Lighting/Light-casters
+    // https://wiki.ogre3d.org/tiki-index.php?page=-Point+Light+Attenuation
     l.constant = 1.0f;
     l.linear = 0.35f;
     l.quadratic = 0.44f;
@@ -88,7 +90,7 @@ void LightManager::addPoint(Vector3f position) {
 }
 
 /**
- * Erzeugt eine statisches Spotlight
+ * Erzeugt ein statisches Spotlight
  * @param position Position des Spotlights
  * @param direction Richtung des Spotlights
  */
@@ -115,7 +117,7 @@ void LightManager::addSpot(Vector3f position, Vector3f direction) {
 }
 
 /**
- * Fügt eine statisches Directionallight hinzu
+ * Fügt ein statisches Directionallight hinzu
  * @param dir Richtung des Lichtes
  */
 void LightManager::addDir(Vector3f dir) {

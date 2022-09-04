@@ -133,7 +133,12 @@ const AABB &AABB::unitBox() {
     return UnitBox;
 }
 
-// https://sudhamr.wordpress.com/2019/05/01/week-12/
+/**
+ * Liefert zurück, ob ein Strahl eine Boundingbox schneidet
+ * Quelle: https://sudhamr.wordpress.com/2019/05/01/week-12/
+ * @param ray Strahl, welcher geprüft werden soll
+ * @return true, wenn es zu einem Schnittpunkt kommt, ansonsten false
+ */
 bool AABB::intersection(const Ray &ray) const {
 //    printf("Ray-Origin: X: %f Y: %f Z: %f\n", ray.origin.x, ray.origin.y, ray.origin.z);
 //    printf("Ray-Direction: X: %f Y: %f Z: %f\n", ray.direction.x, ray.direction.y, ray.direction.z);

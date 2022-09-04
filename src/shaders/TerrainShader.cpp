@@ -4,8 +4,6 @@
 
 #include "TerrainShader.h"
 
-#define TO_RAD(deg) (deg * std::numbers::pi / 180.0)
-
 #define VERT "../assets/shaders/terrainShader.vert"
 #define FRAG "../assets/shaders/terrainShader.frag"
 
@@ -13,6 +11,9 @@ TerrainShader::TerrainShader() : Shader(VERT, FRAG) {}
 
 TerrainShader::~TerrainShader() = default;
 
+/**
+ * Transformations Matrix in den Shader laden
+ */
 void TerrainShader::setUniforms() {
     // Transformation
     setUniform("uTransform", transform);

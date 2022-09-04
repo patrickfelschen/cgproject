@@ -14,15 +14,20 @@
 
 class Model {
 public:
-    explicit Model();
+    explicit Model() = default;
 
-    virtual ~Model();
+    virtual ~Model() = default;
 
+    /**
+     * Muss vom Model implementiert werden.
+     * i.d.R Shader aktivieren -> Meshes zeichnen -> Shader deaktivieren
+     */
     virtual void render() const = 0;
 
     AABB getBoundingBox() const;
 
 protected:
+    // Alle Meshes die angezeigt werden sollen
     std::vector<Mesh> meshes;
 
     AABB boundingBox;

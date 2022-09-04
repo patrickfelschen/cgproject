@@ -16,7 +16,7 @@ UniformBuffer::UniformBuffer(unsigned int size, unsigned int binding) {
     glGenBuffers(1, &id);
     glBindBuffer(GL_UNIFORM_BUFFER, id);
     // Buffer initialisieren mit einer Größe von size Bytes
-    glBufferData(GL_UNIFORM_BUFFER, (GLsizeiptr) size, nullptr, GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, (GLsizeiptr) size, nullptr, GL_DYNAMIC_DRAW);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
     // Buffer an binding index binden
     glBindBufferBase(GL_UNIFORM_BUFFER, binding, id);
