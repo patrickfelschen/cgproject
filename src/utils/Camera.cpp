@@ -22,9 +22,9 @@ Camera::Camera(GLFWwindow *window) : window(window) {
     lastMouseX = (float) windowWidth / 2;
     lastMouseY = (float) windowHeight / 2;
 
-    // View Matrix initialisieren
+    // VIEW MATRIX initialisieren
     view.identity();
-    // erstellt eine PROJECTION MATRIX
+    //  PROJECTION MATRIX erstellen
     proj.perspective(
             TO_RAD(65),
             (float) windowWidth / (float) windowHeight,
@@ -73,7 +73,7 @@ Vector3f Camera::getRight() const {
 
 /**
  * Erstellt pro Frame aus neu berechneten Daten eine VIEW MATRIX
- * @param deltaTime
+ * @param deltaTime Zeitunterschied zum letzten Frame
  */
 void Camera::update(float deltaTime) {
     handleKeyboardInputs(deltaTime);
@@ -86,6 +86,7 @@ void Camera::update(float deltaTime) {
 
 /**
  * Ermöglicht eine Bewegung der Kamera über Benutzereingaben
+ * Quelle: https://learnopengl.com/Getting-started/Camera (Walk around)
  * @param deltaTime Zeitunterschied zum letzten Frame
  */
 void Camera::handleKeyboardInputs(float deltaTime) {
@@ -115,6 +116,7 @@ void Camera::handleKeyboardInputs(float deltaTime) {
     //    position.y += speed;
     //}
 
+    // Sound abspielen
     if (soundPlaying) {
         SoundManager::getInstance().play2DSound("../assets/Sounds/step.mp3", false, true);
     } else {
@@ -122,20 +124,26 @@ void Camera::handleKeyboardInputs(float deltaTime) {
     }
 }
 
+/**
+ * Berechnet yaw (y-Rotation) und pitch (x-Rotation) der Kamera anhand der Mouse Position
+ * Quelle: https://learnopengl.com/Getting-started/Camera (Look around)
+ * @param mouseX x-Position der Maus
+ * @param mouseY y-Position der Maus
+ */
 void Camera::handleMouseInputs(float mouseX, float mouseY) {
+    // Bewegung der Maus zum letzten Frame
     float xOffset = mouseX - lastMouseX;
-    float yOffset = lastMouseY - mouseY;  // reversed since y-coordinates range from bottom to top
-
+    float yOffset = lastMouseY - mouseY;
     lastMouseX = (float) mouseX;
     lastMouseY = (float) mouseY;
-
+    // Maus Sensitivität einstellen
     const float sensitivity = 0.1f;
     xOffset *= sensitivity;
     yOffset *= sensitivity;
-
+    // Pitch und Yaw addieren
     yaw += xOffset;
     pitch += yOffset;
-
+    // Bereich eingrenzen, Kamera kann sich nicht höher/tiefer als +-89 Grad bewegen
     if (pitch > 89.0f) pitch = 89.0f;
     if (pitch < -89.0f) pitch = -89.0f;
 }
