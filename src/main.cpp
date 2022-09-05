@@ -32,7 +32,7 @@ void GLAPIENTRY glErrorCallback(
         const void *userParam
 );
 
-const bool fullScreen = false;
+const bool fullScreen = true;
 const unsigned int SCR_WIDTH = fullScreen ? 1920 : 1280;
 const unsigned int SCR_HEIGHT = fullScreen ? 1080 : 720;
 
