@@ -43,7 +43,7 @@ Texture::~Texture() = default;
  * Erstellt eine Textur und lädt diese in OpenGL
  * Quelle: https://learnopengl.com/Getting-started/Textures
  * Quelle: https://youtu.be/qEfohFgQ1-I?t=2181
- * @param image
+ * @param image Textur Bild
  */
 void Texture::create(RGBImage &image) {
     // Erstellen und binden einer neuen Textur
