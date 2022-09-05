@@ -7,6 +7,7 @@
 
 /**
  * Liest Shader Datei zeilenweise aus und speichert den Text in einem String
+ * Quelle: https://youtu.be/t42UEU3NS1U?t=732
  * @param filePath Pfad zur Shader Datei
  * @param outFile Beinhaltet nach Ausführung den Shader Text
  */
@@ -28,72 +29,72 @@ void Loader::readShaderFile(const std::string &filePath, std::string &outFile) {
 }
 
 /**
- * Liest mit Hilfe von FreeImage eine Bilddatei
- * @param filePath Pfad zum Bild
- * @param outImage Beinhaltet nach Ausführung Farbwerte des Bildes
+ * Liefert einen kompiliertes Shaderprogramm aus Vertex und Fragment Shader zurück
+ * Quelle: https://www.youtube.com/watch?v=t42UEU3NS1U
+ * @param vsFilePath Pfad zum Vertex Shader Code (*.vert)
+ * @param fsFilePath Pfad zum Fragment Shader Code (*.frag)
+ * @return ID des Shaderprogramms
  */
-void Loader::readImageFile(const char *filePath, RGBImage &outImage) {
-    // Prüfe den Dateityp, ob es sich um eine BitMap handelt
-    FREE_IMAGE_FORMAT imageFormat = FreeImage_GetFileType(filePath, 0);
+GLuint Loader::compileShaders(const std::string &vsFilePath, const std::string &fsFilePath) {
+    std::string shaderName = vsFilePath + fsFilePath;
 
-    if (imageFormat == FIF_UNKNOWN) {
-        imageFormat = FreeImage_GetFIFFromFilename(filePath);
+    // Wenn die Kombination aus Vertex und Fragment Shader zuvor kompiliert wurde, wird
+    // dessen gespeicherte Shader ID zurückgeliefert.
+    // (Idee aus https://youtu.be/gDtHL6hy9R8?t=1040)
+    if (shaderCache.find(shaderName) != shaderCache.end()) {
+        std::cout << "LOADER::COMPILESHADERS: ShaderCache HIT" << std::endl;
+        return shaderCache[shaderName];
     }
-    if (imageFormat == FIF_UNKNOWN) {
-        std::cout << "WARNING::LOADER::READIMAGEFILE: Unbekanntes Dateiformat! " << filePath << std::endl;
-    }
-    // Erzeugt Bitmap aus Bilddatei
-    FIBITMAP *pBitMap = FreeImage_Load(imageFormat, filePath);
-    if (pBitMap == nullptr) {
-        std::cout << "ERROR::LOADER::READIMAGEFILE: Dateiformat kann nicht geoeffnet werden! " << filePath << std::endl;
+
+    // Leeres Shader Programm erstellen
+    GLuint id = glCreateProgram();
+    if (id == 0) {
+        std::cerr << "ERROR::SHADER::COMPILESHADERS: Can not create shader program" << std::endl;
         exit(EXIT_FAILURE);
     }
 
-    // Drehen um Koordinaten richtig anzupassen
-    FreeImage_FlipVertical(pBitMap);
+    std::string vs, fs;
+    // Vertex Shader String aus Datei auslesen
+    Loader::readShaderFile(vsFilePath, vs);
+    // Vertex Shader Kompilieren und an ID binden
+    addShader(vs, id, GL_VERTEX_SHADER);
+    // Fragment Shader String aus Datei auslesen
+    Loader::readShaderFile(fsFilePath, fs);
+    // Fragment Shader Kompilieren und an ID binden
+    addShader(fs, id, GL_FRAGMENT_SHADER);
 
-    FREE_IMAGE_TYPE type = FreeImage_GetImageType(pBitMap);
-    assert(type == FIT_BITMAP);
+    std::cout << "SHADER::COMPILED: " << vsFilePath << " " << fsFilePath << std::endl;
 
-    // Lese die Breite, Höhe und Bit pro Pixel der Datei aus.
-    unsigned int width = FreeImage_GetWidth(pBitMap);
-    unsigned int height = FreeImage_GetHeight(pBitMap);
-    unsigned int bpp = FreeImage_GetBPP(pBitMap);
-    assert(bpp == 1 || bpp == 8 || bpp == 16 || bpp == 24 || bpp == 32);
-    GLenum format = GL_RGBA;
-//    if(bpp == 1) format = GL_RED;
-//    if(bpp == 8) format = GL_RED;
-//    if(bpp == 16) format = GL_RGB;
-//    if(bpp == 24) format = GL_RGB;
-//    if(bpp == 32) format = GL_RGBA;
-    // Speicherplatz für alle Pixel erstellen
-    RGBImage image(width, height, format);
-    // Speicherplatz für einzelnen Pixel erstellen
-    RGBQUAD color;
-    // Pixel Farbe auslesen und abspeichern
-    for (unsigned int x = 0; x < width; x++) {
-        for (unsigned int y = 0; y < width; y++) {
-            FreeImage_GetPixelColor(pBitMap, x, y, &color);
-            Color pixelColor;
-            if (bpp == 32) {
-                pixelColor = Color(color.rgbRed, color.rgbGreen, color.rgbBlue, color.rgbReserved);
-            } else {
-                pixelColor = Color(color.rgbRed, color.rgbGreen, color.rgbBlue);
-            }
-            image.setPixelColor(x, y, pixelColor);
-        }
+    // Shader Programm linken
+    glLinkProgram(id);
+
+    // Status abfragen und ggf. Fehler ausgeben
+    GLint success = 0;
+    GLchar errorLog[1024] = {0};
+    glGetProgramiv(id, GL_LINK_STATUS, &success);
+    if (success == 0) {
+        glGetProgramInfoLog(id, sizeof(errorLog), nullptr, errorLog);
+        std::cerr << "ERROR::SHADER::COMPILESHADERS: Can not link shader program: " << errorLog << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    glValidateProgram(id);
+    glGetProgramiv(id, GL_VALIDATE_STATUS, &success);
+    if (!success) {
+        glGetProgramInfoLog(id, sizeof(errorLog), nullptr, errorLog);
+        std::cerr << "ERROR::SHADER::COMPILESHADERS: Invalid shader program: " << errorLog << std::endl;
+        exit(EXIT_FAILURE);
     }
 
-    // Speicherplatz freigeben
-    FreeImage_Unload(pBitMap);
-
-    std::cout << "LOADER::READIMAGEFILE: " << filePath << std::endl;
-    outImage = image;
+    // ID in ShaderCache speichern und aktivieren
+    shaderCache[shaderName] = id;
+    glUseProgram(id);
+    return id;
 }
 
 /**
  * Erstellt einen Shader
- * @param shaderText Shader-Code
+ * Quelle: https://youtu.be/t42UEU3NS1U?t=815
+ * @param shaderText Shader Code
  * @param id ID des Shaders
  * @param shaderType Typ des Shaders (Vertex, Fragment)
  */
@@ -128,56 +129,73 @@ void Loader::addShader(const std::string &shaderText, GLuint id, GLenum shaderTy
 
     // Shader Objekt an id binden
     glAttachShader(id, shaderObject);
-    // Shader kann nun wieder freigegeben werden und später über id angesprochen werden
+    // Shader kann nun wieder freigegeben werden und später über ID angesprochen werden
     glDeleteShader(shaderObject);
 }
 
-GLuint Loader::compileShaders(const std::string &vsFilePath, const std::string &fsFilePath) {
-    std::string shaderName = vsFilePath + fsFilePath;
+/**
+ * Liest mit Hilfe von FreeImage eine Bilddatei
+ * Quelle: Texture.cpp (Philipp Lensing) Texture::load(...)
+ * @param filePath Pfad zum Bild
+ * @param outImage Beinhaltet nach Ausführung Farbwerte des Bildes
+ */
+void Loader::readImageFile(const char *filePath, RGBImage &outImage) {
+    // Prüfe den Dateityp, ob es sich um eine BitMap handelt
+    FREE_IMAGE_FORMAT imageFormat = FreeImage_GetFileType(filePath, 0);
 
-    if (shaderCache.find(shaderName) != shaderCache.end()) {
-        std::cout << "LOADER::COMPILESHADERS: ShaderCache HIT" << std::endl;
-        return shaderCache[shaderName];
+    if (imageFormat == FIF_UNKNOWN) {
+        imageFormat = FreeImage_GetFIFFromFilename(filePath);
     }
-
-    GLuint id = glCreateProgram();
-    if (id == 0) {
-        std::cerr << "ERROR::SHADER::COMPILESHADERS: Can not create shader program" << std::endl;
+    if (imageFormat == FIF_UNKNOWN) {
+        std::cout << "WARNING::LOADER::READIMAGEFILE: Unbekanntes Dateiformat! " << filePath << std::endl;
+    }
+    // Erzeugt Bitmap aus Bilddatei
+    FIBITMAP *pBitMap = FreeImage_Load(imageFormat, filePath);
+    if (pBitMap == nullptr) {
+        std::cout << "ERROR::LOADER::READIMAGEFILE: Dateiformat kann nicht geoeffnet werden! " << filePath << std::endl;
         exit(EXIT_FAILURE);
     }
 
-    std::string vs, fs;
+    // Drehen um Koordinaten richtig anzupassen
+    FreeImage_FlipVertical(pBitMap);
 
-    Loader::readShaderFile(vsFilePath, vs);
-    addShader(vs, id, GL_VERTEX_SHADER);
+    FREE_IMAGE_TYPE type = FreeImage_GetImageType(pBitMap);
+    assert(type == FIT_BITMAP);
 
-    Loader::readShaderFile(fsFilePath, fs);
-    addShader(fs, id, GL_FRAGMENT_SHADER);
-
-    std::cout << "SHADER::COMPILED: " << vsFilePath << " " << fsFilePath << std::endl;
-
-    GLint success = 0;
-    GLchar errorLog[1024] = {0};
-
-    glLinkProgram(id);
-
-    glGetProgramiv(id, GL_LINK_STATUS, &success);
-    if (success == 0) {
-        glGetProgramInfoLog(id, sizeof(errorLog), nullptr, errorLog);
-        std::cerr << "ERROR::SHADER::COMPILESHADERS: Can not link shader program: " << errorLog << std::endl;
-        exit(EXIT_FAILURE);
+    // Lese die Breite, Höhe und Bit pro Pixel der Datei aus.
+    unsigned int width = FreeImage_GetWidth(pBitMap);
+    unsigned int height = FreeImage_GetHeight(pBitMap);
+    unsigned int bpp = FreeImage_GetBPP(pBitMap);
+    assert(bpp == 1 || bpp == 8 || bpp == 16 || bpp == 24 || bpp == 32);
+    GLenum format = GL_RGBA;
+    //if(bpp == 1) format = GL_RED;
+    //if(bpp == 8) format = GL_RED;
+    //if(bpp == 16) format = GL_RGB;
+    //if(bpp == 24) format = GL_RGB;
+    //if(bpp == 32) format = GL_RGBA;
+    // Speicherplatz für alle Pixel erstellen
+    RGBImage image(width, height, format);
+    // Speicherplatz für einzelnen Pixel erstellen
+    RGBQUAD color;
+    // Pixel Farbe auslesen und abspeichern
+    for (unsigned int x = 0; x < width; x++) {
+        for (unsigned int y = 0; y < width; y++) {
+            FreeImage_GetPixelColor(pBitMap, x, y, &color);
+            Color pixelColor;
+            if (bpp == 32) {
+                pixelColor = Color(color.rgbRed, color.rgbGreen, color.rgbBlue, color.rgbReserved);
+            } else {
+                pixelColor = Color(color.rgbRed, color.rgbGreen, color.rgbBlue);
+            }
+            image.setPixelColor(x, y, pixelColor);
+        }
     }
 
-    glValidateProgram(id);
-    glGetProgramiv(id, GL_VALIDATE_STATUS, &success);
-    if (!success) {
-        glGetProgramInfoLog(id, sizeof(errorLog), nullptr, errorLog);
-        std::cerr << "ERROR::SHADER::COMPILESHADERS: Invalid shader program: " << errorLog << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    shaderCache[shaderName] = id;
-    glUseProgram(id);
-    return id;
+    // Speicherplatz freigeben
+    FreeImage_Unload(pBitMap);
+
+    std::cout << "LOADER::READIMAGEFILE: " << filePath << std::endl;
+    outImage = image;
 }
 
 void Loader::writeScoreToFile(unsigned int score) {
