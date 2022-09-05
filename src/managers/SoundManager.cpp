@@ -1,5 +1,4 @@
 #include "SoundManager.h"
-#include "../utils/Camera.h"
 
 SoundManager &SoundManager::getInstance() {
     static SoundManager instance;

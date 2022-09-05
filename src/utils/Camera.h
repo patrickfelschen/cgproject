@@ -8,7 +8,6 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 #include "../maths/Matrix.h"
-#include "../managers/SoundManager.h"
 #include <numbers>
 
 class Camera {

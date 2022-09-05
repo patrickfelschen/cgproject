@@ -6,6 +6,7 @@
 
 
 #include "Camera.h"
+#include "../managers/SoundManager.h"
 
 #define TO_RAD(deg) (deg * std::numbers::pi / 180.0)
 
