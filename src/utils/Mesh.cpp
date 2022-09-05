@@ -6,9 +6,6 @@
 
 #include "Mesh.h"
 
-
-Mesh::Mesh() = default;
-
 /**
  * Erzeugt ein gebündeltes Mesh Objekt
  * @param vertices Vertex Liste
@@ -43,6 +40,8 @@ Mesh::Mesh(const std::vector<Vertex> &vertices,
     this->hasMaterial = false;
     this->setupMesh();
 }
+
+Mesh::Mesh() = default;
 
 Mesh::~Mesh() = default;
 
@@ -132,6 +131,8 @@ void Mesh::render(Shader *shader) const {
     }
     // Mesh zeichnen
     glBindVertexArray(VAO);
+    // zeichnet Dreiecke auf Grundlage vom VBO
+    // in der im EBO definierten Reihenfolge
     glDrawElements(
             GL_TRIANGLES,
             (GLsizei) indices.size(),
