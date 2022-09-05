@@ -4,8 +4,8 @@
 
 #include "ParticleShader.h"
 
-#define VERT "../assets/shaders/particleShader.vert"
-#define FRAG "../assets/shaders/particleShader.frag"
+#define VERT "../assets/Shaders/particleShader.vert"
+#define FRAG "../assets/Shaders/particleShader.frag"
 
 ParticleShader::ParticleShader() : Shader(VERT, FRAG) {
     this->color = Color(1.0f);

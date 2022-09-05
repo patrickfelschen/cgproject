@@ -41,7 +41,7 @@ protected:
 
     Matrix transform;
 private:
-    // ID des shaders
+    // ID des Shaders
     GLuint id = 0;
     // Pfad der Shaderdateien
     const char *vsFilePath;

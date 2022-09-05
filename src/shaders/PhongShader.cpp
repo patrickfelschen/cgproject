@@ -4,8 +4,8 @@
 
 #include "PhongShader.h"
 
-#define VERT "../assets/shaders/phongShader.vert"
-#define FRAG "../assets/shaders/phongShader.frag"
+#define VERT "../assets/Shaders/phongShader.vert"
+#define FRAG "../assets/Shaders/phongShader.frag"
 
 PhongShader::PhongShader() : Shader(VERT, FRAG) {
     this->transform.identity();

@@ -4,8 +4,8 @@
 
 #include "GunShader.h"
 
-#define VERT "../assets/shaders/gunShader.vert"
-#define FRAG "../assets/shaders/phongShader.frag"
+#define VERT "../assets/Shaders/gunShader.vert"
+#define FRAG "../assets/Shaders/phongShader.frag"
 
 GunShader::GunShader() : Shader(VERT, FRAG) {}
 

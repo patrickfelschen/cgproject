@@ -4,8 +4,8 @@
 
 #include "TerrainShader.h"
 
-#define VERT "../assets/shaders/terrainShader.vert"
-#define FRAG "../assets/shaders/terrainShader.frag"
+#define VERT "../assets/Shaders/terrainShader.vert"
+#define FRAG "../assets/Shaders/terrainShader.frag"
 
 TerrainShader::TerrainShader() : Shader(VERT, FRAG) {}
 
