@@ -19,7 +19,7 @@ welche sich auf den Spieler zubewegen. Schafft der Spieler es nicht die Geister 
 bevor sie ihn erreicht haben, erhält der Spieler Schaden. Für jeden erschossenen Geist gibt es einen Punkt.
 Munition und Leben können über Kisten aufgefüllt werden, die sich im Umfeld befinden. Je mehr Punkte erreicht werden,
 desto schwieriger wird das Spiel. Die Geister werden schneller und erhalten mehr Lebenspunkte. Stirbt der Spieler,
-wird der Punktestand beim Erreicheneines neuen Highscores abgespeichert. Anschließend kann
+wird der Punktestand beim Erreichen eines neuen Highscores abgespeichert. Anschließend kann
 das Spiel neu gestartet werden.
 
 ***************************************************************************
