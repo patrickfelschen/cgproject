@@ -88,10 +88,10 @@ int main(int argc, char **argv) {
 
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
+    glEnable(GL_DEPTH_TEST);    // Tiefen Test aktivieren
+    glDepthFunc(GL_LESS);       // Durchlass wenn Wert kleiner als der im Buffer
+    glEnable(GL_CULL_FACE);     // Face Culling aktivieren
+    glCullFace(GL_BACK);        // Rückseiten nicht rendern
 
     glDebugMessageCallback(glErrorCallback, nullptr);
 
@@ -123,15 +123,17 @@ int main(int argc, char **argv) {
             double now = glfwGetTime();
             double deltaTime = now - lastTime;
             lastTime = now;
+
+            // Benutzereingaben prüfen
             glfwPollEvents();
 
             GUIManager::getInstance().startDraw();
 
-            // Render start
+            // Farb- und Z-Buffer leeren
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glClearColor(0.2, 0.2, 0.2, 1.0);
-//            printf("gameStarted: %i\n", gameStarted);
 
+            // Render start
             if (gameStarted) {
                 game->update((float) deltaTime);
                 game->render();
@@ -195,6 +197,7 @@ void GLAPIENTRY glErrorCallback(
         const GLchar *message,
         const void *userParam
 ) {
+    // Error Nachrichten ausgeben
     if (type == GL_DEBUG_TYPE_ERROR) {
         std::cerr << message << std::endl;
     }
