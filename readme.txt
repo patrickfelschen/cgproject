@@ -15,11 +15,12 @@ Um das Spiel zu starten kann die folgende EXE gestartet werden:
 Anleitung:
 
 Nach dem Start des Spiels befindet sich der Spieler in der Mitte eines Waldes. Um den Spieler herum erscheinen Geister, 
-welche sich auf den Spieler zubewegen. Schafft der Spieler es nicht die Geister zu erschießen, bevor sie ihn erreicht haben, 
-erhält der Spieler Schaden. Für jeden erschossenen Geist gibt es einen Punkt. Munition und Leben können über Kisten aufgefüllt werden, 
-die sich im Umfeld befinden. Je mehr Punkte erreicht werden, desto schwieriger wird das Spiel. Die Geister 
-werden schneller und erhalten mehr Lebenspunkte. Stirbt der Spieler, wird der Punktestand beim Erreichen
-eines neuen Highscores abgespeichert. Anschließend kann das Spiel neugestartet werden.
+welche sich auf den Spieler zubewegen. Schafft der Spieler es nicht die Geister zu erschießen,
+bevor sie ihn erreicht haben, erhält der Spieler Schaden. Für jeden erschossenen Geist gibt es einen Punkt.
+Munition und Leben können über Kisten aufgefüllt werden, die sich im Umfeld befinden. Je mehr Punkte erreicht werden,
+desto schwieriger wird das Spiel. Die Geister werden schneller und erhalten mehr Lebenspunkte. Stirbt der Spieler,
+wird der Punktestand beim Erreicheneines neuen Highscores abgespeichert. Anschließend kann
+das Spiel neu gestartet werden.
 
 ***************************************************************************
 Steuerung:
