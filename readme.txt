@@ -37,6 +37,7 @@ Mausbewegung: Ausrichtung der First-Person-Kamera
 ***************************************************************************
 Ordnerstruktur:
 
+- \bin\game : Ausführbares Spiel, notwendige Bibliotheken
 - \project\assets : GUI-Schriftart, 3D-OBJ-Dateien, Shader Codes, Sounds, Hightmap
 - \project\libraries : assimp, freeimage, glew, glfw, imgui, irrklang
 - \project\src : C++ Source Dateien
