@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD 23)
 
 file(GLOB_RECURSE SOURCE_FILES_REC CONFIGURE_DEPENDS "src/*.h" "src/*.hpp" "src/*.cpp" "libraries/win32/imgui/*.h" "libraries/win32/imgui/*.cpp" "libraries/win32/irrklang*.h")
 
-add_executable(CG ${SOURCE_FILES_REC} src/managers/SoundManager.cpp src/managers/SoundManager.h)
+add_executable(CG ${SOURCE_FILES_REC})
 
 IF (WIN32)
     # OpenGL Extension Wrangler Library
