@@ -6,22 +6,36 @@
 #include "../entities/StaticEntity.h"
 #include "../maths/Random.h"
 
-#define STATIC_OBJECTS_COUNT 150
+#define STATIC_OBJECTS_COUNT 100
 #define LIGHT_POLE_COUNT 20
 
 /**
- * Lädt Modelle der Objekte, die sich auf dem Terrain befinden und plaziert diese Zufällig
+ * Lädt Modelle der Objekte, die sich auf dem Terrain befinden und plaziert diese zufällig
  * @param terrainEntity Wird für die Positionsberechnung der StaticEntities benötigt
  * @param lightManager Fügt den Lightpoles Licht hinzu
  */
-TerrainManager::TerrainManager(const TerrainEntity *terrainEntity, LightManager *lightManager) : terrainEntity(
-        terrainEntity), lightManager(lightManager) {
-    flowerYellowModel = new ObjectModel(new PhongShader(),
-                                        "../assets/Objects/FlowerYellow/DR293GUXZXKK16RTKE4Y8HOCH.obj");
-    flowerRedModel = new ObjectModel(new PhongShader(), "../assets/Objects/FlowerRed/XBV47D0X9MNPQYA15BSYICAXS.obj");
-    woodModel = new ObjectModel(new PhongShader(), "../assets/Objects/Wood/BJWDXMOHII5I7VAGI8Q12YATN.obj");
-    treeModel = new ObjectModel(new PhongShader(), "../assets/Objects/Tree01/N6TIYZO5D41STEOW4SQBKWRRG.obj");
-    lightPoleModel = new ObjectModel(new PhongShader(), "../assets/Objects/LightPole/CLADLXMYVP3UCZ3ZVD9QWPQGZ.obj");
+TerrainManager::TerrainManager(const TerrainEntity *terrainEntity, LightManager *lightManager) :
+        terrainEntity(terrainEntity), lightManager(lightManager) {
+    flowerYellowModel = new ObjectModel(
+            new PhongShader(),
+            "../assets/Objects/FlowerYellow/DR293GUXZXKK16RTKE4Y8HOCH.obj"
+    );
+    flowerRedModel = new ObjectModel(
+            new PhongShader(),
+            "../assets/Objects/FlowerRed/XBV47D0X9MNPQYA15BSYICAXS.obj"
+    );
+    woodModel = new ObjectModel(
+            new PhongShader(),
+            "../assets/Objects/Wood/BJWDXMOHII5I7VAGI8Q12YATN.obj"
+    );
+    treeModel = new ObjectModel(
+            new PhongShader(),
+            "../assets/Objects/Tree01/N6TIYZO5D41STEOW4SQBKWRRG.obj"
+    );
+    lightPoleModel = new ObjectModel(
+            new PhongShader(),
+            "../assets/Objects/LightPole/CLADLXMYVP3UCZ3ZVD9QWPQGZ.obj"
+    );
 
     // Bäume
     for (unsigned int i = 0; i < STATIC_OBJECTS_COUNT; i++) {
@@ -74,14 +88,13 @@ TerrainManager::TerrainManager(const TerrainEntity *terrainEntity, LightManager 
 }
 
 TerrainManager::~TerrainManager() {
+    for (Entity *entity: entities) {
+        delete entity;
+    }
     delete flowerYellowModel;
     delete flowerRedModel;
     delete woodModel;
     delete treeModel;
-
-    for (Entity *entity: entities) {
-        delete entity;
-    }
 }
 
 void TerrainManager::update(float deltaTime) {

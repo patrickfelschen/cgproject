@@ -18,6 +18,10 @@ public:
 
     virtual void render() = 0;
 
+    /**
+     * Liefert transformierte BoundingBox des Entity Models zurück
+     * @return BoundingBox des Models
+     */
     virtual AABB getTransformedBoundingBox() const = 0;
 
     void setPosition(const Vector3f &pos);

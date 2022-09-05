@@ -1,5 +1,6 @@
-#ifndef __SimpleRayTracer__Vector3f__
-#define __SimpleRayTracer__Vector3f__
+#ifndef CG_VECTOR3F_H
+#define CG_VECTOR3F_H
+
 
 #include <iostream>
 #include <cmath>
@@ -46,4 +47,5 @@ public:
 
 };
 
-#endif /* defined(__SimpleRayTracer__Vector3f__) */
+
+#endif //CG_VECTOR3F_H

@@ -66,6 +66,10 @@ void EnemyEntity::render() {
     this->model->render();
 }
 
+/**
+ * Liefert transformierte BoundingBox des Entity Models zurück
+ * @return BoundingBox des Models
+ */
 AABB EnemyEntity::getTransformedBoundingBox() const {
     return this->model->getBoundingBox().transform(transformation);
 }

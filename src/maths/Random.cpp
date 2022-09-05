@@ -2,15 +2,15 @@
 // Created by Patrick on 25.08.2022.
 //
 
-#include <ctime>
-#include <cstdlib>
 #include "Random.h"
 
-int Random::randInt(int min, int max) {
-    srand(time(nullptr));
-    return ((int(rand()) / int(RAND_MAX)) * (max - min)) + min;
-}
-
+/**
+ * Liefert eine zufällige Zahl zwischen min und max zurück
+ * Quelle: https://levelup.gitconnected.com/learning-c-generating-random-numbers-the-c-11-way-f041bbe94f3e
+ * @param min kleinste Zahl
+ * @param max größte Zahl
+ * @return Zufallszahl
+ */
 float Random::randFloat(float min, float max) {
     std::random_device rd;
     std::default_random_engine random_engine(rd());

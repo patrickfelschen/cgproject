@@ -221,6 +221,10 @@ void PlayerEntity::increaseMagazines(unsigned int count) {
     this->gunEntity->addMagazines(count);
 }
 
+/**
+ * Liefert transformierte BoundingBox des Entity Models zurück
+ * @return BoundingBox des Models
+ */
 AABB PlayerEntity::getTransformedBoundingBox() const {
     return AABB(); // Spieler besteht aus keinem Model
 }

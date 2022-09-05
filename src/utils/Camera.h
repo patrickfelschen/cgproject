@@ -8,6 +8,7 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 #include "../maths/Matrix.h"
+#include "../managers/SoundManager.h"
 #include <numbers>
 
 class Camera {
@@ -43,7 +44,8 @@ public:
 private:
     GLFWwindow *window;
 
-    int windowWidth, windowHeight;
+    int windowWidth = 0;
+    int windowHeight = 0;
 
     Matrix view;
     Matrix proj;

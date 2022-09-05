@@ -31,7 +31,7 @@ void TerrainEntity::render() {
  * @return Zufälliger Positionsvektor + Offset
  */
 Vector3f TerrainEntity::getRandomPosition(Vector3f offset) const {
-    float size = this->model->getSize() - 40;
+    float size = this->model->getSize() - 40; // Terrain Spawn Bereich verkleinern
     bool onTerrain; // immer true, da zwischen Size - 40
     float x = Random::randFloat(-size / 2, size / 2);
     float z = Random::randFloat(-size / 2, size / 2);
@@ -43,6 +43,10 @@ float TerrainEntity::getHeightOfPosition(Vector3f position, bool &onTerrain) con
     return this->model->getHeightOfTerrain(position.x, position.z, onTerrain);
 }
 
+/**
+ * Liefert transformierte BoundingBox des Entity Models zurück
+ * @return BoundingBox des Models
+ */
 AABB TerrainEntity::getTransformedBoundingBox() const {
     return this->model->getBoundingBox().transform(transformation);
 }

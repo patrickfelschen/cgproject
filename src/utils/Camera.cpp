@@ -1,11 +1,11 @@
 //
 // Created by Patrick on 03.08.2022.
+// https://learnopengl.com/Getting-started/Camera
 // https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/camera.h
 //
 
 
 #include "Camera.h"
-#include "../managers/SoundManager.h"
 
 #define TO_RAD(deg) (deg * std::numbers::pi / 180.0)
 
@@ -22,6 +22,7 @@ Camera::Camera(GLFWwindow *window) : window(window) {
     lastMouseX = (float) windowWidth / 2;
     lastMouseY = (float) windowHeight / 2;
 
+    // View Matrix initialisieren
     view.identity();
     // erstellt eine PROJECTION MATRIX
     proj.perspective(

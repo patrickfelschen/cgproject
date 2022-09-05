@@ -7,7 +7,8 @@
 ParticleEntity::ParticleEntity(const ParticleModel *model) {
     this->model = model;
     this->color = Color(0.0f);
-    this->life = 0.0f;
+    this->maxLife = 0.0f;
+    this->life = maxLife;
 }
 
 ParticleEntity::~ParticleEntity() = default;
@@ -25,7 +26,6 @@ void ParticleEntity::update(float deltaTime) {
 void ParticleEntity::render() {
     this->model->shader->setTransform(transformation);
     this->model->shader->setColor(color);
-
     this->model->render();
 }
 
@@ -46,6 +46,10 @@ void ParticleEntity::setLife(float l) {
     this->life = l;
 }
 
+/**
+ * Liefert transformierte BoundingBox des Entity Models zurück
+ * @return BoundingBox des Models
+ */
 AABB ParticleEntity::getTransformedBoundingBox() const {
     return this->model->getBoundingBox().transform(transformation);
 }

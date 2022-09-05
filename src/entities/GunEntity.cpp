@@ -4,9 +4,6 @@
 
 #include "GunEntity.h"
 
-#define TO_RAD(deg) (deg * std::numbers::pi / 180.0)
-#define TO_DEG(rad) (rad * 180.0 / std::numbers::pi)
-
 GunEntity::GunEntity(ObjectModel *model) : Entity() {
     this->model = model;
 
@@ -102,6 +99,10 @@ void GunEntity::setMagazines(unsigned int count) {
     this->magazines = count;
 }
 
+/**
+ * Liefert transformierte BoundingBox des Entity Models zurück
+ * @return BoundingBox des Models
+ */
 AABB GunEntity::getTransformedBoundingBox() const {
     return this->model->getBoundingBox().transform(transformation);
 }

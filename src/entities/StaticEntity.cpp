@@ -42,6 +42,10 @@ void StaticEntity::setSpawnOffset(const Vector3f &spawnOffset) {
     StaticEntity::spawnOffset = spawnOffset;
 }
 
+/**
+ * Liefert transformierte BoundingBox des Entity Models zurück
+ * @return BoundingBox des Models
+ */
 AABB StaticEntity::getTransformedBoundingBox() const {
     return this->model->getBoundingBox().transform(transformation);
 }
