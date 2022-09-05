@@ -1,20 +1,21 @@
-#include "AABB.h"
+//
+//  Aabb.cpp
+//  CGXcode
+//
+//  Created by Philipp Lensing on 02.11.16.
+//  Copyright © 2016 Philipp Lensing. All rights reserved.
+//
 
-#define EPSILON 1e-5
+#include "AABB.h"
 
 AABB AABB::UnitBox(Vector3f(-1, -1, -1), Vector3f(1, 1, 1));
 
-AABB::AABB() {
+AABB::AABB() = default;
 
-}
-
-AABB::AABB(const Vector3f &min, const Vector3f &max) : Min(min), Max(max) {
-
-}
+AABB::AABB(const Vector3f &min, const Vector3f &max) : Min(min), Max(max) {}
 
 AABB::AABB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) : Min(minX, minY, minZ),
                                                                                      Max(maxX, maxY, maxZ) {
-
 }
 
 Vector3f AABB::size() const {
@@ -29,8 +30,9 @@ Vector3f AABB::size() const {
 AABB AABB::transform(const Matrix &m) const {
     Vector3f c[8];
     corners(c);
-    for (int i = 0; i < 8; ++i)
-        c[i] = m * c[i];
+    for (auto &i: c) {
+        i = m * i;
+    }
     AABB r;
     r.fromPoints(c, 8);
     return r;
@@ -229,8 +231,8 @@ bool AABB::intersection(const Ray &ray) const {
         // Distanz zwischen Ray-Origin und Box auf Z-Achse
         zt = Max.z - ray.origin.z;
 
-    // Wenn zt > Ende des Rays -> Ray endet, bevor Box erreicht wurde
-    if (zt < ray.direction.z) {
+        // Wenn zt > Ende des Rays -> Ray endet, bevor Box erreicht wurde
+        if (zt < ray.direction.z) {
             //printf("INTERSECTION:: Objekt ausser Reichweite (Z-Achse)\n");
             return false;
         }
@@ -263,7 +265,7 @@ bool AABB::intersection(const Ray &ray) const {
             if (z < Min.z || z > Max.z) return false;
         }
             break;
-        // Prüfen, ob Ray aus Sicht der Y-Koordinate außerhalb der Box liegt
+            // Prüfen, ob Ray aus Sicht der Y-Koordinate außerhalb der Box liegt
         case 1: {
             float x = ray.origin.x + ray.direction.x * t;
             if (x < Min.x || x > Max.x) return false;
@@ -272,7 +274,7 @@ bool AABB::intersection(const Ray &ray) const {
             if (z < Min.z || z > Max.z) return false;
         }
             break;
-        // Prüfen, ob Ray aus Sicht der Z-Koordinate außerhalb der Box liegt
+            // Prüfen, ob Ray aus Sicht der Z-Koordinate außerhalb der Box liegt
         case 2: {
             float x = ray.origin.x + ray.direction.x * t;
             if (x < Min.x || x > Max.x) return false;
