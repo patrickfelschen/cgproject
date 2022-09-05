@@ -10,6 +10,10 @@
 
 #define TO_RAD(deg) (deg * std::numbers::pi / 180.0)
 
+/**
+ * Erzeugt und initialisiert ein Kamera Objekt
+ * @param window GLFW window für Benutzereingaben und Fenstergröße
+ */
 Camera::Camera(GLFWwindow *window) : window(window) {
     position = Vector3f(0.0f, 0.0f, 0.0f);
     target = Vector3f(0.0f, 0.0f, -1.0f);

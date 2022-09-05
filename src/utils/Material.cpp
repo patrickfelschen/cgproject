@@ -4,10 +4,15 @@
 
 #include "Material.h"
 
+/**
+ * Standard Materialeigenschaften
+ * Weitere Materialeigenschaften unter:
+ * http://devernay.free.fr/cours/opengl/materials.html
+ */
 Material::Material() {
-    this->diffuse = Color(0.8f, 0.8f, 0.8f, 1.0f);
-    this->specular = Color(0.5f, 0.5f, 0.5f, 1.0f);
-    this->ambient = Color(0.3f, 0.3f, 0.3f, 1.0f);
+    this->diffuse = Color(0.8f, 0.8f, 0.8f);
+    this->specular = Color(0.5f, 0.5f, 0.5f);
+    this->ambient = Color(0.3f, 0.3f, 0.3f);
     this->shininess = 1.0f;
 }
 

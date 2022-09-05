@@ -37,6 +37,9 @@ public:
     void setUniform(const std::string &name, const Matrix &value);
 
 protected:
+    /**
+     * Ermöglicht das Setzen von Uniforms nach dem Aktivieren
+     */
     virtual void setUniforms() = 0;
 
     Matrix transform;
