@@ -7,7 +7,7 @@
 #include "../maths/Random.h"
 
 #define STATIC_OBJECTS_COUNT 100
-#define LIGHT_POLE_COUNT 20
+#define LIGHT_POLE_COUNT 15
 
 /**
  * Lädt Modelle der Objekte, die sich auf dem Terrain befinden und plaziert diese zufällig

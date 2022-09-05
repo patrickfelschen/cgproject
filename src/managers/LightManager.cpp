@@ -75,14 +75,14 @@ void LightManager::addPoint(Vector3f position) {
     l.position = position;
 
     l.ambient = Color(0.05f, 0.05f, 0.05f);
-    l.diffuse = Color(0.8f, 0.8f, 0.1f);
-    l.specular = Color(0.7f, 0.7f, 0.1f);
+    l.diffuse = Color(0.8f, 0.8f, 0.3f);
+    l.specular = Color(0.7f, 0.7f, 0.3f);
 
     // https://learnopengl.com/Lighting/Light-casters
     // https://wiki.ogre3d.org/tiki-index.php?page=-Point+Light+Attenuation
     l.constant = 1.0f;
-    l.linear = 0.35f;
-    l.quadratic = 0.44f;
+    l.linear = 0.09f;
+    l.quadratic = 0.032f;
 
     // Licht zu staticLights hinzufügen und in UniformBuffer setzen
     this->lights.staticLights[lights.staticLightsCount++] = l;
