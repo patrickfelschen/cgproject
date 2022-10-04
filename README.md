@@ -6,8 +6,8 @@ Computergrafik Projekt SS22, Thema: First Person Shooter
 
 Projektteilnehmer:
 
-Patrick Felschen, 932056
-Julian Voß, 934505
+- Patrick Felschen, 932056
+- Julian Voß, 934505
 
 ***************************************************************************
 Um das Spiel zu starten kann die folgende EXE gestartet werden:
