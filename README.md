@@ -28,14 +28,14 @@ das Spiel neu gestartet werden.
 ***************************************************************************
 Steuerung:
 
-W-Taste: Bewegung vorwärts
-S-Taste: Bewegung rückwärts
-A-Taste: Bewegung nach links
-D-Taste: Bewegung nach rechts
-R-Taste: Nachladen
-Shift-Taste (links): Sprint
-Linke Maustaste: Schießen
-Mausbewegung: Ausrichtung der First-Person-Kamera
+- W-Taste: Bewegung vorwärts
+- S-Taste: Bewegung rückwärts
+- A-Taste: Bewegung nach links
+- D-Taste: Bewegung nach rechts
+- R-Taste: Nachladen
+- Shift-Taste (links): Sprint
+- Linke Maustaste: Schießen
+- Mausbewegung: Ausrichtung der First-Person-Kamera
 
 ***************************************************************************
 Ordnerstruktur:
