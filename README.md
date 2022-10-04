@@ -1,8 +1,6 @@
-Computergrafik Projekt SS22, Thema: First Person Shooter
-
+## Computergrafik Projekt SS22, Thema: First Person Shooter
 
 ![Screenshot](Screenshot.png)
-
 
 Projektteilnehmer:
 
