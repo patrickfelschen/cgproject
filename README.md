@@ -52,11 +52,11 @@ Genaue Quellenangaben sind als Kommentare im Quellcode zu finden.
 
 Hauptsächliche Quellen:
 
-Learn OpenGL - https://learnopengl.com/
-OGLDEV - https://ogldev.org/
-3D Modelle - https://rigmodels.com/
-ThinMatrix - https://www.youtube.com/watch?v=VS8wlS9hF8E&list=PLRIWtICgwaX0u7Rf9zkZhLoLuZVfUksDP
-The Cherno - https://www.youtube.com/watch?v=W3gAzLwfIP0&list=PLlrATfBNZ98foTJPJ_Ev03o2oq3-GGOS2
+- Learn OpenGL - https://learnopengl.com/
+- OGLDEV - https://ogldev.org/
+- 3D Modelle - https://rigmodels.com/
+- ThinMatrix - https://www.youtube.com/watch?v=VS8wlS9hF8E&list=PLRIWtICgwaX0u7Rf9zkZhLoLuZVfUksDP
+- The Cherno - https://www.youtube.com/watch?v=W3gAzLwfIP0&list=PLlrATfBNZ98foTJPJ_Ev03o2oq3-GGOS2
 
 ***************************************************************************
 Hinweise:
