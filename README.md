@@ -4,8 +4,8 @@
 
 Projektteilnehmer:
 
-- Patrick Felschen, 932056
-- Julian Voß, 934505
+- Patrick Felschen
+- Julian Voß
 
 ***************************************************************************
 Um das Spiel zu starten kann die folgende EXE gestartet werden:
