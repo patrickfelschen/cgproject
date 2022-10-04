@@ -1,6 +1,9 @@
 Computergrafik Projekt SS22, Thema: First Person Shooter
 
 
+![Screenshot](Screenshot.png)
+
+
 Projektteilnehmer:
 
 Patrick Felschen, 932056
